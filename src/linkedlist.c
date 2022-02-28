@@ -58,6 +58,34 @@ int list_push_back(LinkedList* list, LPDATA data){
     return ERR_LIST_OK;
 }
 
+int list_insert(LinkedList* list, LPDATA data ,int nPos){
+    if (LIST_MAGIC_CODE != list->magicCode) {
+        //magic 코드가 오류 코드 리턴합니다
+        return ERR_LIST_MAGICCODE;
+    }
+    if(nPos < 0 || nPos >= list_size(list)){
+        return ERR_LIST_POSITION;
+    }
+    Node *temp = (Node*)malloc(sizeof(Node));
+    temp->data = data;
+
+    Node *buffer = list -> head;
+    for (int i = 0; i < nPos; i++){
+        buffer = buffer -> next;
+    }
+
+    temp->prev = buffer->prev;
+    temp->next = buffer;
+    if(buffer == list->head){
+        list->head = temp;
+    }
+    else{
+        buffer->prev->next =temp;
+    }
+    buffer->prev = temp;
+    return ERR_LIST_OK;
+}
+
 int list_pop_front(LinkedList* list){
     if (LIST_MAGIC_CODE != list->magicCode) {
         //magic 코드가 오류 코드 리턴합니다
@@ -103,6 +131,43 @@ int list_pop_back(LinkedList* list){
     return ERR_LIST_OK;
 }
 
+int list_remove(LinkedList* list, int nPos){
+     if (LIST_MAGIC_CODE != list->magicCode) {
+        //magic 코드가 오류 코드 리턴합니다
+        return ERR_LIST_MAGICCODE;
+    }
+    if(nPos < 0 || nPos >= list_size(list)){
+        return ERR_LIST_POSITION;
+    }
+
+    Node *temp = list -> head;
+    for (int i = 0; i < nPos; i++){
+        temp = temp -> next;
+    }
+
+    if(temp == list->head && temp == list->tail){
+        free(temp);
+        list->head = list->tail = NULL;
+    }
+    if(temp == list->head){
+        list->head = temp->next;
+        list->head->prev = NULL;
+        free(temp);
+    }
+    else if(temp == list->tail){
+        list->tail = list->tail->prev;
+        list->tail->next = NULL;
+        free(temp);
+    }
+    else{
+        temp->prev->next = temp->next;
+        temp->next->prev = temp->prev;
+        free(temp);
+    }
+
+    return ERR_LIST_OK;
+}
+
 int list_size(LinkedList* list){
     if (LIST_MAGIC_CODE != list->magicCode) {
         //magic 코드가 오류 코드 리턴합니다
@@ -116,7 +181,7 @@ int list_get_at(LinkedList* list, int nPos, LPDATA* lpValue){
         //magic 코드가 오류 코드 리턴합니다
         return ERR_LIST_MAGICCODE;
     }
-    if(nPos < 0 || nPos > list_size(list)){
+    if(nPos < 0 || nPos >= list_size(list)){
         return ERR_LIST_POSITION;
     }
 
@@ -133,7 +198,7 @@ int list_set_at(LinkedList* list, int nPos, const LPDATA lpValue){
         //magic 코드가 오류 코드 리턴합니다
         return ERR_LIST_MAGICCODE;
     }
-    if(nPos < 0 || nPos > list_size(list)){
+    if(nPos < 0 || nPos >= list_size(list)){
         return ERR_LIST_POSITION;
     }
 

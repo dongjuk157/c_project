@@ -30,11 +30,13 @@ LinkedList* create_linked_list_ptr();
 
 int list_push_front(LinkedList* list, LPDATA data);
 int list_push_back(LinkedList* list, LPDATA data);
+int list_insert(LinkedList* list, LPDATA data, int nPos);
+
 
 int list_pop_front(LinkedList* list);
 int list_pop_back(LinkedList* list);
+int list_remove(LinkedList* list, int nPos);
 
-int insert(LinkedList* list, Node node);
 
 int list_size(LinkedList* list);
 int list_get_at(LinkedList* list, int nPos, LPDATA* lpValue);
