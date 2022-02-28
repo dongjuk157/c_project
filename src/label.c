@@ -34,11 +34,3 @@ bool setLabelText(Label *label, const char *text){
     return True;
 }
 
-bool printLabel(const Label* label){
-    if(label->text==NULL) return False;
-
-    gotoxy(label->posx,label->posy);
-    printf("%s",label->text);    
-
-    return True;
-}

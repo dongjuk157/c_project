@@ -6,7 +6,7 @@
 Widget* createWidget()
 {
     Widget* widget = (Widget*)malloc(sizeof(Widget));
-    
+    setWidgetPos(widget,DEFAULT_POSY,DEFAULT_POSX);
     arrayCreate(&(widget->label));
     
     return widget;
@@ -14,34 +14,57 @@ Widget* createWidget()
 
 void printWidget(Widget* widget)
 {
-    system("clear");
-    gotoxy(widget->posx,widget->posy);
-    printf("┏━");
-    for (int i = 1; i < widget->width-1; i++) printf("━━");
-    printf("━┓");
+    if(widget->type == MAIN){
+        gotoxy(widget->posx,widget->posy);
+        printf("┏");
+        for (int i = 1; i < widget->width-1; i++) printf("━");
+        printf("┓");
 
-    for (int i = 1; i < widget->height-1; i++)
-    {
-       gotoxy(widget->posx, widget->posy + i + 1);
-       printf("┃ ");
-       gotoxy(widget->posx + widget->width * 2, widget->posy + i + 1);
-       printf("┃");
+        for (int i = 1; i < widget->height-1; i++)
+        {
+        gotoxy(widget->posx, widget->posy + i);
+        printf("┃");
+        gotoxy(widget->posx + widget->width-1, widget->posy + i);
+        printf("┃");
+        }
+        printf("\n");
+        gotoxy(widget->posx, widget->posy + widget->height-1);
+        printf("┗");
+        for (int i = 1; i <widget->width-1; i++) printf("━");
+        printf("┛\n");
     }
-    printf("\n┗");
-    for (int i = 1; i <widget->width; i++) printf("━━");
-    printf("┛\n");
+    else if(widget->type == SUB){
+        gotoxy(widget->posx,widget->posy);
+        printf("┌");
+        for (int i = 1; i < widget->width-1; i++) printf("─");
+        printf("┐");
+
+        for (int i = 1; i < widget->height-1; i++)
+        {
+        gotoxy(widget->posx, widget->posy + i);
+        printf("│");
+        gotoxy(widget->posx + widget->width-1, widget->posy + i);
+        printf("│");
+        }
+        printf("\n");
+        gotoxy(widget->posx, widget->posy + widget->height-1);
+        printf("└");
+        for (int i = 1; i <widget->width-1; i++) printf("─");
+        printf("┘\n");
+    }
+   
 }
 
-void render(Widget* widget)
+int renderWidget(Widget* widget)
 {
     printWidget(widget);
-    static int count = 0;
-    for (int i = 0; i < arraySize(widget->label); i++,count++)
+    for (int i = 0; i < arraySize(widget->label); i++)
     {
-        // printf("%d",count);
-        printLabel((Label *)(widget->label->lpData)[i]);
+        printLabel(widget,(Label *)(widget->label->lpData)[i]);
     }
+    return True;
 }
+
 bool addLabel(Widget *widget, Label *label)
 {
     if(widget->label == NULL) return False;
@@ -50,8 +73,19 @@ bool addLabel(Widget *widget, Label *label)
     return True;
 }
 
+bool printLabel(Widget* widget, const Label* label){
+    if(label->text==NULL) return False;
+
+    gotoxy(widget->posx + label->posx,widget->posy + label->posy);
+    printf("%s",label->text);    
+
+    return True;
+}
+
+
 void setWidgetPos(Widget *widget, int posy, int posx)
 {
+    // if(posx<=0 || posy<=0) return;
     widget -> posy = posy;
     widget -> posx = posx;
 }
@@ -60,4 +94,8 @@ void setWidgetSize(Widget *widget, int height, int width)
 {
     widget->height = height;
     widget->width = width;
+}
+
+void setWidgetType(Widget *Widget, int type){
+    Widget->type = type;
 }

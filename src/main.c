@@ -2,32 +2,79 @@
 #include "array.h"
 #include "widget.h"
 #include "label.h"
+#include "home_ui.h"
+// #include "info_ui.h"
+// #include "info.h"
+// #include "history_ui.h"
 #include <stdlib.h>
 #include <unistd.h>
 
+typedef int (*FP)(Widget*);
+
+
 int main(int argc, char const *argv[])
 {
-    Widget* frame = createWidget();
-    setWidgetPos(frame, 0, 0);
-    setWidgetSize(frame, 25, 50);
-
-    Label* label = createLabel();
-    setLabelPos(label,10, 30);
-    setLabelText(label,"----------------");
+    void *mainPage;
+    FP render;
     
-    Label* label2 = createLabel();
-    setLabelPos(label2,5, 20);
-    setLabelText(label2,"Hello world");
+    HOME_UI* home = createHomeUI();
+    // INFO_UI* info = createInfoUI();
+    // HISTORY_UI* history = createHistoryUI();
+    // Info buf;
 
+    mainPage = home;
+    render = renderHomeUI;
 
-    addLabel(frame, label);
-    addLabel(frame, label2);
-
+    int page = 0;
+    
     while(1){
-        usleep(1000 * 100);
-        render(frame);
-       
+        system("clear");
+        page = render(mainPage);
+        switch (page)
+        {
+        case HOME:
+            mainPage = home;
+            render = renderHomeUI;
+            break;
+        case CARINFO:
+            // mainPage = info;
+            // render = renderInfoUI;
+            // break;
+        case PARKHISTORY:
+            // mainPage = history;
+            // render = renderHistoryUI;
+            // break;
+        case 6:
+            // printf("차량번호 >> ");
+            // scanf("%s",buf.carNumber);
+            // printf("이름 >> ");
+            // scanf("%s",buf.name);
+            // printf("연락처 >> ");
+            // scanf("%s",buf.phoneNumber);
+            // sprintf(buf.inDatetime,"2022년 02월 27일 13시 27분");
+            // buf.fee = 0;
+
+            // FILE* fp;
+            // fp = fopen("data/Current.dat","ab");
+            // if(fp == NULL){
+            //     return 0;
+            // }
+            // fwrite(&buf,sizeof(Info),1,fp);
+            // fclose(fp);
+            // page = HOME;
+            // break;
+        case EXIT:
+            return 0;
+        default:
+            break;
+        }
     }
+
+    
+
+    free(home);
+    // free(info);
+    // free(history);
 
     return 0;
 }
