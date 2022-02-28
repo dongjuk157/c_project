@@ -3,8 +3,8 @@
 #include <time.h>
 #include <string.h>
 #include "manage.h"
+#include "hash.h"
 
-#define SIMPLE_LOG_FILE_PATH "../data/history.log"
 
 /*
 manage.c
@@ -48,7 +48,7 @@ int manage_in_out(void){
             case 'i': 
                 // 2. 데이터 입력 및 생성(입차)
                 do {
-                    ret = getValues(menu, &car_info);
+                    ret = get_values(menu, &car_info);
                 } while (!ret); // 입력 에러 인 경우엔 제대로 된 값을 넣을 때까지 계속 확인
                 
                  // 3. save simple log
@@ -68,18 +68,18 @@ int manage_in_out(void){
                 // 4 search user data with car_number
                 // user_info 해시테이블에 추가
                 // 해당 메모리는 main끝날때 free
-                ret = update_current(menu, user); // 5. add current list 
-                ret = update_history(menu, user); // 6. add history
+                ret = update_current(menu, car_info, user); // 5. add current list 
+                ret = update_history(menu, car_info, user); // 6. add history
                 //currentList에 추가
                 break;
             case 'o':
-                ret = getValues(menu, &car_info); // 2. 데이터 입력 및 생성(출차)
+                ret = get_values(menu, &car_info); // 2. 데이터 입력 및 생성(출차)
                 if (!ret) return ret;
                 ret = save_log(menu, &car_info); // 3. save simple log
                 if (!ret) return ret;
-                ret = update_current(menu, user); // 5. add current list 
+                ret = update_current(menu, car_info, user); // 5. add current list 
                 if (!ret) return ret;
-                ret = update_history(menu, user); // 6. add history
+                ret = update_history(menu, car_info, user); // 6. add history
                 if (!ret) return ret;
                 // currentList 데이터 free
                 // car_info free
@@ -97,7 +97,7 @@ int manage_in_out(void){
     return OK;
 }
 
-int getValues(char io, CAR_INFO **car_info) {
+int get_values(char io, CAR_INFO **car_info) {
     // current_list 에 저장할 데이터
     car_info = (CAR_INFO*) malloc(sizeof(CAR_INFO));
     // 현재 시간
@@ -161,16 +161,62 @@ int save_log(char io, CAR_INFO *car_info){
 }
 
 int search_user(char *car_number, USER_INFO **user_data){
+	// 해시 테이블에서 확인. 찾는 값이 있으면 user_data에 저장
 
+    // LPHASH, LPDATA에 대한 것 설정해야할 듯
+    // ret = hashGetValue(LPHASH lpHash, const char* key, LPDATA* value);
+    // if(value) {
+    //     user_data = (User *)malloc(sizeof(User));
+    //     strcpy(user_data->name, value->name);
+    //     strcpy(user_data->phone_num, value->phone_num);
+    //     strcpy(user_data->car_num, value->car_num);
+    //     user_data->has_ticket = value->has_ticket;
+    // }
+    // else {
+    //     save_user(car_number, user_data);
+    // }
+	
+    return OK;
+}
+int save_user(char *car_number, USER_INFO **user_data){
+    // user 해시테이블에 없을 때 해시 테이블에 저장
+    // 처음 시작할때 텍스트 파일 읽어서 쉽게 만들어주면 좋을듯
+}
+int update_current(char io, CAR_INFO *car_info, USER_INFO *user_data){
+    // 1. io == i 일때 current list 에 데이터 추가
+	// 2. io == o 일때 current list 에서 제거
     return OK;
 }
 
-int update_current(char io, USER_INFO *user_data){
+int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
+    switch (io){
+        case 'i':
+            // 입차할 때 history 마지막에 추가
+            FILE *fp;
+            fp = fopen(HISTORY_DATA_FILE_PATH,"ab");
+            if(!fp) 
+                return FILE_ERROR;
 
-    return OK;
-}
-
-int update_history(char io, USER_INFO *user_data){
-    
+            // 구조체의 내용을 파일에 저장
+            fwrite(&car_info, sizeof(car_info), 1, fp);
+            fclose(fp);
+            break;
+        case 'o':
+            // 출차할 때 차 번호가 맞는 값 찾고 해당 부분 수정
+            // append모드 fopen("history.dat", "r+");
+            FILE *fp;
+            fp = fopen(HISTORY_DATA_FILE_PATH,"r+");
+            if(!fp) 
+                return FILE_ERROR;
+            ////////// 미구현
+            // 파일끝에서부터 확인=> 최근에 추가되어있을 거니까
+            // 찾으면 해당 부분에 그대로 붙여넣기
+            // fwrite(&car_info, sizeof(car_info), 1, fp);
+            fclose(fp);
+            break;
+        default:
+            return FORMAT_ERROR;
+    }
+	// 0: 입력 성공 1: 파일 입출력(오픈, 입력 등) 실패
     return OK;
 }

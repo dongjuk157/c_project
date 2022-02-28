@@ -5,6 +5,10 @@
 #define FILE_ERROR    -1
 #define FORMAT_ERROR  -2
 
+#define SIMPLE_LOG_FILE_PATH    "../data/history.log"
+#define USER_DATA_FILE_PATH     "../data/user.dat"
+#define HISTORY_DATA_FILE_PATH     "../data/history.dat"
+
 typedef struct car_informaition {
   char* car_number[20]; // 123가4567 
 	char* in_datetime[20]; // 2022-02-28 21:44:42 : \0까지 해서 20자리
@@ -23,11 +27,12 @@ typedef struct user_information {
 } USER_INFO;
 
 int manage_in_out(void);
-int getValues(char io, CAR_INFO **car_info);
+int get_values(char io, CAR_INFO **car_info);
 int save_log(char io, CAR_INFO *car_info);
 // int save_log(char io, char* car_number);
 int search_user(char *car_number, USER_INFO **user_data);
-int update_current(char io, USER_INFO *user_data); 
-int update_history(char io, USER_INFO *user_data);
+int save_user(char *car_number, USER_INFO **user_data);
+int update_current(char io, CAR_INFO *car_info, USER_INFO *user_data); 
+int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data);
 
 #endif
