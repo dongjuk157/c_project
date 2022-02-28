@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
     
     HOME_UI* home = createHomeUI();
     INFO_UI* info = createInfoUI();
-    // HISTORY_UI* history = createHistoryUI();
+    HISTORY_UI* history = createHistoryUI();
     // Info buf;
 
     mainPage = home;
@@ -42,8 +42,13 @@ int main(int argc, char const *argv[])
             render = renderInfoUI;
             break;
         case PARKHISTORY:
+<<<<<<< HEAD
             // mainPage = history;
             // render = renderHistoryUI;
+=======
+            mainPage = history;
+            render = renderHistoryUI;
+>>>>>>> feature/history_ui
             break;
         case 6:
             // printf("차량번호 >> ");
