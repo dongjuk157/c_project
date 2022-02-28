@@ -1,4 +1,4 @@
-CC = gcc
+CC = arm-linux-gnueabihf-gcc
 
 SRC_DIR = src
 OBJ_DIR = obj

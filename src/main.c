@@ -3,6 +3,7 @@
 #include "widget.h"
 #include "label.h"
 #include "home_ui.h"
+#include "pay_ui.h"
 #include "info_ui.h"
 #include "info.h"
 // #include "history_ui.h"
@@ -14,30 +15,34 @@ typedef int (*FP)(Widget*);
 
 int main(int argc, char const *argv[])
 {
-    void *mainPage;
+    void *currentPage;
     FP render;
     
     HOME_UI* home = createHomeUI();
+    PAY_UI *pay = createPayUI();
     INFO_UI* info = createInfoUI();
     // HISTORY_UI* history = createHistoryUI();
     // Info buf;
 
-    mainPage = home;
+    currentPage = home;
     render = renderHomeUI;
 
     int page = 0;
     
     while(1){
         system("clear");
-        page = render(mainPage);
+        page = render(currentPage);
         switch (page)
         {
         case HOME:
-            mainPage = home;
+            currentPage = home;
             render = renderHomeUI;
             break;
+        case PAY:
+            currentPage = pay;
+            render = renderPayUI;
         case CARINFO:
-            mainPage = info;
+            currentPage = info;
             render = renderInfoUI;
             break;
         case PARKHISTORY:
