@@ -3,8 +3,8 @@
 #include "widget.h"
 #include "label.h"
 #include "home_ui.h"
-// #include "info_ui.h"
-// #include "info.h"
+#include "info_ui.h"
+#include "info.h"
 // #include "history_ui.h"
 #include <stdlib.h>
 #include <unistd.h>
@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
     FP render;
     
     HOME_UI* home = createHomeUI();
-    // INFO_UI* info = createInfoUI();
+    INFO_UI* info = createInfoUI();
     // HISTORY_UI* history = createHistoryUI();
     // Info buf;
 
@@ -37,9 +37,9 @@ int main(int argc, char const *argv[])
             render = renderHomeUI;
             break;
         case CARINFO:
-            // mainPage = info;
-            // render = renderInfoUI;
-            // break;
+            mainPage = info;
+            render = renderInfoUI;
+            break;
         case PARKHISTORY:
             // mainPage = history;
             // render = renderHistoryUI;
