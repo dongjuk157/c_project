@@ -41,6 +41,7 @@ int main(int argc, char const *argv[])
         case PAY:
             currentPage = pay;
             render = renderPayUI;
+            break;
         case CARINFO:
             currentPage = info;
             render = renderInfoUI;

@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pay_ui.h"
-#include "info.h"
+
 
 // 결제하기 기능 선택시 나타날 UI 제작 -> 제작한 Widget 구조체의 포인터 리턴
 PAY_UI *createPayUI(){
+
     PAY_UI *payUI = (PAY_UI *)malloc(sizeof(PAY_UI));
 
     // 기본 위젯 Position 세팅
@@ -45,7 +46,7 @@ PAY_UI *createPayUI(){
     return payUI;
 }
 
-int renderInfoUI(PAY_UI *pay){
+int renderPayUI(PAY_UI *pay){
 
 REPEAT:
     //UI 프레임 그리기
