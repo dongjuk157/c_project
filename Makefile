@@ -8,7 +8,6 @@ SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/array.c $(SRC_DIR)/widget.c $(SRC_DIR)/utils
 SRCS += $(SRC_DIR)/home_ui.c $(SRC_DIR)/info_ui.c $(SRC_DIR)/history_ui.c
 SRCS += $(SRC_DIR)/linkedlist.c
 
->>>>>>> feature/history_ui
 OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
 TARGET = main
 
