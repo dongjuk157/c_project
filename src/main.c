@@ -42,13 +42,8 @@ int main(int argc, char const *argv[])
             render = renderInfoUI;
             break;
         case PARKHISTORY:
-<<<<<<< HEAD
-            // mainPage = history;
-            // render = renderHistoryUI;
-=======
             mainPage = history;
             render = renderHistoryUI;
->>>>>>> feature/history_ui
             break;
         case 6:
             // printf("차량번호 >> ");
