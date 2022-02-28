@@ -5,7 +5,8 @@
 #include "home_ui.h"
 #include "info_ui.h"
 #include "info.h"
-// #include "history_ui.h"
+#include "history_ui.h"
+#include "linkedlist.h"
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -43,7 +44,7 @@ int main(int argc, char const *argv[])
         case PARKHISTORY:
             // mainPage = history;
             // render = renderHistoryUI;
-            // break;
+            break;
         case 6:
             // printf("차량번호 >> ");
             // scanf("%s",buf.carNumber);
@@ -70,6 +71,7 @@ int main(int argc, char const *argv[])
         }
     }
 
+  
     
 
     free(home);
