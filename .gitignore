@@ -2,6 +2,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c,c++,linux,macos,windows,visualstudio,visualstudiocode,xcode
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,c++,linux,macos,windows,visualstudio,visualstudiocode,xcode
 
+### user file ###
+.vscode/
+
+
 ### C ###
 # Prerequisites
 *.d
