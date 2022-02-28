@@ -17,23 +17,23 @@ PAY_UI *createPayUI(){
 
     // Label 세팅
     Label *title = createLabel();
-    setLabelPos(title, 5, 26);
+    setLabelPos(title, 3, 26);
     setLabelText(title,"주차 관리 프로그램");
 
     Label *subTitle = createLabel();
-    setLabelPos(subTitle, 7, 31);
+    setLabelPos(subTitle, 5, 31);
     setLabelText(subTitle,"결제 기능");
 
     Label *selectOne = createLabel();
-    setLabelPos(selectOne, 12, 10);
+    setLabelPos(selectOne, 13, 10);
     setLabelText(selectOne,"1. 주차요금 정산");
 
     Label *selectTwo = createLabel();
-    setLabelPos(selectOne, 16, 10);
-    setLabelText(selectOne,"2. 정기권 등록 및 연장");
+    setLabelPos(selectTwo, 16, 10);
+    setLabelText(selectTwo,"2. 정기권 등록 및 연장");
 
     Label *prompt = createLabel();
-    setLabelPos(prompt, 25, 10);
+    setLabelPos(prompt, 20, 10);
     setLabelText(prompt,"사용할 기능을 선택하세요 >> ");
 
     // 세팅한 Label Widget.label 동적 배열에 담기
@@ -57,14 +57,13 @@ REPEAT:
         printLabel(pay, (Label *)(pay->label->lpData)[i]);
 
     //prompt로 받을 선택넘버 | exit - home | 1,2 - 각 Page로 | 이외 - 다시입력 |
-    char selectNumber[4];
+    char selectNumber[8];
 
     //User에게 입력받고 개행문자 제거
-    fgets(selectNumber, 4, stdin);
+    fgets(selectNumber, 8, stdin);
     selectNumber[strlen(selectNumber)-1] = '\0';
     
-    //exit 입력시 home으로 보냄
-    if(!strcmp("exit",selectNumber))
+    if(!strcmp("exit", selectNumber))
         return HOME;
 
     int num = atoi(selectNumber);
@@ -73,9 +72,9 @@ REPEAT:
     } else if(num == 2){
         //butTicket
     } else{
+        system("clear");
         goto REPEAT;
     }
-    
     
     return HOME;
 }
