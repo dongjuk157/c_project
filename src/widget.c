@@ -101,6 +101,18 @@ void setWidgetType(Widget *Widget, int type){
     Widget->type = type;
 }
 
+int renderEmpty(Widget *widget){
+    for (int i = 0; i < widget->height; i++)
+    {
+        gotoxy(widget->posx,widget->posy + i);
+        for (int j = 0; j < widget->width; j++)
+        {
+            printf(" ");
+        }
+    }
+    return 0;
+}
+
 int clearWidget(Widget* widget){
     arrayDestroy(widget->label);
 
