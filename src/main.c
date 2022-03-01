@@ -29,7 +29,6 @@ int main(int argc, char const *argv[])
     int page = 0;
     
     while(1){
-        system("clear");
         page = render(mainPage);
         switch (page)
         {
@@ -74,9 +73,9 @@ int main(int argc, char const *argv[])
   
     
 
-    free(home);
-    // free(info);
-    // free(history);
+    clearWidget(home);
+    clearWidget(info);
+    clearWidget(history);
 
     return 0;
 }

@@ -36,5 +36,6 @@ void setWidgetPos(Widget *widget, int posy, int posx);
 void setWidgetSize(Widget *widget, int height, int width);
 void setWidgetType(Widget *Widget, int type);
 bool printLabel(Widget* widget, const Label* label);
+int clearWidget(Widget* widget);
 
 #endif // __WIDGET_H__

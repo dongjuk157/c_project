@@ -57,6 +57,7 @@ void printWidget(Widget* widget)
 
 int renderWidget(Widget* widget)
 {
+    if(widget->type == MAIN) system("clear");
     printWidget(widget);
     for (int i = 0; i < arraySize(widget->label); i++)
     {
@@ -98,4 +99,10 @@ void setWidgetSize(Widget *widget, int height, int width)
 
 void setWidgetType(Widget *Widget, int type){
     Widget->type = type;
+}
+
+int clearWidget(Widget* widget){
+    arrayDestroy(widget->label);
+
+    free(widget);
 }

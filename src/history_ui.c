@@ -1,7 +1,10 @@
 #include "history_ui.h"
+#include "history_detail.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+typedef int (*FP)(Widget*);
 
 HISTORY_UI* createHistoryUI(){
 
@@ -39,7 +42,6 @@ HISTORY_UI* createHistoryUI(){
     setLabelPos(input, 20, 10);
     setLabelText(input,"조회 방식 입력 >> ");
 
-
     addLabel(history, title);
     addLabel(history, subTitle);
     addLabel(history, carNumber);
@@ -51,47 +53,39 @@ HISTORY_UI* createHistoryUI(){
     return history;
 }
 
-// int checkinit(char *init){
-//     if(!strcmp("exit", init)) return EXIT;
-//     else{
-//         int num = atoi(init);
-//         return num;
-//     }
-// }
-
 int renderHistoryUI(HISTORY_UI* history){
-    printWidget(history);
+    renderWidget(history);
     char init[20];
-    for (int i = 0; i < arraySize(history->label); i++)
-    {
-        printLabel(history,(Label *)(history->label->lpData)[i]);
-    }
 
     fgets(init,20,stdin);
     init[strlen(init)-1] = '\0';
 
-    // int sel = checkinit(init);
-    // Label* input = createLabel();
+    if(!strcmp("exit", init)) return HOME;
+    else{
+        HISTORY_DETAIL_UI* history_detail;
+        FP render;
+        if(!strcmp("1", init)){
+            history_detail = createHistoryDetailUI(1);
+            render = renderHistoryDetailByCarNum;
+        }
+        else if(!strcmp("2", init)){
+            history_detail = createHistoryDetailUI(2);
+            render = renderHistoryDetailByNotPaid;
+        }
+        else if(!strcmp("3", init)){
+            history_detail = createHistoryDetailUI(3);
+            render = renderHistoryDetailByDate;
+        }
+        else if(!strcmp("4", init)){
+            history_detail = createHistoryDetailUI(4);
+            render = renderHistoryDetailByDate;
+        }
+        else return HOME;
 
-    // switch (sel)
-    // {
-    // case EXIT:
-    //     return HOME;
-    //     break;
-    // case 1:
-    //     setLabelPos(input, 10, 10);
-    //     setLabelText(input,"차량번호 입력(띄어쓰기 X) >> ");
-    //     printLabel(history, input);
-    //     break;
-    // case 2:
-    //     break;
-    // case 3:
-    //     break;
-    // case 4:
-    //     break;
-    // default:
-    //     break;
-    // }
+        render(history_detail);
+
+        clearWidget(history_detail);
+    }
     
     return HOME;
 }

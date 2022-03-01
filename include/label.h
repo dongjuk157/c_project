@@ -4,7 +4,7 @@
 
 typedef struct Label{
     int posx, posy;
-    char text[100];
+    char* text;
 }Label;
 
 Label* createLabel();
