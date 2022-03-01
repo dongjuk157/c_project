@@ -117,4 +117,5 @@ int clearWidget(Widget* widget){
     arrayDestroy(widget->label);
 
     free(widget);
+    return 0;
 }

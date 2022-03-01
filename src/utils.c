@@ -4,6 +4,7 @@
 #include "utils.h"
 #include <time.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 void gotoxy(int x, int y)
@@ -85,9 +86,9 @@ int to_day(int y, int m, int d)
 	int day = 0;
 	int i;
 	for(i=1; i<y; i++){
-		day += (i%4==0 && i%100!=0 || i%400==0)? 366 : 365;
+		day += ((i%4==0 && i%100!=0) || i%400==0)? 366 : 365;
 	}
-	if(y%4==0 && y%100!=0 || y%400==0) mon[2]++;
+	if((y%4==0 && y%100!=0) || y%400==0) mon[2]++;
 	for(i=1; i<m; i++){
 		day += mon[i];
 	}

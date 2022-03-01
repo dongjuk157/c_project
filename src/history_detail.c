@@ -98,7 +98,7 @@ int renderHistoryDetail(HISTORY_DETAIL_UI* history, int type){
         {
             struct car_information* buf;
             char str[100];
-            arrayGetAt(datas, i*7 + j, &buf);
+            arrayGetAt(datas, i*7 + j, (LPDATA *)&buf);
             Label *temp = createLabel();
             setLabelPos(temp,3+j,1);
             sprintf(str," %s   %16s   %16s   %4s   %5d    %c",
