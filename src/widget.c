@@ -57,6 +57,7 @@ void printWidget(Widget* widget)
 
 int renderWidget(Widget* widget)
 {
+    if(widget->type == MAIN) system("clear");
     printWidget(widget);
     for (int i = 0; i < arraySize(widget->label); i++)
     {
@@ -98,4 +99,23 @@ void setWidgetSize(Widget *widget, int height, int width)
 
 void setWidgetType(Widget *Widget, int type){
     Widget->type = type;
+}
+
+int renderEmpty(Widget *widget){
+    for (int i = 0; i < widget->height; i++)
+    {
+        gotoxy(widget->posx,widget->posy + i);
+        for (int j = 0; j < widget->width; j++)
+        {
+            printf(" ");
+        }
+    }
+    return 0;
+}
+
+int clearWidget(Widget* widget){
+    arrayDestroy(widget->label);
+
+    free(widget);
+    return 0;
 }

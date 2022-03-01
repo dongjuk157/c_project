@@ -51,14 +51,9 @@ int findInfo(char* carNumber, Info *info){
 }
 
 int renderInfoUI(INFO_UI* info){
-    printWidget(info);
+    renderWidget(info);
 
     char carNumber[20];
-
-    for (int i = 0; i < arraySize(info->label); i++)
-    {
-        printLabel(info,(Label *)(info->label->lpData)[i]);
-    }
 
     fgets(carNumber,20,stdin);
     carNumber[strlen(carNumber)-1] = '\0';

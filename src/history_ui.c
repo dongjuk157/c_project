@@ -1,7 +1,10 @@
 #include "history_ui.h"
+#include "history_detail.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+typedef int (*FP)(Widget*);
 
 HISTORY_UI* createHistoryUI(){
 
@@ -39,7 +42,6 @@ HISTORY_UI* createHistoryUI(){
     setLabelPos(input, 20, 10);
     setLabelText(input,"조회 방식 입력 >> ");
 
-
     addLabel(history, title);
     addLabel(history, subTitle);
     addLabel(history, carNumber);
@@ -51,47 +53,24 @@ HISTORY_UI* createHistoryUI(){
     return history;
 }
 
-// int checkinit(char *init){
-//     if(!strcmp("exit", init)) return EXIT;
-//     else{
-//         int num = atoi(init);
-//         return num;
-//     }
-// }
-
 int renderHistoryUI(HISTORY_UI* history){
-    printWidget(history);
+    renderWidget(history);
     char init[20];
-    for (int i = 0; i < arraySize(history->label); i++)
-    {
-        printLabel(history,(Label *)(history->label->lpData)[i]);
-    }
 
     fgets(init,20,stdin);
     init[strlen(init)-1] = '\0';
 
-    // int sel = checkinit(init);
-    // Label* input = createLabel();
-
-    // switch (sel)
-    // {
-    // case EXIT:
-    //     return HOME;
-    //     break;
-    // case 1:
-    //     setLabelPos(input, 10, 10);
-    //     setLabelText(input,"차량번호 입력(띄어쓰기 X) >> ");
-    //     printLabel(history, input);
-    //     break;
-    // case 2:
-    //     break;
-    // case 3:
-    //     break;
-    // case 4:
-    //     break;
-    // default:
-    //     break;
-    // }
+    if(!strcmp("exit", init)) return HOME;
+    else{
+        HISTORY_DETAIL_UI* history_detail;
+        int type = atoi(init);
+        if(type < 1 || type > 4) return HOME;
+        else{
+            history_detail = createHistoryDetailUI(type);
+            renderHistoryDetail(history_detail, type);
+            clearWidget(history_detail);
+        }
+    }
     
     return HOME;
 }
