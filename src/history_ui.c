@@ -63,28 +63,13 @@ int renderHistoryUI(HISTORY_UI* history){
     if(!strcmp("exit", init)) return HOME;
     else{
         HISTORY_DETAIL_UI* history_detail;
-        FP render;
-        if(!strcmp("1", init)){
-            history_detail = createHistoryDetailUI(1);
-            render = renderHistoryDetailByCarNum;
+        int type = atoi(init);
+        if(type < 1 || type > 4) return HOME;
+        else{
+            history_detail = createHistoryDetailUI(type);
+            renderHistoryDetail(history_detail, type);
+            clearWidget(history_detail);
         }
-        else if(!strcmp("2", init)){
-            history_detail = createHistoryDetailUI(2);
-            render = renderHistoryDetailByNotPaid;
-        }
-        else if(!strcmp("3", init)){
-            history_detail = createHistoryDetailUI(3);
-            render = renderHistoryDetailByDate;
-        }
-        else if(!strcmp("4", init)){
-            history_detail = createHistoryDetailUI(4);
-            render = renderHistoryDetailByDate;
-        }
-        else return HOME;
-
-        render(history_detail);
-
-        clearWidget(history_detail);
     }
     
     return HOME;

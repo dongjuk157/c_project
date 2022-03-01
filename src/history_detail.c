@@ -74,64 +74,82 @@ Widget* createHistoryDetailSub(){
 }
 
 
-int renderHistoryDetailByCarNum(HISTORY_DETAIL_UI* history){
+int renderHistoryDetail(HISTORY_DETAIL_UI* history, int type){
     renderWidget(history);
+    char init[20];
 
-    char carNumber[20];
-    fgets(carNumber,20,stdin);
-    carNumber[strlen(carNumber)-1] = '\0';
+    if(type == BY_CAR_NUMBER || type == BY_DATE_IN || type == BY_DATE_OUT){
+        fgets(init,20,stdin);
+        init[strlen(init)-1] = '\0';
     
-    if(!strcmp("exit",carNumber)){
-        return HOME;
+        if(!strcmp("exit",init)){
+            return HOME;
+        }
     }
-    else{
+    
+    LPARRAY datas;
+    getHistoryDetail(type, init, &datas);
+
+    for (int i = 0; i < (arraySize(datas)-1)/7 + 1; i++)
+    {
         Widget* historyData = createHistoryDetailSub();
+        renderEmpty(historyData);
+        for (int j = 0; j < min(7,arraySize(datas) - i*7); j++)
+        {
+            struct car_information* buf;
+            char str[100];
+            arrayGetAt(datas, i*7 + j, &buf);
+            Label *temp = createLabel();
+            setLabelPos(temp,3+j,1);
+            sprintf(str," %s   %16s   %16s   %4s   %5d    %c",
+                buf->car_number,
+                buf->in_datetime,
+                buf->out_datetime,
+                (buf->car_type == 'e') ? "전기" : (buf->car_type == 'l') ? "경차" : "일반",
+                buf->fee,
+                (buf->is_paid==True) ? 'O' : 'X'
+            );
+            setLabelText(temp,str);
+            addLabel(historyData, temp);
+        }
         renderWidget(historyData);
         getch();
+        clearWidget(historyData);
+        
+        
+        arrayDestroy(datas);
     }
-
     return HOME;
 }
 
-int renderHistoryDetailByNotPaid(HISTORY_DETAIL_UI* history){
-    renderWidget(history);
-    Widget* historyData = createHistoryDetailSub();
-    renderWidget(historyData);
 
-    char init[20];
-    fgets(init,20,stdin);
-    init[strlen(init)-1] = '\0';
-    
-    if(!strcmp("exit",init)){
-        return HOME;
+int getHistoryDetail(int type, char* data, LPARRAY* datas){
+    arrayCreate(datas);
+    FILE* fp = fopen("./data/history.dat","rb");
+    if(fp<=0){
+        return 1;
     }
-
-    return HOME;
-}
-
-int renderHistoryDetailByDate(HISTORY_DETAIL_UI* history){
-    renderWidget(history);
-    
-    char init[20];
-    fgets(init,20,stdin);
-    init[strlen(init)-1] = '\0';
-    
-    if(!strcmp("exit",init)){
-        return HOME;
-    }
-    else {
-        Widget* historyData = createHistoryDetailSub();
+    while(1){
+        struct car_information* info = (struct car_information *) malloc(sizeof(struct car_information));
+        if(fread(info,sizeof(struct car_information), 1,fp)==False){
+            break;
+        }
         
-        // 데이터 7개까지 출력 가능
-        // Label* log1 = createLabel();
-        // setLabelPos(log1,3,1);
-        // setLabelText(log1," 123가1234   2022.02.10 13:24   2022.02.10 15:22   경차   32000    X");
-        // addLabel(historyData,log1);
-        
+        if(type == BY_CAR_NUMBER){
+            if(!strcmp(info->car_number, data)) arrayAdd(*datas, info);
+        }
+        else if(type == BY_NOT_PAID){
+            if(info->is_paid == False) arrayAdd(*datas, info);
+        }
+        else if(type == BY_DATE_IN){
+            if(!strncmp(info->in_datetime, data,10)) arrayAdd(*datas, info);
+        }
+        else if(type == BY_DATE_OUT){
+            if(!strncmp(info->out_datetime, data,10)) arrayAdd(*datas, info);
+        }
 
-        renderWidget(historyData);
-        getch();
     }
+    fclose(fp);
 
-    return HOME;
+    return 0;
 }
