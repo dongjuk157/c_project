@@ -46,3 +46,18 @@ int readCurrentData(LinkedList* list){
     }
     fclose(fp);
 }
+
+int saveUserData(LPHASH hash){
+    FILE* fp = fopen(USER_DATA_FILE_PATH, "wb");
+	LPNODE lpNode, lpTemp;
+    for (int i=0; i < hash->nHashSize; i++) {
+		lpNode = hash->array[i];
+		while (lpNode) {
+			//노드 메모리를 제거한다.
+            fwrite((USER_INFO *)lpNode->value, sizeof(USER_INFO), 1, fp);
+            lpNode = lpNode->pNext;
+		}
+	}
+    fclose(fp);
+    return 0;
+}
