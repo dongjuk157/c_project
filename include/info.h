@@ -1,6 +1,7 @@
 #ifndef __INFO_H__
 #define __INFO_H__
-
+#include "linkedlist.h"
+#include "hash.h"
 typedef struct Info{
     char carNumber[20];
     char name[10];
@@ -44,6 +45,9 @@ typedef struct Car{
 
 
 void printInfo(Info info);
+int readUserData(LPHASH *hash);
+int readParkingLot(LinkedList* list);
+int readCurrentData(LinkedList* list);
 
 #endif // __INFO_H__
 

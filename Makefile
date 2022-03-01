@@ -11,6 +11,7 @@ SRCS += $(SRC_DIR)/pay_ui.c $(SRC_DIR)/view.c $(SRC_DIR)/parkstatus_ui.c
 SRCS += $(SRC_DIR)/history_detail.c
 SRCS += $(SRC_DIR)/linkedlist.c
 SRCS += $(SRC_DIR)/hash.c
+SRCS += $(SRC_DIR)/info.c
 SRCS += $(SRC_DIR)/manage.c
 
 OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)

@@ -17,57 +17,30 @@
 
 typedef int (*FP)(Widget*);
 
+LPHASH user;
+
 
 int main(int argc, char const *argv[])
 {
     // user 해시테이블 생성
-    LPHASH user;
+    // LPHASH user;
     hashCreate(&user); 
-
-    // 파일 user.dat 읽어서 해시테이블 데이터 생성
-    FILE *fp = fopen(USER_DATA_FILE_PATH, "rb");
-    USER_INFO *tmp_user;
-    while (1){
-        tmp_user = (USER_INFO *)malloc(sizeof(USER_INFO));
-        fread(tmp_user, sizeof((*tmp_user)), 1, fp);
-        if (feof(fp)) 
-            break;
-        hashSetValue(user, tmp_user->car_num, tmp_user);
-    }
-    fclose(fp);
+    readUserData(&user);
 
     //  current list 생성
     LinkedList current_list;
     create_linked_list(&current_list);
-    // 파일 parkinglot.dat 읽어서 리스트 생성
-    fp = fopen(PARKINGLOT_SETTINGS_FILE_PATH, "rb");
-    PARK *tmp_park;
-    while (1){
-        tmp_park = (PARK *)malloc(sizeof(PARK));
-        fread(tmp_park, sizeof((*tmp_park)), 1, fp);
-        if (feof(fp)) 
-            break;
-        
-        list_push_back(&current_list, tmp_park);
-    }
-    fclose(fp);
+    readParkingLot(&current_list);
 
     // current_car_list 생성
     LinkedList current_car_list;
     create_linked_list(&current_car_list);
+    readCurrentData(&current_car_list);
 
-    // 파일 current.dat 읽어서 리스트 생성
-    fp = fopen(CURRENT_DATA_FILE_PATH, "rb");
-    CAR_INFO *tmp_car_info;
-    while (1){
-        tmp_car_info = (CAR_INFO *)malloc(sizeof(CAR_INFO));
-        fread(tmp_car_info, sizeof((*tmp_car_info)), 1, fp);
-        if (feof(fp)) 
-            break;
-        list_push_back(&current_car_list, tmp_car_info);
-    }
-    fclose(fp);
-
+    printf("park data : %d개\n",list_size(&current_list));
+    printf("car data : %d개\n", list_size(&current_car_list));
+    
+    getch();
     void *mainPage;
     FP render;
     
