@@ -1,4 +1,5 @@
 #include "history_detail.h"
+#include "info.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -96,7 +97,7 @@ int renderHistoryDetail(HISTORY_DETAIL_UI* history, int type){
         renderEmpty(historyData);
         for (int j = 0; j < min(7,arraySize(datas) - i*7); j++)
         {
-            struct car_information* buf;
+            CAR_INFO* buf;
             char str[100];
             arrayGetAt(datas, i*7 + j, (LPDATA *)&buf);
             Label *temp = createLabel();
@@ -125,13 +126,13 @@ int renderHistoryDetail(HISTORY_DETAIL_UI* history, int type){
 
 int getHistoryDetail(int type, char* data, LPARRAY* datas){
     arrayCreate(datas);
-    FILE* fp = fopen("./data/history.dat","rb");
+    FILE* fp = fopen("./data/History.dat","rb");
     if(fp<=0){
         return 1;
     }
     while(1){
-        struct car_information* info = (struct car_information *) malloc(sizeof(struct car_information));
-        if(fread(info,sizeof(struct car_information), 1,fp)==False){
+        CAR_INFO* info = (CAR_INFO *) malloc(sizeof(CAR_INFO));
+        if(fread(info,sizeof(CAR_INFO), 1,fp)==False){
             break;
         }
         
