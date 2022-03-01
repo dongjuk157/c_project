@@ -5,6 +5,7 @@
 #include "manage.h"
 #include "hash.h"
 #include "linkedlist.h"
+#include "widget.h"
 #include "utils.h"
 
 /*
@@ -54,7 +55,7 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
                 ret = search_user(user_table, car_info->car_number, &user);      // 4 search user data with car_number
                 ret = update_current(menu, car_info, current_park, current_car); // 5. add current list 
                 ret = update_history(menu, car_info, user); // 6. add history
-                saveUserData(user_table);
+                // saveUserData(user_table);
                 break;
             }
             case 'o':
@@ -71,7 +72,7 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
                 return OK;
                 break;
             default:
-                return FORMAT_ERROR;
+                return HOME;
                 break;
         }
         printf("press any buttons");
