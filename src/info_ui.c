@@ -64,7 +64,7 @@ int renderInfoUI(INFO_UI* info){
 
     Info data;
     char buffer[50];
-    findInfo(carNumber, &data);
+    findInfo(carNumber, &data); //data에 차량번호와 일치하는 info 객체 담음 없다면 못담음
  
     Widget* dataWidget = createWidget();
     setWidgetPos(dataWidget,14,10);
