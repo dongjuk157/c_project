@@ -3,7 +3,7 @@
 #include <string.h>
 #include "parkstatus_ui.h"
 
-PARKSTATUS_UI *createPayUI(){
+PARKSTATUS_UI* createParkStatusUI(){
 
     PARKSTATUS_UI *parkStatus_UI = (PARKSTATUS_UI *)malloc(sizeof(PARKSTATUS_UI));
 
@@ -46,7 +46,8 @@ PARKSTATUS_UI *createPayUI(){
 
 int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI){
 
-REPEAT:
+    REPEAT:
+    {
     //UI 프레임 그리기
     printWidget(parkStatus_UI);
     
@@ -75,4 +76,5 @@ REPEAT:
     }
     
     return HOME;
+    }
 }

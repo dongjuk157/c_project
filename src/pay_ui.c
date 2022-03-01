@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "pay_ui.h"
-
+#include "info.h"
+#include "view.h"
 
 // 결제하기 기능 선택시 나타날 UI 제작 -> 제작한 Widget 구조체의 포인터 리턴
 PAY_UI *createPayUI(){
@@ -48,7 +50,8 @@ PAY_UI *createPayUI(){
 
 int renderPayUI(PAY_UI *pay){
 
-REPEAT:
+    REPEAT:
+    {
     //UI 프레임 그리기
     printWidget(pay);
     
@@ -68,13 +71,77 @@ REPEAT:
 
     int num = atoi(selectNumber);
     if(num == 1){
-        //ParkingFee
+        //ParkingFee // 1번을 선택한 상황
+        payParkingFee();
+        
     } else if(num == 2){
-        //butTicket
+        //buyTicket
+        buyTicket();
+
     } else{
         system("clear");
         goto REPEAT;
     }
-    
+    }
     return HOME;
+}
+
+
+int payParkingFee(){
+
+// REPEAT:
+    //fee view load
+    printFeeView();
+
+    //차량번호 입력받기
+    char carNumber[20];
+
+    fgets(carNumber,20,stdin);
+    carNumber[strlen(carNumber)-1] = '\0';
+
+    calcFee(carNumber);
+
+    return 0;
+}
+
+int calcFee(char *carNumber){
+    
+    FILE *fp = fopen("./data/history.dat","rb");
+    if(fp == NULL){
+        return 1;
+    }
+
+    CAR_INFO *carInfo = (CAR_INFO *)malloc(sizeof(CAR_INFO));
+    
+    int fee = 0;
+    //History.dat file 검색하면서 입력받은 carnumber와 일치하는 구조체들 
+    while(fread(carInfo, sizeof(CAR_INFO), 1, fp)){
+        if(!strcmp(carNumber, carInfo->car_number) && (strcmp(carInfo->out_datetime, "xxx"))){  
+            fee += carInfo->fee;
+        }
+    }
+    free(carInfo);
+
+    //carNumber와 일치하는 user 찾기 -> hash? 이게 되면 할인권 적용 가능
+    int hasTicket = 1;
+
+    fclose(fp);
+
+    if(fee == 0){
+        printSingleLineView("주차요금 정산", "미정산 요금이 없습니다!");
+    } else{
+        printFeeDetailView(carNumber, fee, hasTicket);
+    }
+
+     
+    return 0;
+}
+
+// int createPayView{
+
+// }
+
+int buyTicket(){
+
+    return 0;
 }

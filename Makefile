@@ -5,7 +5,7 @@ OBJ_DIR = obj
 INCLUDE_DIR = include
 
 SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/array.c $(SRC_DIR)/widget.c $(SRC_DIR)/utils.c $(SRC_DIR)/label.c
-SRCS += $(SRC_DIR)/home_ui.c $(SRC_DIR)/info_ui.c $(SRC_DIR)/pay_ui.c #$(SRC_DIR)/history_ui.c
+SRCS += $(SRC_DIR)/home_ui.c $(SRC_DIR)/info_ui.c $(SRC_DIR)/pay_ui.c $(SRC_DIR)/view.c $(SRC_DIR)/parkstatus_ui.c
 OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
 TARGET = main
 
