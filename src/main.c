@@ -4,6 +4,7 @@
 #include "label.h"
 #include "home_ui.h"
 #include "pay_ui.h"
+#include "parkstatus_ui.h"
 #include "info_ui.h"
 #include "info.h"
 // #include "history_ui.h"
@@ -20,6 +21,7 @@ int main(int argc, char const *argv[])
     
     HOME_UI* home = createHomeUI();
     PAY_UI *pay = createPayUI();
+    PARKSTATUS_UI *parkStatus = createParkStatusUI();
     INFO_UI* info = createInfoUI();
     // HISTORY_UI* history = createHistoryUI();
     // Info buf;
@@ -41,6 +43,10 @@ int main(int argc, char const *argv[])
         case PAY:
             currentPage = pay;
             render = renderPayUI;
+            break;
+        case PARKSTATUS:
+            currentPage = parkStatus;
+            render = renderParkStatusUI;
             break;
         case CARINFO:
             currentPage = info;

@@ -34,7 +34,7 @@ PAY_UI *createPayUI(){
 
     Label *prompt = createLabel();
     setLabelPos(prompt, 20, 10);
-    setLabelText(prompt,"사용할 기능을 선택하세요 >> ");
+    setLabelText(prompt,"기능을 선택하세요 >> ");
 
     // 세팅한 Label Widget.label 동적 배열에 담기
     addLabel(payUI, title);
