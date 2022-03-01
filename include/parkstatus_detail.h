@@ -2,9 +2,12 @@
 #define __PARKSTATUS_DETAIL_H__
 #include "widget.h"
 
-typedef Widget PARK_DETAIL;
+typedef Widget PARK_DETAIL_UI;
 
-HISTORY_DETAIL_UI* createHistoryDetailUI(int type); 
-Widget* createHistoryDetailSub();
+PARK_DETAIL_UI* createParkDetailEntryUI(); 
+PARK_DETAIL_UI* createParkDetailFloorUI();
+
+int renderDetailEntry(PARK_DETAIL_UI* park_detail);
+int renderDetailFloor(PARK_DETAIL_UI* park_detail);
 
 #endif // __PARKSTATUS_DETAIL_H__

@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "parkstatus_ui.h"
+#include "parkstatus_detail.h"
 
 PARKSTATUS_UI* createParkStatusUI(){
 
-    PARKSTATUS_UI *parkStatus_UI = (PARKSTATUS_UI *)malloc(sizeof(PARKSTATUS_UI));
+    PARKSTATUS_UI *parkStatus_UI = createWidget();
 
     // 기본 위젯 Position 세팅
     setWidgetPos(parkStatus_UI, DEFAULT_POSY,DEFAULT_POSX);
@@ -62,9 +63,21 @@ int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI){
     int num = atoi(selectNumber);
     if(num == 1){
         //all status
+        PARK_DETAIL_UI* entry_detail = createParkDetailEntryUI();
+        renderDetailEntry(entry_detail);
+
+
+        clearWidget(entry_detail);
+        getch();
     } 
     else if(num == 2){
         //floor status
+        PARK_DETAIL_UI* floor_detail = createParkDetailFloorUI();
+        renderDetailFloor(floor_detail);
+
+
+        clearWidget(floor_detail);
+        getch();
     }
     
     return HOME;
