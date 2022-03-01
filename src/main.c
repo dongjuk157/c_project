@@ -6,6 +6,7 @@
 #include "widget.h"
 #include "label.h"
 #include "home_ui.h"
+#include "manage_ui.h"
 #include "pay_ui.h"
 #include "parkstatus_ui.h"
 #include "info_ui.h"
@@ -20,7 +21,6 @@ typedef int (*FP)(Widget*);
 LPHASH user;
 LinkedList current_list;
 LinkedList current_car_list;
-
 
 int main(int argc, char const *argv[])
 {
@@ -41,6 +41,7 @@ int main(int argc, char const *argv[])
     FP render;
     
     HOME_UI* home = createHomeUI();
+    MANAGE_UI *iomanage = createManageUI();
     PAY_UI *pay = createPayUI();
     PARKSTATUS_UI *parkStatus = createParkStatusUI();
     INFO_UI* info = createInfoUI();
@@ -62,7 +63,9 @@ int main(int argc, char const *argv[])
             render = renderHomeUI;
             break;
         case IOMANAGE:
-            page = manage_in_out(user, &current_list, &current_car_list);
+            // page = manage_in_out(user, &current_list, &current_car_list);
+            mainPage = iomanage;
+            render = renderManageUI;
             break;
         case PAY:
             mainPage = pay;
@@ -100,14 +103,49 @@ int main(int argc, char const *argv[])
             page = HOME;
             break;
         case EXIT:
-            return 0;
+            break_sig = 1;
+            break;
+            // return 0;
         default:
+            break;
+        }
+        if (break_sig){
             break;
         }
     }
 
-  
-    // 메모리 해제, data 백업 필요함
+    // data 백업
+    // 1. current_list -> ParkingLot.dat
+    printf("Backup current_list\n");
+    FILE *fp = fopen(PARKINGLOT_SETTINGS_FILE_PATH, "wb");
+    Node *cur;
+    cur = current_list.head;
+    while (cur){
+        fwrite(((PARK *)cur->data), sizeof(PARK), 1, fp);
+        cur = cur->next;
+    }
+    fclose(fp);
+    
+    // 2. current_car_list -> Current.dat
+    printf("Backup current_car_list\n");
+    fp = fopen(CURRENT_DATA_FILE_PATH, "wb");
+    cur = current_car_list.head;
+    while (cur){
+        fwrite(((CAR_INFO *)cur->data), sizeof(CAR_INFO), 1, fp);
+        cur = cur->next;
+    }
+    fclose(fp);
+
+    
+    // 3. user_table -> User.dat
+    saveUserData(user);
+
+
+    // 메모리 해제
+    list_clear(&current_list);  
+    list_clear(&current_car_list);
+    hashDestroy(user);
+
 
     clearWidget(home);
     clearWidget(info);
