@@ -1,5 +1,5 @@
-#CC = gcc
- CC = c:/sysgcc/raspberry/bin/arm-linux-gnueabihf-gcc.exe
+CC = gcc
+#  CC = c:/sysgcc/raspberry/bin/arm-linux-gnueabihf-gcc.exe
 
 SRC_DIR = src
 OBJ_DIR = obj
@@ -13,6 +13,7 @@ SRCS += $(SRC_DIR)/linkedlist.c
 SRCS += $(SRC_DIR)/hash.c
 SRCS += $(SRC_DIR)/info.c
 SRCS += $(SRC_DIR)/manage.c
+SRCS += $(SRC_DIR)/parkstatus_detail.c
 
 OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
 TARGET = main

@@ -11,9 +11,9 @@ int readUserData(LPHASH *hash){
     if(fp==NULL){
         return -1;
     }
-    USER_INFO *tmp_user;
+
     while (1){
-        tmp_user = (USER_INFO *)malloc(sizeof(USER_INFO));
+        USER_INFO *tmp_user = (USER_INFO *)malloc(sizeof(USER_INFO));
         fread(tmp_user, sizeof(USER_INFO), 1, fp);
         if (feof(fp)) 
             break;
@@ -27,9 +27,8 @@ int readParkingLot(LinkedList* list){
     if(fp==NULL){
         return -1;
     }
-    PARK *tmp_park;
     while (1){
-        tmp_park = (PARK *)malloc(sizeof(PARK));
+        PARK *tmp_park = (PARK *)malloc(sizeof(PARK));
         fread(tmp_park, sizeof(PARK), 1, fp);
         if (feof(fp)) 
             break;
@@ -45,9 +44,9 @@ int readCurrentData(LinkedList* list){
     if(fp==NULL){
         return -1;
     }
-    CAR_INFO *tmp_car_info;
+    
     while (1){
-        tmp_car_info = (CAR_INFO *)malloc(sizeof(CAR_INFO));
+        CAR_INFO *tmp_car_info = (CAR_INFO *)malloc(sizeof(CAR_INFO));
         fread(tmp_car_info, sizeof(CAR_INFO), 1, fp);
         if (feof(fp)) 
             break;

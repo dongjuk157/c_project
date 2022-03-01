@@ -8,7 +8,7 @@ typedef int (*FP)(Widget*);
 
 HISTORY_UI* createHistoryUI(){
 
-    HISTORY_UI* history = (HISTORY_UI*)malloc(sizeof(HISTORY_UI));
+    HISTORY_UI* history = createWidget();
     setWidgetPos(history, DEFAULT_POSY,DEFAULT_POSX);
     setWidgetSize(history, 25, 70);
     setWidgetType(history, MAIN);

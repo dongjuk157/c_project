@@ -4,11 +4,10 @@
 #include <string.h>
 
 HOME_UI* createHomeUI(){
-    HOME_UI* home = (HOME_UI*)malloc(sizeof(HOME_UI));
+    HOME_UI* home = createWidget();
     setWidgetPos(home, DEFAULT_POSY,DEFAULT_POSX);
     setWidgetSize(home, 25, 75);
     setWidgetType(home, MAIN);
-    arrayCreate(&(home->label));
 
     Label* title = createLabel();
     setLabelPos(title,5, 28);

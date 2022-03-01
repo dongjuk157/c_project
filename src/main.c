@@ -18,6 +18,8 @@
 typedef int (*FP)(Widget*);
 
 LPHASH user;
+LinkedList current_list;
+LinkedList current_car_list;
 
 
 int main(int argc, char const *argv[])
@@ -28,12 +30,10 @@ int main(int argc, char const *argv[])
     readUserData(&user);
 
     //  current list 생성
-    LinkedList current_list;
     create_linked_list(&current_list);
     readParkingLot(&current_list);
 
     // current_car_list 생성
-    LinkedList current_car_list;
     create_linked_list(&current_car_list);
     readCurrentData(&current_car_list);
 

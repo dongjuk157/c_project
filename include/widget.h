@@ -32,6 +32,7 @@ Widget* createWidget();
 void printWidget(Widget* widget);
 int renderWidget(Widget* widget);
 bool addLabel(Widget *widget, Label *label);
+int addWidget(Widget *widget, Widget *subWidget);
 void setWidgetPos(Widget *widget, int posy, int posx);
 void setWidgetSize(Widget *widget, int height, int width);
 void setWidgetType(Widget *Widget, int type);

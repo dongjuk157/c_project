@@ -7,11 +7,10 @@
 extern LPHASH user;
 
 INFO_UI* createInfoUI(){
-    INFO_UI* info = (INFO_UI*)malloc(sizeof(INFO_UI));
+    INFO_UI* info = createWidget();
     setWidgetPos(info, DEFAULT_POSY,DEFAULT_POSX);
     setWidgetSize(info, 25, 70);
     setWidgetType(info, MAIN);
-    arrayCreate(&(info->label));
 
     Label* title = createLabel();
     setLabelPos(title,5, 26);
@@ -36,7 +35,13 @@ INFO_UI* createInfoUI(){
 
 int findInfo(char* carNumber, Info *info){
     USER_INFO* user_info;
-    hashGetValue(user,carNumber,&user_info);
+    int res;
+    res = hashGetValue(user,carNumber,(LPDATA*)&user_info);
+    if(res != ERR_HASH_OK){
+        memset(info,0,sizeof(Info));
+        return -1;
+    }
+
     char datetime[20];
     getDateTime(datetime);
 

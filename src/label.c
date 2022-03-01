@@ -12,6 +12,11 @@ Label* createLabel(){
     label->text = NULL;
     return label;
 }
+void labelCreate(Label* label){
+    label->posx = 0;
+    label->posy = 0;
+    label->text = 0;
+}
 
 bool setLabelPos(Label *label, int posy, int posx){
     if(posx < 0 || posy < 0) return False;
