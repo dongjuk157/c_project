@@ -118,16 +118,23 @@ int main(int argc, char const *argv[])
             page = HOME;
             break;
         case EXIT:
+            break_sig = 1;
+            break;
             return 0;
         default:
+            break;
+        }
+        if (break_sig){
             break;
         }
     }
 
     // data 백업
     // 1. current_list -> ParkingLot.dat
+    printf("Backup current_list\n");
     fp = fopen(PARKINGLOT_SETTINGS_FILE_PATH, "wb");
-    Node *cur = current_list.head;
+    Node *cur;
+    cur = current_list.head;
     while (cur){
         fwrite(((PARK *)cur->data), sizeof(PARK), 1, fp);
         cur = cur->next;
@@ -135,28 +142,22 @@ int main(int argc, char const *argv[])
     fclose(fp);
     
     // 2. current_car_list -> Current.dat
+    printf("Backup current_car_list\n");
     fp = fopen(CURRENT_DATA_FILE_PATH, "wb");
-    Node *cur = current_car_list.head;
+    cur = current_car_list.head;
     while (cur){
         fwrite(((CAR_INFO *)cur->data), sizeof(CAR_INFO), 1, fp);
         cur = cur->next;
     }
     fclose(fp);
+
     
     // 3. user_table -> User.dat
-    fp = fopen(USER_DATA_FILE_PATH, "wb");
-    NODE *cur;
-    void *tmp11, *tmp12;
-    hashGetFirstPostion(user, cur);
-    while (cur){
-        fwrite(((CAR_INFO *)cur->data), sizeof(CAR_INFO), 1, fp);
-        hashGetNextPostion(user, cur, tmp11, tmp12);
-    }
-    fclose(fp);
+    saveUserData(user);
 
 
     // 메모리 해제
-    list_clear(&current_list);
+    list_clear(&current_list);  
     list_clear(&current_car_list);
     hashDestroy(user);
 

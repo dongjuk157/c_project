@@ -23,6 +23,7 @@ typedef struct user_information {
   char name[10]; // 출입자 성명
   char phone_num[15]; // 출입자 폰번호
   char car_num[20]; // 출입자 차번호	
+  char recentTicket[20];
   int has_ticket; // 정기권 등록여부, 1이면 등록된 사용자
 } USER_INFO;
 
