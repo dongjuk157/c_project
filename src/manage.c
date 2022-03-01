@@ -240,27 +240,25 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
                 return FILE_ERROR;
 
             // 구조체의 내용을 파일에 저장
-            fwrite(&car_info, sizeof(car_info), 1, fp);
+            fwrite(car_info, sizeof(CAR_INFO), 1, fp);
             fclose(fp);
             break;
         }
         case 'o':{
             // 출차할 때 차 번호가 맞는 값 찾고 해당 부분 수정
-            // 모든 파일을 읽어서 값 다른 부분 찾고 임시 파일에 값 변경해서 저장
-            FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"rb");
+            FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"rb+");
             if(!fp) 
                 return FILE_ERROR;
-            FILE *fp_tmp = fopen(TEMP_HISTORY_DATA_FILE_PATH,"wb");
-            if (!fp_tmp)
-                return FILE_ERROR;
+            
             while (1){
                 CAR_INFO* tmp_car= (CAR_INFO *)malloc(sizeof(CAR_INFO));
-                fread(tmp_car, sizeof((*tmp_car)), 1, fp);
+                fread(tmp_car, sizeof(CAR_INFO), 1, fp);
                 if (feof(fp)) 
                     break;
                 if (strcmp(tmp_car->car_number, car_info->car_number) == 0
                     && strcmp(tmp_car->out_datetime, NULL) == 0
                 ) { // 차량번호가 같은데 out_datetime이 NULL인 구조체
+                    // out_datetime 설정
                     char datetime[20];
                     struct tm* today;
                     time_t rawTime = time(NULL);
@@ -271,31 +269,17 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
                         today->tm_hour, today->tm_min, today->tm_sec
                     );
                     strcpy(tmp_car->out_datetime, datetime);
+                    // 요금산정
                     tmp_car->fee = calculate_fee(tmp_car->in_datetime, tmp_car->out_datetime);
-                    fwrite(tmp_car, sizeof(*tmp_car), 1, fp_tmp);
-                } else {
-                    fwrite(tmp_car, sizeof(*tmp_car), 1, fp_tmp);
+
+                    // read한 만큼 뒤로 돌아가기
+                    fseek(fp, -sizeof(CAR_INFO), SEEK_CUR);
+                    // 덮어쓰기
+                    fwrite(tmp_car, sizeof(CAR_INFO), 1, fp);
                 }
-                
             }
             fclose(fp);
-            fclose(fp_tmp);
-            // 임시 파일에 있는 값을 덮어씌움
-            fp = fopen(HISTORY_DATA_FILE_PATH,"wb");
-            if(!fp) 
-                return FILE_ERROR;
-            fp_tmp = fopen(TEMP_HISTORY_DATA_FILE_PATH,"rb");
-            if (!fp_tmp)
-                return FILE_ERROR;            
-            while (1){
-                CAR_INFO* tmp_car= (CAR_INFO *)malloc(sizeof(CAR_INFO));
-                fread(tmp_car, sizeof((*tmp_car)), 1, fp_tmp);
-                if (feof(fp_tmp)) 
-                    break;
-                fwrite(tmp_car, sizeof(*tmp_car), 1, fp);
-            }
-            fclose(fp_tmp);
-            fclose(fp);
+
             break;
         }
         default:
