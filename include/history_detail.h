@@ -10,16 +10,6 @@
 
 typedef Widget HISTORY_DETAIL_UI;
 
-struct car_information{
-    char car_number[20]; // 123가4567 
-    char in_datetime[20]; // 2022-02-28 21:44:42 : \0까지 해서 20자리
-    char out_datetime[20];
-    char car_type; // [e]lectric, [l]ight, [n]ormal
-    char is_paid; // when creating
-    int floor; // except 0
-    int fee; // when creating, 0
-};
-
 HISTORY_DETAIL_UI* createHistoryDetailUI(int type); 
 Widget* createHistoryDetailSub();
 

@@ -54,15 +54,6 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
                 ret = search_user(user_table, car_info->car_number, &user);      // 4 search user data with car_number
                 ret = update_current(menu, car_info, current_park, current_car); // 5. add current list 
                 ret = update_history(menu, car_info, user); // 6. add history
-                // 주차한 층에 값 증가, head부터 순회해서 같은 층의 정보를 받고, 해당 층의 total_car값을 증가시킴
-                Node *cur = current_park->head;
-                while (cur){
-                    if (((PARK*)cur->data)->floor == car_info->floor){
-                        ++(((PARK*)cur->data)->total_car);
-                        break;
-                    }
-                    cur = cur->next;
-                }
                 break;
             }
             case 'o':
@@ -104,14 +95,7 @@ int get_values(char io, CAR_INFO **car_info) {
     *car_info = (CAR_INFO*) malloc(sizeof(CAR_INFO));
     // 현재 시간
     char datetime[20];
-    struct tm* today;
-    time_t rawTime = time(NULL);
-    today = localtime(&rawTime);  
-
-    sprintf(datetime, "%4d-%02d-%02d %02d:%02d", 
-        today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
-        today->tm_hour, today->tm_min, today->tm_sec
-    );
+    getDateTime(datetime);
 
     // 메뉴 값 확인해서 저장
     if (io == 'i'){ // io == i 일때 입력
@@ -201,7 +185,7 @@ int save_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
     // 정기권 없음
     (*user_data)->has_ticket = 0;
     // 해시 테이블에 저장
-    hashSetValue(user_table, car_number, user_data);
+    hashSetValue(user_table, car_number, *user_data);
 
     return OK;
 }
@@ -265,35 +249,33 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
         case 'o':{
             // 출차할 때 차 번호가 맞는 값 찾고 해당 부분 수정
             FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"rb+");
+
             if(!fp) 
                 return FILE_ERROR;
             
             while (1){
+                
                 CAR_INFO* tmp_car= (CAR_INFO *)malloc(sizeof(CAR_INFO));
                 fread(tmp_car, sizeof(CAR_INFO), 1, fp);
                 if (feof(fp)) 
                     break;
                 if (strcmp(tmp_car->car_number, car_info->car_number) == 0
-                    && strcmp(tmp_car->out_datetime, NULL) == 0
+                    && strcmp(tmp_car->out_datetime, "") == 0
                 ) { // 차량번호가 같은데 out_datetime이 NULL인 구조체
                     // out_datetime 설정
                     char datetime[20];
-                    struct tm* today;
-                    time_t rawTime = time(NULL);
-                    today = localtime(&rawTime);  
-
-                    sprintf(datetime, "%4d-%02d-%02d %02d:%02d", 
-                        today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
-                        today->tm_hour, today->tm_min, today->tm_sec
-                    );
+                    getDateTime(datetime);
+                    
                     strcpy(tmp_car->out_datetime, datetime);
                     // 요금산정
                     tmp_car->fee = calculate_fee(tmp_car->in_datetime, tmp_car->out_datetime);
 
-                    // read한 만큼 뒤로 돌아가기
+                    // read한 만큼 뒤로 
                     fseek(fp, -sizeof(CAR_INFO), SEEK_CUR);
                     // 덮어쓰기
+
                     fwrite(tmp_car, sizeof(CAR_INFO), 1, fp);
+
                 }
             }
             fclose(fp);

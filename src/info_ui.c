@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern LPHASH user;
+
 INFO_UI* createInfoUI(){
     INFO_UI* info = (INFO_UI*)malloc(sizeof(INFO_UI));
     setWidgetPos(info, DEFAULT_POSY,DEFAULT_POSX);
@@ -33,20 +35,17 @@ INFO_UI* createInfoUI(){
 
 
 int findInfo(char* carNumber, Info *info){
-    FILE* fp = fopen("data/Current.dat","rb");
-    if(fp == NULL){
-        return FOE;
-    }
-    
-    while(fread(info,sizeof(Info),1,fp)){
-        if(!strcmp(carNumber, info->carNumber)){
-            fclose(fp);
-            return EOK; 
-        }
-    }
-    
-    memset(info,0,sizeof(Info));
-    fclose(fp); 
+    USER_INFO* user_info;
+    hashGetValue(user,carNumber,&user_info);
+    char datetime[20];
+    getDateTime(datetime);
+
+    strcpy(info->carNumber,carNumber);
+    strcpy(info->inDatetime, "2022-02-10 13:12");
+    strcpy(info->name,user_info->name);
+    strcpy(info->phoneNumber,user_info->phone_num);
+    info->fee = calculate_fee(info->inDatetime,datetime);
+
     return NFD;
 }
 
@@ -64,7 +63,7 @@ int renderInfoUI(INFO_UI* info){
 
     Info data;
     char buffer[50];
-    findInfo(carNumber, &data);
+    findInfo(carNumber, &data); //data에 차량번호와 일치하는 info 객체 담음 없다면 못담음
  
     Widget* dataWidget = createWidget();
     setWidgetPos(dataWidget,14,10);

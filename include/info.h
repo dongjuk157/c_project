@@ -1,6 +1,7 @@
 #ifndef __INFO_H__
 #define __INFO_H__
-
+#include "linkedlist.h"
+#include "hash.h"
 typedef struct Info{
     char carNumber[20];
     char name[10];
@@ -10,13 +11,13 @@ typedef struct Info{
 }Info;
 
 typedef struct car_informaition {
-  char car_number[20]; // 123가4567 
-	char in_datetime[20]; // 2022-02-28 21:44:42 : \0까지 해서 20자리
-	char out_datetime[20];
-	char car_type; // [e]lectric, [l]ight, [n]ormal
-	char is_paid; // when creating
-	int floor; // except 0
-	int fee; // when creating, 0
+   char car_number[20]; // 123가4567 
+   char in_datetime[20]; // 2022-02-28 21:44:42 : \0까지 해서 20자리
+   char out_datetime[20];
+   char car_type; // [e]lectric, [l]ight, [n]ormal
+   char is_paid; // when creating
+   int floor; // except 0
+   int fee; // when creating, 0
 } CAR_INFO;
 
 typedef struct user_information {
@@ -45,6 +46,11 @@ typedef struct Car{
 
 
 void printInfo(Info info);
+int readUserData(LPHASH *hash);
+int readParkingLot(LinkedList* list);
+int readCurrentData(LinkedList* list);
+
+int saveUserData(LPHASH hash);
 
 #endif // __INFO_H__
 

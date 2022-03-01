@@ -25,6 +25,16 @@ void gotoxy(int x, int y)
 // 	return ch;
 // }
 
+int getDateTime(char *datetime){
+    struct tm* today;
+    time_t rawTime = time(NULL);
+    today = localtime(&rawTime);  
+
+    sprintf(datetime, "%4d-%02d-%02d %02d:%02d", 
+        today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
+        today->tm_hour, today->tm_min
+    );
+}
 
 
 int getch(void) 
@@ -76,8 +86,6 @@ int calculate_fee(char* inDateTime, char* outDateTime){
 
 	int fee = diffMin / 10 * 100;
 	fee += (diffMin % 10) ? 100 : 0;
-
-	printf("%d",fee);
 	return fee;
 }
 int to_day(int y, int m, int d)
