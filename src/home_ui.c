@@ -79,12 +79,8 @@ int checkinit(char *init){
 }
 
 int renderHomeUI(HOME_UI* home){
-    printWidget(home);
+    renderWidget(home);
     char init[20];
-    for (int i = 0; i < arraySize(home->label); i++)
-    {
-        printLabel(home,(Label *)(home->label->lpData)[i]);
-    }
 
     fgets(init,20,stdin);
     init[strlen(init)-1] = '\0';
