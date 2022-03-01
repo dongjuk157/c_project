@@ -78,7 +78,7 @@ int main(int argc, char const *argv[])
     HISTORY_UI* history = createHistoryUI();
     Info buf;
 
-    currentPage = home;
+    mainPage = home;
     render = renderHomeUI;
 
     int page = 0, err_no, break_sig;
@@ -89,21 +89,21 @@ int main(int argc, char const *argv[])
         switch (page)
         {
         case HOME:
-            currentPage = home;
+            mainPage = home;
             render = renderHomeUI;
             break;
         case IOMANAGE:
             err_no = manage_in_out(user, &current_list, &current_car_list);
         case PAY:
-            currentPage = pay;
+            mainPage = pay;
             render = renderPayUI;
             break;
         case PARKSTATUS:
-            currentPage = parkStatus;
+            mainPage = parkStatus;
             render = renderParkStatusUI;
             break;
         case CARINFO:
-            currentPage = info;
+            mainPage = info;
             render = renderInfoUI;
             break;
         case PARKHISTORY:
