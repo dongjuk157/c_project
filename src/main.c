@@ -6,6 +6,7 @@
 #include "widget.h"
 #include "label.h"
 #include "home_ui.h"
+#include "manage_ui.h"
 #include "pay_ui.h"
 #include "parkstatus_ui.h"
 #include "info_ui.h"
@@ -18,7 +19,8 @@
 typedef int (*FP)(Widget*);
 
 LPHASH user;
-
+LinkedList current_list;
+LinkedList current_car_list;
 
 int main(int argc, char const *argv[])
 {
@@ -28,12 +30,10 @@ int main(int argc, char const *argv[])
     readUserData(&user);
 
     //  current list 생성
-    LinkedList current_list;
     create_linked_list(&current_list);
     readParkingLot(&current_list);
 
     // current_car_list 생성
-    LinkedList current_car_list;
     create_linked_list(&current_car_list);
     readCurrentData(&current_car_list);
 
@@ -41,6 +41,7 @@ int main(int argc, char const *argv[])
     FP render;
     
     HOME_UI* home = createHomeUI();
+    MANAGE_UI *iomanage = createManageUI();
     PAY_UI *pay = createPayUI();
     PARKSTATUS_UI *parkStatus = createParkStatusUI();
     INFO_UI* info = createInfoUI();
@@ -62,7 +63,9 @@ int main(int argc, char const *argv[])
             render = renderHomeUI;
             break;
         case IOMANAGE:
-            page = manage_in_out(user, &current_list, &current_car_list);
+            // page = manage_in_out(user, &current_list, &current_car_list);
+            mainPage = iomanage;
+            render = renderManageUI;
             break;
         case PAY:
             mainPage = pay;
