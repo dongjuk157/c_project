@@ -86,14 +86,7 @@ int get_values(char io, CAR_INFO **car_info) {
     *car_info = (CAR_INFO*) malloc(sizeof(CAR_INFO));
     // 현재 시간
     char datetime[20];
-    struct tm* today;
-    time_t rawTime = time(NULL);
-    today = localtime(&rawTime);  
-
-    sprintf(datetime, "%4d-%02d-%02d %02d:%02d", 
-        today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
-        today->tm_hour, today->tm_min
-    );
+    getDateTime(datetime);
 
     // 메뉴 값 확인해서 저장
     if (io == 'i'){ // io == i 일때 입력
@@ -183,7 +176,7 @@ int save_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
     // 정기권 없음
     (*user_data)->has_ticket = 0;
     // 해시 테이블에 저장
-    hashSetValue(user_table, car_number, user_data);
+    hashSetValue(user_table, car_number, *user_data);
 
     return OK;
 }
@@ -262,14 +255,8 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
                 ) { // 차량번호가 같은데 out_datetime이 NULL인 구조체
                     // out_datetime 설정
                     char datetime[20];
-                    struct tm* today;
-                    time_t rawTime = time(NULL);
-                    today = localtime(&rawTime);  
-
-                    sprintf(datetime, "%4d-%02d-%02d %02d:%02d", 
-                        today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
-                        today->tm_hour, today->tm_min
-                    );
+                    getDateTime(datetime);
+                    
                     strcpy(tmp_car->out_datetime, datetime);
                     // 요금산정
                     tmp_car->fee = calculate_fee(tmp_car->in_datetime, tmp_car->out_datetime);
