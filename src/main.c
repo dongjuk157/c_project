@@ -62,7 +62,8 @@ int main(int argc, char const *argv[])
             render = renderHomeUI;
             break;
         case IOMANAGE:
-            err_no = manage_in_out(user, &current_list, &current_car_list);
+            page = manage_in_out(user, &current_list, &current_car_list);
+            break;
         case PAY:
             mainPage = pay;
             render = renderPayUI;

@@ -23,11 +23,11 @@ PARKSTATUS_UI* createParkStatusUI(){
     setLabelText(subTitle,"주차 현황");
 
     Label *selectOne = createLabel();
-    setLabelPos(selectOne, 13, 10);
+    setLabelPos(selectOne, 10, 10);
     setLabelText(selectOne,"1. 전체 현황 조회");
 
     Label *selectTwo = createLabel();
-    setLabelPos(selectTwo, 16, 10);
+    setLabelPos(selectTwo, 13, 10);
     setLabelText(selectTwo,"2. 층별 현황 조회");
 
     Label *prompt = createLabel();
@@ -49,7 +49,7 @@ int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI){
     REPEAT:
     {
     //UI 프레임 그리기
-    printWidget(parkStatus_UI);
+    renderWidget(parkStatus_UI);
     
     //세팅된 label 출력
     for (int i = 0; i < arraySize(parkStatus_UI->label); i++)
