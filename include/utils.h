@@ -5,6 +5,7 @@
 typedef char bool;
 
 void gotoxy(int x, int y);
+int min(int a, int b);
 // int kbhit(void);
 int getch(void);
 #endif // __UTILS_H__
