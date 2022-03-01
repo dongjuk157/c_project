@@ -26,6 +26,23 @@ typedef struct user_information {
   int has_ticket; // 정기권 등록여부, 1이면 등록된 사용자
 } USER_INFO;
 
+typedef struct park { // 주차장
+  int floor; // 층} 0 제외, + 지상, - 지하
+  int total; // 주차장 내 주차 공간 수,
+  int total_car; // 주차장 내 주차된 차 수
+  int electric_charge; // 전기차 충전 공간 여부, 0이면 없음, 1이상 충전 공간 개수
+  int handicapped; //장애인 주차 공간 여부
+  int light_car; //  경차 전용 공간 여부
+} PARK;
+
+
+typedef struct Car{
+	char car_number[20]; // 차량 번호
+  char in_datetime[20]; // 2022-02-28 21:44:42 : \0까지 해서 20자리
+	int car_type; // 차량 구분(경차 , 전기 , 일반 차량)
+} CAR;
+
+
 void printInfo(Info info);
 
 #endif // __INFO_H__

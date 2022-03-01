@@ -4,7 +4,8 @@
 #include <string.h>
 #include "manage.h"
 #include "hash.h"
-
+#include "linkedlist.h"
+#include "utils.h"
 
 /*
 manage.c
@@ -33,7 +34,7 @@ flow
 */
 
 
-int manage_in_out(void){
+int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *current_car){
     // 차량의 출입 로그 기록 및 데이터 입력
     char menu, tmp;
     int ret, error_cnt;
@@ -56,16 +57,12 @@ int manage_in_out(void){
                         free(car_info);
                     }
                 } while (ret); // 입력 에러 인 경우엔 제대로 된 값을 넣을 때까지 계속 확인
-                printf("==\n");
-                printf("%s\n", car_info->car_number);
-                printf("%s\n", (menu=='i')?car_info->in_datetime : car_info->out_datetime);
-                printf("==\n");
                  // 3. save simple log
                 error_cnt = 0;
                 while (error_cnt < 5) // 파일 입출력 에러인경우 5번 시도
                 {
                     ret = save_log(menu, car_info);
-                    printf("error_num: %d", ret);
+                    printf("error_num: %d\n", ret);
                     if (ret == OK){
                         break;
                     }
@@ -73,17 +70,10 @@ int manage_in_out(void){
                 if (error_cnt >= 5) { // 5번 시도이상 파일입출력 에러인경우 함수 종료
                     return ret;
                 }
-                
-                ret = search_user(car_info->car_number, &user); 
-                printf("error_num: %d", ret);
                 // 4 search user data with car_number
-                // user_info 해시테이블에 추가
-                // 해당 메모리는 main끝날때 free
-                ret = update_current(menu, car_info, user); // 5. add current list 
-                printf("error_num: %d", ret);
-
+                ret = search_user(user_table, car_info->car_number, &user); 
+                ret = update_current(menu, car_info, current_park, current_car); // 5. add current list 
                 ret = update_history(menu, car_info, user); // 6. add history
-                printf("error_num: %d", ret);
                 //currentList에 추가
                 break;
             }
@@ -91,8 +81,10 @@ int manage_in_out(void){
             {
                 ret = get_values(menu, &car_info); // 2. 데이터 입력 및 생성(출차)
                 ret = save_log(menu, car_info); // 3. save simple log
-                ret = update_current(menu, car_info, user); // 5. add current list 
-                ret = update_history(menu, car_info, user); // 6. add history
+                ret = search_user(user_table, car_info->car_number, &user); 
+                ret = update_current(menu, car_info, current_park, current_car); // 5. remove current list 
+                system("pause");
+                ret = update_history(menu, car_info, user); // 6. modify history
                 // currentList 데이터 free
                 // car_info free
                 break;
@@ -121,7 +113,7 @@ int get_values(char io, CAR_INFO **car_info) {
     time_t rawTime = time(NULL);
     today = localtime(&rawTime);  
 
-    sprintf(datetime, "%4d-%02d-%02d %02d:%02d:%02d", 
+    sprintf(datetime, "%4d-%02d-%02d %02d:%02d", 
         today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
         today->tm_hour, today->tm_min, today->tm_sec
     );
@@ -130,32 +122,34 @@ int get_values(char io, CAR_INFO **car_info) {
     if (io == 'i'){ // io == i 일때 입력
         strcpy((*car_info)->in_datetime, datetime);
         // strcpy((*car_info)->out_datetime, NULL);
+        
+        printf("차량 번호 >> ");
+        scanf("%s", (*car_info)->car_number); while((tmp=getchar())!='\n');
+
+        printf("차종 [e]lectric, [l]ight, [n]ormal >> ");
+        scanf("%c", &(*car_info)->car_type); while((tmp=getchar())!='\n');
+        
+        printf("주차 위치 >> ");
+        scanf("%d", &(*car_info)->floor); while((tmp=getchar())!='\n');
+    
+        switch ((*car_info)->car_type){
+            case 'e': case'l': case'n':
+                break;
+            default:
+                return FORMAT_ERROR;
+        }
     }
     else if (io == 'o'){// io == o 일때 입력
         strcpy((*car_info)->out_datetime, datetime);
         // strcpy((*car_info)->in_datetime, NULL);
+        printf("차량 번호 >> ");
+        scanf("%s", (*car_info)->car_number); while((tmp=getchar())!='\n');
     }
     else{
         // 메뉴를 잘못받았는데 들어올 경우가 없지만
         // 혹시라도 들어온다면 메모리 해제하고 함수 종료
         return FORMAT_ERROR;
     }
-    
-    printf("차량 번호 >> ");
-    scanf("%s", (*car_info)->car_number); while((tmp=getchar())!='\n');
-
-    printf("차종 [e]lectric, [l]ight, [n]ormal >> ");
-    scanf("%c", &(*car_info)->car_type); while((tmp=getchar())!='\n');
-    switch ((*car_info)->car_type){
-        case 'e': case'l': case'n':
-            break;
-        default:
-            return FORMAT_ERROR;
-    }
-
-    printf("주차 위치 >> ");
-    scanf("%d", &(*car_info)->floor); while((tmp=getchar())!='\n');
-    
     // 그 외의 값 0으로 설정 정산할때 사용
     (*car_info)->fee = 0;
     (*car_info)->is_paid = 0;
@@ -169,9 +163,7 @@ int save_log(char io, CAR_INFO *car_info){
         return FILE_ERROR;
     }
     // fputs("",fp);
-    // 파일형식 [i|o]    [car_number]   [yyyy-mm-dd hh:mm:ss]
-    printf("%s\n", car_info->car_number);
-    printf("%s\n", (io=='i')?car_info->in_datetime : car_info->out_datetime);
+    // 파일형식 [i|o]\t[car_number]\t[yyyy-mm-dd hh:mm:ss]
     fprintf(fp, "%c\t%s\t%s\n", 
         io, 
         car_info->car_number, 
@@ -182,31 +174,80 @@ int save_log(char io, CAR_INFO *car_info){
     return OK;
 }
 
-int search_user(char *car_number, USER_INFO **user_data){
+int search_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
 	// 해시 테이블에서 확인. 찾는 값이 있으면 user_data에 저장
-
-    // LPHASH, LPDATA에 대한 것 설정해야할 듯
-    // ret = hashGetValue(LPHASH lpHash, const char* key, LPDATA* value);
-    // if(value) {
-    //     user_data = (User *)malloc(sizeof(User));
-    //     strcpy(user_data->name, value->name);
-    //     strcpy(user_data->phone_num, value->phone_num);
-    //     strcpy(user_data->car_num, value->car_num);
-    //     user_data->has_ticket = value->has_ticket;
-    // }
-    // else {
-    //     save_user(car_number, user_data);
-    // }
+    // hash table get
+    USER_INFO *tmp_user = NULL;
+    hashGetValue(user_table, car_number, &tmp_user);
+    *user_data = (USER_INFO *) malloc(sizeof(USER_INFO));
+    if ((tmp_user) == NULL){ // hash 값이 없는 경우
+        save_user(user_table, car_number, user_data);
+    }
+    else {
+        strcpy((*user_data)->name, tmp_user->name);
+        strcpy((*user_data)->phone_num, tmp_user->phone_num);
+        strcpy((*user_data)->car_num, tmp_user->car_num);
+        (*user_data)->has_ticket = tmp_user->has_ticket;
+        //printf("tmp_user: %s, %s\n", tmp_user->name, tmp_user->phone_num);
+    }
 	
     return OK;
 }
-int save_user(char *car_number, USER_INFO **user_data){
-    // user 해시테이블에 없을 때 해시 테이블에 저장
-    // 처음 시작할때 텍스트 파일 읽어서 쉽게 만들어주면 좋을듯
+int save_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
+    // user_data에 값 저장
+    char tmp;
+    printf("차주 이름 >> ");
+    scanf("%s", (*user_data)->name); while((tmp=getchar())!='\n');
+    printf("차주 휴대폰 번호 >> ");
+    scanf("%s", (*user_data)->phone_num); while((tmp=getchar())!='\n');
+    // 차량 번호 자동 저장
+    strcpy((*user_data)->car_num, car_number);
+    // 정기권 없음
+    (*user_data)->has_ticket = 0;
+    printf("has_ticket: %d\n", (*user_data)->has_ticket);
+    // 해시 테이블에 저장
+    hashSetValue(user_table, car_number, user_data);
+
+    return OK;
 }
-int update_current(char io, CAR_INFO *car_info, USER_INFO *user_data){
-    // 1. io == i 일때 current list 에 데이터 추가
-	// 2. io == o 일때 current list 에서 제거
+
+int update_current(char io, CAR_INFO *car_info, LinkedList *current_park, LinkedList *current_car){
+    switch (io){
+        case 'i': // 1. io == i 일때 current list 에 데이터 추가
+            {
+                CAR_INFO* tmp_car_info;
+                tmp_car_info = (CAR_INFO *)malloc(sizeof(CAR_INFO));
+                strcpy(tmp_car_info->car_number, car_info->car_number);
+                strcpy(tmp_car_info->in_datetime, car_info->in_datetime);
+                strcpy(tmp_car_info->out_datetime, car_info->out_datetime);
+                tmp_car_info->car_type = car_info->car_type;
+                tmp_car_info->is_paid = car_info->is_paid;
+                tmp_car_info->floor = car_info->floor;
+                tmp_car_info->fee = car_info->floor;
+
+                list_push_back(current_car, tmp_car_info);
+            } 
+            break;
+        case 'o': // 2. io == o 일때 current list 에서 제거
+            {
+                Node* cur;
+                int idx=0;
+                cur = current_car->head;
+                while (cur){
+                    CAR_INFO* tmp2;
+                    tmp2 = (CAR_INFO*) cur->data;
+                    if (strcmp(tmp2->car_number, car_info->car_number) == 0) {
+                        list_remove(current_car, idx);
+                        break;
+                    }
+                    cur = cur->next;
+                    idx++;
+                }
+            }
+            break;
+        default:
+            break;
+    }
     return OK;
 }
 
@@ -225,14 +266,55 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
         }
         case 'o':{
             // 출차할 때 차 번호가 맞는 값 찾고 해당 부분 수정
-            // append모드 fopen("history.dat", "r+");
-            FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"r+");
+            // 모든 파일을 읽어서 값 다른 부분 찾고 임시 파일에 값 변경해서 저장
+            FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"rb");
             if(!fp) 
                 return FILE_ERROR;
-            ////////// 미구현
-            // 파일끝에서부터 확인=> 최근에 추가되어있을 거니까
-            // 찾으면 해당 부분에 그대로 붙여넣기
-            // fwrite(&car_info, sizeof(car_info), 1, fp);
+            FILE *fp_tmp = fopen(TEMP_HISTORY_DATA_FILE_PATH,"wb");
+            if (!fp_tmp)
+                return FILE_ERROR;
+            while (1){
+                CAR_INFO* tmp_car= (CAR_INFO *)malloc(sizeof(CAR_INFO));
+                fread(tmp_car, sizeof((*tmp_car)), 1, fp);
+                if (feof(fp)) 
+                    break;
+                if (strcmp(tmp_car->car_number, car_info->car_number) == 0
+                    && strcmp(tmp_car->out_datetime, NULL) == 0
+                ) { // 차량번호가 같은데 out_datetime이 NULL인 구조체
+                    char datetime[20];
+                    struct tm* today;
+                    time_t rawTime = time(NULL);
+                    today = localtime(&rawTime);  
+
+                    sprintf(datetime, "%4d-%02d-%02d %02d:%02d", 
+                        today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
+                        today->tm_hour, today->tm_min, today->tm_sec
+                    );
+                    strcpy(tmp_car->out_datetime, datetime);
+                    tmp_car->fee = calculate_fee(tmp_car->in_datetime, tmp_car->out_datetime);
+                    fwrite(tmp_car, sizeof(*tmp_car), 1, fp_tmp);
+                } else {
+                    fwrite(tmp_car, sizeof(*tmp_car), 1, fp_tmp);
+                }
+                
+            }
+            fclose(fp);
+            fclose(fp_tmp);
+            // 임시 파일에 있는 값을 덮어씌움
+            fp = fopen(HISTORY_DATA_FILE_PATH,"wb");
+            if(!fp) 
+                return FILE_ERROR;
+            fp_tmp = fopen(TEMP_HISTORY_DATA_FILE_PATH,"rb");
+            if (!fp_tmp)
+                return FILE_ERROR;            
+            while (1){
+                CAR_INFO* tmp_car= (CAR_INFO *)malloc(sizeof(CAR_INFO));
+                fread(tmp_car, sizeof((*tmp_car)), 1, fp_tmp);
+                if (feof(fp_tmp)) 
+                    break;
+                fwrite(tmp_car, sizeof(*tmp_car), 1, fp);
+            }
+            fclose(fp_tmp);
             fclose(fp);
             break;
         }
