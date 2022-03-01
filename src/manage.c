@@ -50,31 +50,34 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
         switch (menu){
             case 'i': {
                 // 2. 데이터 입력 및 생성(입차)
-                do {
-                    ret = get_values(menu, &car_info);
-                    if (ret) {
-                        printf("error_num: %d\n", ret);
-                        free(car_info);
-                    }
-                } while (ret); // 입력 에러 인 경우엔 제대로 된 값을 넣을 때까지 계속 확인
+                ret = get_values(menu, &car_info);
+                // do {
+                //     ret = get_values(menu, &car_info);
+                //     if (ret) {
+                //         printf("error_num: %d\n", ret);
+                //         free(car_info);
+                //     }
+                // } while (ret); // 입력 에러 인 경우엔 제대로 된 값을 넣을 때까지 계속 확인
+
                  // 3. save simple log
+                ret = save_log(menu, car_info);
                 error_cnt = 0;
-                while (error_cnt < 5) // 파일 입출력 에러인경우 5번 시도
-                {
-                    ret = save_log(menu, car_info);
-                    printf("error_num: %d\n", ret);
-                    if (ret == OK){
-                        break;
-                    }
-                }
-                if (error_cnt >= 5) { // 5번 시도이상 파일입출력 에러인경우 함수 종료
-                    return ret;
-                }
+                // while (error_cnt < 5) // 파일 입출력 에러인경우 5번 시도
+                // {
+                //     ret = save_log(menu, car_info);
+                //     printf("error_num: %d\n", ret);
+                //     if (ret == OK){
+                //         break;
+                //     }
+                // }
+                // if (error_cnt >= 5) { // 5번 시도이상 파일입출력 에러인경우 함수 종료
+                //     return ret;
+                // }
+
                 // 4 search user data with car_number
                 ret = search_user(user_table, car_info->car_number, &user); 
                 ret = update_current(menu, car_info, current_park, current_car); // 5. add current list 
                 ret = update_history(menu, car_info, user); // 6. add history
-                //currentList에 추가
                 break;
             }
             case 'o':
@@ -83,7 +86,6 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
                 ret = save_log(menu, car_info); // 3. save simple log
                 ret = search_user(user_table, car_info->car_number, &user); 
                 ret = update_current(menu, car_info, current_park, current_car); // 5. remove current list 
-                system("pause");
                 ret = update_history(menu, car_info, user); // 6. modify history
                 // currentList 데이터 free
                 // car_info free
