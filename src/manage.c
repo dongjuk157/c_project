@@ -240,7 +240,7 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
                 return FILE_ERROR;
 
             // 구조체의 내용을 파일에 저장
-            fwrite(&car_info, sizeof(car_info), 1, fp);
+            fwrite(car_info, sizeof(CAR_INFO), 1, fp);
             fclose(fp);
             break;
         }
@@ -252,7 +252,7 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
             
             while (1){
                 CAR_INFO* tmp_car= (CAR_INFO *)malloc(sizeof(CAR_INFO));
-                fread(tmp_car, sizeof((*tmp_car)), 1, fp);
+                fread(tmp_car, sizeof(CAR_INFO), 1, fp);
                 if (feof(fp)) 
                     break;
                 if (strcmp(tmp_car->car_number, car_info->car_number) == 0
@@ -273,9 +273,9 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
                     tmp_car->fee = calculate_fee(tmp_car->in_datetime, tmp_car->out_datetime);
 
                     // read한 만큼 뒤로 돌아가기
-                    fseek(fp, -sizeof(*tmp_car), SEEK_CUR);
+                    fseek(fp, -sizeof(CAR_INFO), SEEK_CUR);
                     // 덮어쓰기
-                    fwrite(tmp_car, sizeof(*tmp_car), 1, fp);
+                    fwrite(tmp_car, sizeof(CAR_INFO), 1, fp);
                 }
             }
             fclose(fp);
