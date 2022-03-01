@@ -43,13 +43,13 @@ int main(int argc, char const *argv[])
     while (1){
         tmp_park = (PARK *)malloc(sizeof(PARK));
         fread(tmp_park, sizeof((*tmp_park)), 1, fp);
-        printf("3");
         if (feof(fp)) 
             break;
         
         list_push_back(&current_list, tmp_park);
     }
     fclose(fp);
+
     // current_car_list 생성
     LinkedList current_car_list;
     create_linked_list(&current_car_list);
@@ -126,7 +126,7 @@ int main(int argc, char const *argv[])
     }
 
   
-    
+    // 메모리 해제, data 백업 필요함
 
     clearWidget(home);
     clearWidget(info);

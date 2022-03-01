@@ -49,33 +49,9 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
         scanf("%c", &menu);  while((tmp=getchar())!='\n');
         switch (menu){
             case 'i': {
-                // 2. 데이터 입력 및 생성(입차)
-                ret = get_values(menu, &car_info);
-                // do {
-                //     ret = get_values(menu, &car_info);
-                //     if (ret) {
-                //         printf("error_num: %d\n", ret);
-                //         free(car_info);
-                //     }
-                // } while (ret); // 입력 에러 인 경우엔 제대로 된 값을 넣을 때까지 계속 확인
-
-                 // 3. save simple log
-                ret = save_log(menu, car_info);
-                error_cnt = 0;
-                // while (error_cnt < 5) // 파일 입출력 에러인경우 5번 시도
-                // {
-                //     ret = save_log(menu, car_info);
-                //     printf("error_num: %d\n", ret);
-                //     if (ret == OK){
-                //         break;
-                //     }
-                // }
-                // if (error_cnt >= 5) { // 5번 시도이상 파일입출력 에러인경우 함수 종료
-                //     return ret;
-                // }
-
-                // 4 search user data with car_number
-                ret = search_user(user_table, car_info->car_number, &user); 
+                ret = get_values(menu, &car_info);  // 2. 데이터 입력 및 생성(입차)
+                ret = save_log(menu, car_info);     // 3. save simple log
+                ret = search_user(user_table, car_info->car_number, &user);      // 4 search user data with car_number
                 ret = update_current(menu, car_info, current_park, current_car); // 5. add current list 
                 ret = update_history(menu, car_info, user); // 6. add history
                 break;
@@ -87,8 +63,6 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
                 ret = search_user(user_table, car_info->car_number, &user); 
                 ret = update_current(menu, car_info, current_park, current_car); // 5. remove current list 
                 ret = update_history(menu, car_info, user); // 6. modify history
-                // currentList 데이터 free
-                // car_info free
                 break;
             }
             case 'q':
@@ -99,7 +73,8 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
                 return FORMAT_ERROR;
                 break;
         }
-        system("pause");
+        printf("press any buttons");
+        getchar();
     }
 	
     return OK;
@@ -177,6 +152,7 @@ int save_log(char io, CAR_INFO *car_info){
 }
 
 int search_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
+    printf("search_user\n");
 	// 해시 테이블에서 확인. 찾는 값이 있으면 user_data에 저장
     // hash table get
     USER_INFO *tmp_user = NULL;
@@ -206,7 +182,6 @@ int save_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
     strcpy((*user_data)->car_num, car_number);
     // 정기권 없음
     (*user_data)->has_ticket = 0;
-    printf("has_ticket: %d\n", (*user_data)->has_ticket);
     // 해시 테이블에 저장
     hashSetValue(user_table, car_number, user_data);
 
@@ -214,6 +189,8 @@ int save_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
 }
 
 int update_current(char io, CAR_INFO *car_info, LinkedList *current_park, LinkedList *current_car){
+    
+    printf("update_current\n");
     switch (io){
         case 'i': // 1. io == i 일때 current list 에 데이터 추가
             {
@@ -254,6 +231,7 @@ int update_current(char io, CAR_INFO *car_info, LinkedList *current_park, Linked
 }
 
 int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
+    printf("udpate_history\n");
     switch (io){
         case 'i':{
             // 입차할 때 history 마지막에 추가
