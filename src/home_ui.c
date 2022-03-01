@@ -20,7 +20,7 @@ HOME_UI* createHomeUI(){
 
     Label* pay_manage= createLabel();
     setLabelPos(pay_manage,12,30);
-    setLabelText(pay_manage,"2. 정산 기능");
+    setLabelText(pay_manage,"2. 결제 기능");
 
     Label* park_status = createLabel();
     setLabelPos(park_status,12,50);
