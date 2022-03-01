@@ -92,7 +92,7 @@ int get_values(char io, CAR_INFO **car_info) {
 
     sprintf(datetime, "%4d-%02d-%02d %02d:%02d", 
         today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
-        today->tm_hour, today->tm_min, today->tm_sec
+        today->tm_hour, today->tm_min
     );
 
     // 메뉴 값 확인해서 저장
@@ -247,16 +247,18 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
         case 'o':{
             // 출차할 때 차 번호가 맞는 값 찾고 해당 부분 수정
             FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"rb+");
+
             if(!fp) 
                 return FILE_ERROR;
             
             while (1){
+                
                 CAR_INFO* tmp_car= (CAR_INFO *)malloc(sizeof(CAR_INFO));
                 fread(tmp_car, sizeof(CAR_INFO), 1, fp);
                 if (feof(fp)) 
                     break;
                 if (strcmp(tmp_car->car_number, car_info->car_number) == 0
-                    && strcmp(tmp_car->out_datetime, NULL) == 0
+                    && strcmp(tmp_car->out_datetime, "") == 0
                 ) { // 차량번호가 같은데 out_datetime이 NULL인 구조체
                     // out_datetime 설정
                     char datetime[20];
@@ -266,16 +268,18 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
 
                     sprintf(datetime, "%4d-%02d-%02d %02d:%02d", 
                         today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
-                        today->tm_hour, today->tm_min, today->tm_sec
+                        today->tm_hour, today->tm_min
                     );
                     strcpy(tmp_car->out_datetime, datetime);
                     // 요금산정
                     tmp_car->fee = calculate_fee(tmp_car->in_datetime, tmp_car->out_datetime);
 
-                    // read한 만큼 뒤로 돌아가기
+                    // read한 만큼 뒤로 
                     fseek(fp, -sizeof(CAR_INFO), SEEK_CUR);
                     // 덮어쓰기
+
                     fwrite(tmp_car, sizeof(CAR_INFO), 1, fp);
+
                 }
             }
             fclose(fp);
