@@ -53,7 +53,7 @@ int renderPayUI(PAY_UI *pay){
     REPEAT:
     {
     //UI 프레임 그리기
-    printWidget(pay);
+    renderWidget(pay);
     
     //세팅된 label 출력
     for (int i = 0; i < arraySize(pay->label); i++)
