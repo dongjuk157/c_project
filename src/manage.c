@@ -9,47 +9,47 @@
 
 /*
 manage.c
-// ÃâÀÔ Â÷·® °ü¸® //
-Â÷·®ÀÇ ÃâÀÔ ·Î±× ±â·Ï ¹× µ¥ÀÌÅÍ ÀÔ·Â
+// ì¶œì… ì°¨ëŸ‰ ê´€ë¦¬ //
+ì°¨ëŸ‰ì˜ ì¶œì… ë¡œê·¸ ê¸°ë¡ ë° ë°ì´í„° ì…ë ¥
 
 flow 
-1. ¸Ş´º ÀÔ·Â(ÀÔÂ÷, ÃâÂ÷, ¸Ş´º Á¾·á)
-2. getValues: µ¥ÀÌÅÍ ÀÔ·Â ¹× »ı¼º(ÀÔÂ÷, ÃâÂ÷) 
-    data ±¸Á¶: ÀÔÂ÷½Ã°£, ÃâÂ÷½Ã°£, Â÷Á¾, À§Ä¡, ¿ä±İ, Á¤»ê À¯¹«
+1. ë©”ë‰´ ì…ë ¥(ì…ì°¨, ì¶œì°¨, ë©”ë‰´ ì¢…ë£Œ)
+2. getValues: ë°ì´í„° ì…ë ¥ ë° ìƒì„±(ì…ì°¨, ì¶œì°¨) 
+    data êµ¬ì¡°: ì…ì°¨ì‹œê°„, ì¶œì°¨ì‹œê°„, ì°¨ì¢…, ìœ„ì¹˜, ìš”ê¸ˆ, ì •ì‚° ìœ ë¬´
     char* car_number;	char* in_datetime;	char* out_datetime;	
     char* car_type;	int floor;	int fee;	char is_paid;
-3. save_log: ·Î±× ÆÄÀÏ(history.log) ÀÔ·Â (ÀÔÂ÷, ÃâÂ÷)
-4. search_user: ÀÔÂ÷½Ã Â÷·®¹øÈ£·Î user Å½»ö(user.dat)
--> Ã£´Â user°¡ ¾øÀ¸¸é ÀÔ·Â Æû »ı¼º
-    4-1. Â÷ÁÖ ÀÌ¸§, ¿¬¶ôÃ³ (Å°º¸µå ÀÔ·Â)
-    4-2. user.dat¿¡ ÀúÀå
-5. current_list ¾÷µ¥ÀÌÆ®
-5-1. ÀÔÂ÷½Ã current ¸®½ºÆ®¿¡ Ãß°¡
-5-2. ÃâÂ÷½Ã current ¸®½ºÆ®¿¡ »èÁ¦
-5-3. current.dat: ÇöÀç ÁÖÂ÷ µÇ¾îÀÖ´Â Á¤º¸ 
-      -> ÇØ´ç ÆÄÀÏ·Î ¸Ş´º ½ÃÀÛÇÒ¶§ ¸®½ºÆ® »ı¼º
-6. history.dat: ÀüÃ¼ Á¤º¸, logº¸´Ù »ó¼¼ÇÑ Á¤º¸ ÀúÀå
-6-1. ÀÔÂ÷½Ã history.dat µ¥ÀÌÅÍ Ãß°¡
-6-2. ÃâÂ÷½Ã history.dat µ¥ÀÌÅÍ ¼öÁ¤
+3. save_log: ë¡œê·¸ íŒŒì¼(history.log) ì…ë ¥ (ì…ì°¨, ì¶œì°¨)
+4. search_user: ì…ì°¨ì‹œ ì°¨ëŸ‰ë²ˆí˜¸ë¡œ user íƒìƒ‰(user.dat)
+-> ì°¾ëŠ” userê°€ ì—†ìœ¼ë©´ ì…ë ¥ í¼ ìƒì„±
+    4-1. ì°¨ì£¼ ì´ë¦„, ì—°ë½ì²˜ (í‚¤ë³´ë“œ ì…ë ¥)
+    4-2. user.datì— ì €ì¥
+5. current_list ì—…ë°ì´íŠ¸
+5-1. ì…ì°¨ì‹œ current ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
+5-2. ì¶œì°¨ì‹œ current ë¦¬ìŠ¤íŠ¸ì— ì‚­ì œ
+5-3. current.dat: í˜„ì¬ ì£¼ì°¨ ë˜ì–´ìˆëŠ” ì •ë³´ 
+      -> í•´ë‹¹ íŒŒì¼ë¡œ ë©”ë‰´ ì‹œì‘í• ë•Œ ë¦¬ìŠ¤íŠ¸ ìƒì„±
+6. history.dat: ì „ì²´ ì •ë³´, logë³´ë‹¤ ìƒì„¸í•œ ì •ë³´ ì €ì¥
+6-1. ì…ì°¨ì‹œ history.dat ë°ì´í„° ì¶”ê°€
+6-2. ì¶œì°¨ì‹œ history.dat ë°ì´í„° ìˆ˜ì •
 */
 
 
 int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *current_car){
-    // Â÷·®ÀÇ ÃâÀÔ ·Î±× ±â·Ï ¹× µ¥ÀÌÅÍ ÀÔ·Â
+    // ì°¨ëŸ‰ì˜ ì¶œì… ë¡œê·¸ ê¸°ë¡ ë° ë°ì´í„° ì…ë ¥
     char menu, tmp;
     int ret, error_cnt;
     CAR_INFO *car_info; 
     USER_INFO *user;
 
     while (1){
-        // 1. ¸Ş´º ÀÔ·Â(ÀÔÂ÷, ÃâÂ÷, ¸Ş´º Á¾·á)
-        // char ÇÏ³ª¸¸ ¹ŞÀ¸¸ç ±× ÀÌÈÄÀÇ °ªÀº getchar°¡ Ã³¸®ÇßÀ¸´Ï ¾È½ÉÇÏ¶ó±¸!
+        // 1. ë©”ë‰´ ì…ë ¥(ì…ì°¨, ì¶œì°¨, ë©”ë‰´ ì¢…ë£Œ)
+        // char í•˜ë‚˜ë§Œ ë°›ìœ¼ë©° ê·¸ ì´í›„ì˜ ê°’ì€ getcharê°€ ì²˜ë¦¬í–ˆìœ¼ë‹ˆ ì•ˆì‹¬í•˜ë¼êµ¬!
         system("clear");
-        printf("ÀÔÂ÷ µî·Ï(i), ÃâÂ÷ µî·Ï(o), µ¹¾Æ°¡±â(q)\nselect >> ");
+        printf("ì…ì°¨ ë“±ë¡(i), ì¶œì°¨ ë“±ë¡(o), ëŒì•„ê°€ê¸°(q)\nselect >> ");
         scanf("%c", &menu);  while((tmp=getchar())!='\n');
         switch (menu){
             case 'i': {
-                // 2. µ¥ÀÌÅÍ ÀÔ·Â ¹× »ı¼º(ÀÔÂ÷)
+                // 2. ë°ì´í„° ì…ë ¥ ë° ìƒì„±(ì…ì°¨)
                 ret = get_values(menu, &car_info);
                 // do {
                 //     ret = get_values(menu, &car_info);
@@ -57,12 +57,12 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
                 //         printf("error_num: %d\n", ret);
                 //         free(car_info);
                 //     }
-                // } while (ret); // ÀÔ·Â ¿¡·¯ ÀÎ °æ¿ì¿£ Á¦´ë·Î µÈ °ªÀ» ³ÖÀ» ¶§±îÁö °è¼Ó È®ÀÎ
+                // } while (ret); // ì…ë ¥ ì—ëŸ¬ ì¸ ê²½ìš°ì—” ì œëŒ€ë¡œ ëœ ê°’ì„ ë„£ì„ ë•Œê¹Œì§€ ê³„ì† í™•ì¸
 
                  // 3. save simple log
                 ret = save_log(menu, car_info);
                 error_cnt = 0;
-                // while (error_cnt < 5) // ÆÄÀÏ ÀÔÃâ·Â ¿¡·¯ÀÎ°æ¿ì 5¹ø ½Ãµµ
+                // while (error_cnt < 5) // íŒŒì¼ ì…ì¶œë ¥ ì—ëŸ¬ì¸ê²½ìš° 5ë²ˆ ì‹œë„
                 // {
                 //     ret = save_log(menu, car_info);
                 //     printf("error_num: %d\n", ret);
@@ -70,7 +70,7 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
                 //         break;
                 //     }
                 // }
-                // if (error_cnt >= 5) { // 5¹ø ½ÃµµÀÌ»ó ÆÄÀÏÀÔÃâ·Â ¿¡·¯ÀÎ°æ¿ì ÇÔ¼ö Á¾·á
+                // if (error_cnt >= 5) { // 5ë²ˆ ì‹œë„ì´ìƒ íŒŒì¼ì…ì¶œë ¥ ì—ëŸ¬ì¸ê²½ìš° í•¨ìˆ˜ ì¢…ë£Œ
                 //     return ret;
                 // }
 
@@ -82,17 +82,17 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
             }
             case 'o':
             {
-                ret = get_values(menu, &car_info); // 2. µ¥ÀÌÅÍ ÀÔ·Â ¹× »ı¼º(ÃâÂ÷)
+                ret = get_values(menu, &car_info); // 2. ë°ì´í„° ì…ë ¥ ë° ìƒì„±(ì¶œì°¨)
                 ret = save_log(menu, car_info); // 3. save simple log
                 ret = search_user(user_table, car_info->car_number, &user); 
                 ret = update_current(menu, car_info, current_park, current_car); // 5. remove current list 
                 ret = update_history(menu, car_info, user); // 6. modify history
-                // currentList µ¥ÀÌÅÍ free
+                // currentList ë°ì´í„° free
                 // car_info free
                 break;
             }
             case 'q':
-                // 1-1. ¸Ş´º Á¾·á½Ã ÇÔ¼ö Á¾·á
+                // 1-1. ë©”ë‰´ ì¢…ë£Œì‹œ í•¨ìˆ˜ ì¢…ë£Œ
                 return OK;
                 break;
             default:
@@ -107,9 +107,9 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
 
 int get_values(char io, CAR_INFO **car_info) {
     char tmp;
-    // current_list ¿¡ ÀúÀåÇÒ µ¥ÀÌÅÍ
+    // current_list ì— ì €ì¥í•  ë°ì´í„°
     *car_info = (CAR_INFO*) malloc(sizeof(CAR_INFO));
-    // ÇöÀç ½Ã°£
+    // í˜„ì¬ ì‹œê°„
     char datetime[20];
     struct tm* today;
     time_t rawTime = time(NULL);
@@ -120,18 +120,18 @@ int get_values(char io, CAR_INFO **car_info) {
         today->tm_hour, today->tm_min, today->tm_sec
     );
 
-    // ¸Ş´º °ª È®ÀÎÇØ¼­ ÀúÀå
-    if (io == 'i'){ // io == i ÀÏ¶§ ÀÔ·Â
+    // ë©”ë‰´ ê°’ í™•ì¸í•´ì„œ ì €ì¥
+    if (io == 'i'){ // io == i ì¼ë•Œ ì…ë ¥
         strcpy((*car_info)->in_datetime, datetime);
         // strcpy((*car_info)->out_datetime, NULL);
         
-        printf("Â÷·® ¹øÈ£ >> ");
+        printf("ì°¨ëŸ‰ ë²ˆí˜¸ >> ");
         scanf("%s", (*car_info)->car_number); while((tmp=getchar())!='\n');
 
-        printf("Â÷Á¾ [e]lectric, [l]ight, [n]ormal >> ");
+        printf("ì°¨ì¢… [e]lectric, [l]ight, [n]ormal >> ");
         scanf("%c", &(*car_info)->car_type); while((tmp=getchar())!='\n');
         
-        printf("ÁÖÂ÷ À§Ä¡ >> ");
+        printf("ì£¼ì°¨ ìœ„ì¹˜ >> ");
         scanf("%d", &(*car_info)->floor); while((tmp=getchar())!='\n');
     
         switch ((*car_info)->car_type){
@@ -141,18 +141,18 @@ int get_values(char io, CAR_INFO **car_info) {
                 return FORMAT_ERROR;
         }
     }
-    else if (io == 'o'){// io == o ÀÏ¶§ ÀÔ·Â
+    else if (io == 'o'){// io == o ì¼ë•Œ ì…ë ¥
         strcpy((*car_info)->out_datetime, datetime);
         // strcpy((*car_info)->in_datetime, NULL);
-        printf("Â÷·® ¹øÈ£ >> ");
+        printf("ì°¨ëŸ‰ ë²ˆí˜¸ >> ");
         scanf("%s", (*car_info)->car_number); while((tmp=getchar())!='\n');
     }
     else{
-        // ¸Ş´º¸¦ Àß¸ø¹Ş¾Ò´Âµ¥ µé¾î¿Ã °æ¿ì°¡ ¾øÁö¸¸
-        // È¤½Ã¶óµµ µé¾î¿Â´Ù¸é ¸Ş¸ğ¸® ÇØÁ¦ÇÏ°í ÇÔ¼ö Á¾·á
+        // ë©”ë‰´ë¥¼ ì˜ëª»ë°›ì•˜ëŠ”ë° ë“¤ì–´ì˜¬ ê²½ìš°ê°€ ì—†ì§€ë§Œ
+        // í˜¹ì‹œë¼ë„ ë“¤ì–´ì˜¨ë‹¤ë©´ ë©”ëª¨ë¦¬ í•´ì œí•˜ê³  í•¨ìˆ˜ ì¢…ë£Œ
         return FORMAT_ERROR;
     }
-    // ±× ¿ÜÀÇ °ª 0À¸·Î ¼³Á¤ Á¤»êÇÒ¶§ »ç¿ë
+    // ê·¸ ì™¸ì˜ ê°’ 0ìœ¼ë¡œ ì„¤ì • ì •ì‚°í• ë•Œ ì‚¬ìš©
     (*car_info)->fee = 0;
     (*car_info)->is_paid = 0;
     return OK;
@@ -165,7 +165,7 @@ int save_log(char io, CAR_INFO *car_info){
         return FILE_ERROR;
     }
     // fputs("",fp);
-    // ÆÄÀÏÇü½Ä [i|o]\t[car_number]\t[yyyy-mm-dd hh:mm:ss]
+    // íŒŒì¼í˜•ì‹ [i|o]\t[car_number]\t[yyyy-mm-dd hh:mm:ss]
     fprintf(fp, "%c\t%s\t%s\n", 
         io, 
         car_info->car_number, 
@@ -177,12 +177,12 @@ int save_log(char io, CAR_INFO *car_info){
 }
 
 int search_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
-	// ÇØ½Ã Å×ÀÌºí¿¡¼­ È®ÀÎ. Ã£´Â °ªÀÌ ÀÖÀ¸¸é user_data¿¡ ÀúÀå
+	// í•´ì‹œ í…Œì´ë¸”ì—ì„œ í™•ì¸. ì°¾ëŠ” ê°’ì´ ìˆìœ¼ë©´ user_dataì— ì €ì¥
     // hash table get
     USER_INFO *tmp_user = NULL;
     hashGetValue(user_table, car_number, &tmp_user);
     *user_data = (USER_INFO *) malloc(sizeof(USER_INFO));
-    if ((tmp_user) == NULL){ // hash °ªÀÌ ¾ø´Â °æ¿ì
+    if ((tmp_user) == NULL){ // hash ê°’ì´ ì—†ëŠ” ê²½ìš°
         save_user(user_table, car_number, user_data);
     }
     else {
@@ -196,18 +196,18 @@ int search_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
     return OK;
 }
 int save_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
-    // user_data¿¡ °ª ÀúÀå
+    // user_dataì— ê°’ ì €ì¥
     char tmp;
-    printf("Â÷ÁÖ ÀÌ¸§ >> ");
+    printf("ì°¨ì£¼ ì´ë¦„ >> ");
     scanf("%s", (*user_data)->name); while((tmp=getchar())!='\n');
-    printf("Â÷ÁÖ ÈŞ´ëÆù ¹øÈ£ >> ");
+    printf("ì°¨ì£¼ íœ´ëŒ€í° ë²ˆí˜¸ >> ");
     scanf("%s", (*user_data)->phone_num); while((tmp=getchar())!='\n');
-    // Â÷·® ¹øÈ£ ÀÚµ¿ ÀúÀå
+    // ì°¨ëŸ‰ ë²ˆí˜¸ ìë™ ì €ì¥
     strcpy((*user_data)->car_num, car_number);
-    // Á¤±â±Ç ¾øÀ½
+    // ì •ê¸°ê¶Œ ì—†ìŒ
     (*user_data)->has_ticket = 0;
     printf("has_ticket: %d\n", (*user_data)->has_ticket);
-    // ÇØ½Ã Å×ÀÌºí¿¡ ÀúÀå
+    // í•´ì‹œ í…Œì´ë¸”ì— ì €ì¥
     hashSetValue(user_table, car_number, user_data);
 
     return OK;
@@ -215,7 +215,7 @@ int save_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
 
 int update_current(char io, CAR_INFO *car_info, LinkedList *current_park, LinkedList *current_car){
     switch (io){
-        case 'i': // 1. io == i ÀÏ¶§ current list ¿¡ µ¥ÀÌÅÍ Ãß°¡
+        case 'i': // 1. io == i ì¼ë•Œ current list ì— ë°ì´í„° ì¶”ê°€
             {
                 CAR_INFO* tmp_car_info;
                 tmp_car_info = (CAR_INFO *)malloc(sizeof(CAR_INFO));
@@ -230,7 +230,7 @@ int update_current(char io, CAR_INFO *car_info, LinkedList *current_park, Linked
                 list_push_back(current_car, tmp_car_info);
             } 
             break;
-        case 'o': // 2. io == o ÀÏ¶§ current list ¿¡¼­ Á¦°Å
+        case 'o': // 2. io == o ì¼ë•Œ current list ì—ì„œ ì œê±°
             {
                 Node* cur;
                 int idx=0;
@@ -256,19 +256,19 @@ int update_current(char io, CAR_INFO *car_info, LinkedList *current_park, Linked
 int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
     switch (io){
         case 'i':{
-            // ÀÔÂ÷ÇÒ ¶§ history ¸¶Áö¸·¿¡ Ãß°¡
+            // ì…ì°¨í•  ë•Œ history ë§ˆì§€ë§‰ì— ì¶”ê°€
             FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"ab");
             if(!fp) 
                 return FILE_ERROR;
 
-            // ±¸Á¶Ã¼ÀÇ ³»¿ëÀ» ÆÄÀÏ¿¡ ÀúÀå
+            // êµ¬ì¡°ì²´ì˜ ë‚´ìš©ì„ íŒŒì¼ì— ì €ì¥
             fwrite(&car_info, sizeof(car_info), 1, fp);
             fclose(fp);
             break;
         }
         case 'o':{
-            // ÃâÂ÷ÇÒ ¶§ Â÷ ¹øÈ£°¡ ¸Â´Â °ª Ã£°í ÇØ´ç ºÎºĞ ¼öÁ¤
-            // ¸ğµç ÆÄÀÏÀ» ÀĞ¾î¼­ °ª ´Ù¸¥ ºÎºĞ Ã£°í ÀÓ½Ã ÆÄÀÏ¿¡ °ª º¯°æÇØ¼­ ÀúÀå
+            // ì¶œì°¨í•  ë•Œ ì°¨ ë²ˆí˜¸ê°€ ë§ëŠ” ê°’ ì°¾ê³  í•´ë‹¹ ë¶€ë¶„ ìˆ˜ì •
+            // ëª¨ë“  íŒŒì¼ì„ ì½ì–´ì„œ ê°’ ë‹¤ë¥¸ ë¶€ë¶„ ì°¾ê³  ì„ì‹œ íŒŒì¼ì— ê°’ ë³€ê²½í•´ì„œ ì €ì¥
             FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"rb");
             if(!fp) 
                 return FILE_ERROR;
@@ -282,7 +282,7 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
                     break;
                 if (strcmp(tmp_car->car_number, car_info->car_number) == 0
                     && strcmp(tmp_car->out_datetime, NULL) == 0
-                ) { // Â÷·®¹øÈ£°¡ °°Àºµ¥ out_datetimeÀÌ NULLÀÎ ±¸Á¶Ã¼
+                ) { // ì°¨ëŸ‰ë²ˆí˜¸ê°€ ê°™ì€ë° out_datetimeì´ NULLì¸ êµ¬ì¡°ì²´
                     char datetime[20];
                     struct tm* today;
                     time_t rawTime = time(NULL);
@@ -302,7 +302,7 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
             }
             fclose(fp);
             fclose(fp_tmp);
-            // ÀÓ½Ã ÆÄÀÏ¿¡ ÀÖ´Â °ªÀ» µ¤¾î¾º¿ò
+            // ì„ì‹œ íŒŒì¼ì— ìˆëŠ” ê°’ì„ ë®ì–´ì”Œì›€
             fp = fopen(HISTORY_DATA_FILE_PATH,"wb");
             if(!fp) 
                 return FILE_ERROR;
@@ -323,6 +323,6 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
         default:
             return FORMAT_ERROR;
     }
-	// 0: ÀÔ·Â ¼º°ø 1: ÆÄÀÏ ÀÔÃâ·Â(¿ÀÇÂ, ÀÔ·Â µî) ½ÇÆĞ
+	// 0: ì…ë ¥ ì„±ê³µ 1: íŒŒì¼ ì…ì¶œë ¥(ì˜¤í”ˆ, ì…ë ¥ ë“±) ì‹¤íŒ¨
     return OK;
 }

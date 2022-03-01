@@ -10,8 +10,8 @@ typedef struct Info{
 }Info;
 
 typedef struct car_informaition {
-  char car_number[20]; // 123°¡4567 
-	char in_datetime[20]; // 2022-02-28 21:44:42 : \0±îÁö ÇØ¼­ 20ÀÚ¸®
+  char car_number[20]; // 123ê°€4567 
+	char in_datetime[20]; // 2022-02-28 21:44:42 : \0ê¹Œì§€ í•´ì„œ 20ìë¦¬
 	char out_datetime[20];
 	char car_type; // [e]lectric, [l]ight, [n]ormal
 	char is_paid; // when creating
@@ -20,26 +20,26 @@ typedef struct car_informaition {
 } CAR_INFO;
 
 typedef struct user_information {
-  char name[10]; // ÃâÀÔÀÚ ¼º¸í
-  char phone_num[15]; // ÃâÀÔÀÚ Æù¹øÈ£
-  char car_num[20]; // ÃâÀÔÀÚ Â÷¹øÈ£	
-  int has_ticket; // Á¤±â±Ç µî·Ï¿©ºÎ, 1ÀÌ¸é µî·ÏµÈ »ç¿ëÀÚ
+  char name[10]; // ì¶œì…ì ì„±ëª…
+  char phone_num[15]; // ì¶œì…ì í°ë²ˆí˜¸
+  char car_num[20]; // ì¶œì…ì ì°¨ë²ˆí˜¸	
+  int has_ticket; // ì •ê¸°ê¶Œ ë“±ë¡ì—¬ë¶€, 1ì´ë©´ ë“±ë¡ëœ ì‚¬ìš©ì
 } USER_INFO;
 
-typedef struct park { // ÁÖÂ÷Àå
-  int floor; // Ãş} 0 Á¦¿Ü, + Áö»ó, - ÁöÇÏ
-  int total; // ÁÖÂ÷Àå ³» ÁÖÂ÷ °ø°£ ¼ö,
-  int total_car; // ÁÖÂ÷Àå ³» ÁÖÂ÷µÈ Â÷ ¼ö
-  int electric_charge; // Àü±âÂ÷ ÃæÀü °ø°£ ¿©ºÎ, 0ÀÌ¸é ¾øÀ½, 1ÀÌ»ó ÃæÀü °ø°£ °³¼ö
-  int handicapped; //Àå¾ÖÀÎ ÁÖÂ÷ °ø°£ ¿©ºÎ
-  int light_car; //  °æÂ÷ Àü¿ë °ø°£ ¿©ºÎ
+typedef struct park { // ì£¼ì°¨ì¥
+  int floor; // ì¸µ} 0 ì œì™¸, + ì§€ìƒ, - ì§€í•˜
+  int total; // ì£¼ì°¨ì¥ ë‚´ ì£¼ì°¨ ê³µê°„ ìˆ˜,
+  int total_car; // ì£¼ì°¨ì¥ ë‚´ ì£¼ì°¨ëœ ì°¨ ìˆ˜
+  int electric_charge; // ì „ê¸°ì°¨ ì¶©ì „ ê³µê°„ ì—¬ë¶€, 0ì´ë©´ ì—†ìŒ, 1ì´ìƒ ì¶©ì „ ê³µê°„ ê°œìˆ˜
+  int handicapped; //ì¥ì• ì¸ ì£¼ì°¨ ê³µê°„ ì—¬ë¶€
+  int light_car; //  ê²½ì°¨ ì „ìš© ê³µê°„ ì—¬ë¶€
 } PARK;
 
 
 typedef struct Car{
-	char car_number[20]; // Â÷·® ¹øÈ£
-  char in_datetime[20]; // 2022-02-28 21:44:42 : \0±îÁö ÇØ¼­ 20ÀÚ¸®
-	int car_type; // Â÷·® ±¸ºĞ(°æÂ÷ , Àü±â , ÀÏ¹İ Â÷·®)
+	char car_number[20]; // ì°¨ëŸ‰ ë²ˆí˜¸
+  char in_datetime[20]; // 2022-02-28 21:44:42 : \0ê¹Œì§€ í•´ì„œ 20ìë¦¬
+	int car_type; // ì°¨ëŸ‰ êµ¬ë¶„(ê²½ì°¨ , ì „ê¸° , ì¼ë°˜ ì°¨ëŸ‰)
 } CAR;
 
 
