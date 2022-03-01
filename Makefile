@@ -10,6 +10,7 @@ SRCS += $(SRC_DIR)/home_ui.c $(SRC_DIR)/info_ui.c $(SRC_DIR)/history_ui.c
 SRCS += $(SRC_DIR)/history_detail.c
 SRCS += $(SRC_DIR)/linkedlist.c
 SRCS += $(SRC_DIR)/hash.c
+SRCS += $(SRC_DIR)/info.c
 SRCS += $(SRC_DIR)/manage.c
 
 
