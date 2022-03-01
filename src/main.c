@@ -37,10 +37,6 @@ int main(int argc, char const *argv[])
     create_linked_list(&current_car_list);
     readCurrentData(&current_car_list);
 
-    printf("park data : %d개\n",list_size(&current_list));
-    printf("car data : %d개\n", list_size(&current_car_list));
-    
-    getch();
     void *mainPage;
     FP render;
     
