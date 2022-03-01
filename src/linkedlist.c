@@ -83,6 +83,7 @@ int list_insert(LinkedList* list, LPDATA data ,int nPos){
         buffer->prev->next =temp;
     }
     buffer->prev = temp;
+    list->size += 1;
     return ERR_LIST_OK;
 }
 
@@ -141,6 +142,8 @@ int list_remove(LinkedList* list, int nPos){
     }
 
     Node *temp = list -> head;
+    list->size -= 1;
+
     for (int i = 0; i < nPos; i++){
         temp = temp -> next;
     }
@@ -149,7 +152,7 @@ int list_remove(LinkedList* list, int nPos){
         free(temp);
         list->head = list->tail = NULL;
     }
-    if(temp == list->head){
+    else if(temp == list->head){
         list->head = temp->next;
         list->head->prev = NULL;
         free(temp);
@@ -225,6 +228,7 @@ int list_clear(LinkedList* list){
         temp = next;
     }
     list->head = list->tail = NULL;
+    list->size = 0;
     return ERR_LIST_OK;
 }
 
