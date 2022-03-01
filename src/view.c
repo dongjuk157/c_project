@@ -4,7 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 
-
+//정산하기
 int printFeeView(){
 
     system("clear");
@@ -122,12 +122,12 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
         // memset(carInfo, 0, sizeof(CAR_INFO));
         //file을 읽어서 carnumber랑 일치하는 carinfo->fee = 0으로 처리해서 파일다시쓰기
         while(fread(carInfo, sizeof(Info), 1, ifp)){
-            if(!strcmp(carNumber, carInfo->car_number) && (strcmp(carInfo->out_datetime, "xxx")) //carnum 일치 && 출차안된건들말고
+            if(!strcmp(carNumber, carInfo->car_number) && strcmp(carInfo->out_datetime, "xxx"))
                 carInfo->fee = 0;
+            
             fwrite(carInfo, sizeof(CAR_INFO), 1, ofp);
         }
         free(carInfo);
-
         fclose(ifp);
         fclose(ofp);
 
@@ -142,6 +142,47 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
     return 0;
 }
 
+//정기권 뷰
+int printTicketView(){
+    system("clear");
+
+    Widget *ticketView = (Widget *)malloc(sizeof(Widget));
+
+    setWidgetPos(ticketView, DEFAULT_POSY,DEFAULT_POSX);
+    setWidgetSize(ticketView, 25, 70);
+    setWidgetType(ticketView, MAIN);
+    arrayCreate(&(ticketView->label));
+
+    Label *title = createLabel();
+    setLabelPos(title, 3, 26);
+    setLabelText(title,"주차 관리 프로그램");
+
+    Label *subTitle = createLabel();
+    setLabelPos(subTitle, 5, 26);
+    setLabelText(subTitle,"정기권 등록 및 연장");
+
+    Label *prompt = createLabel();
+    setLabelPos(prompt, 10, 10);
+    setLabelText(prompt,"차량번호를 입력하세요 >> ");
+
+    addLabel(ticketView, title);
+    addLabel(ticketView, subTitle);
+    addLabel(ticketView, prompt);
+
+//UI 프레임 그리기
+    printWidget(ticketView);
+    
+//세팅된 label 출력
+    for (int i = 0; i < arraySize(ticketView->label); i++)
+        printLabel(ticketView, (Label *)(ticketView->label->lpData)[i]);
+    
+    return 0;
+}
+
+
+
+
+//
 int printSingleLineView(char *currentMenu, char *defaultText){
 
     system("clear");

@@ -87,9 +87,8 @@ int renderPayUI(PAY_UI *pay){
 }
 
 
+// 정산하기
 int payParkingFee(){
-
-// REPEAT:
     //fee view load
     printFeeView();
 
@@ -137,11 +136,24 @@ int calcFee(char *carNumber){
     return 0;
 }
 
-// int createPayView{
-
-// }
+//정기권 등록
 
 int buyTicket(){
 
+//fee view load
+    printTicketView();
+
+    //차량번호 입력받기
+    char carNumber[20];
+
+    fgets(carNumber,20,stdin);
+    carNumber[strlen(carNumber)-1] = '\0';
+
+    calcFee(carNumber);
+
     return 0;
+}
+
+int hasTicket(char *carNumber, int hasTicket){
+
 }
