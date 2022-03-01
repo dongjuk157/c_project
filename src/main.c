@@ -21,7 +21,6 @@ int main(int argc, char const *argv[])
     // user 해시테이블 생성
     LPHASH user;
     hashCreate(&user); 
-
     // 파일 user.dat 읽어서 해시테이블 데이터 생성
     FILE *fp = fopen(USER_DATA_FILE_PATH, "rb");
     USER_INFO *tmp_user;
@@ -125,8 +124,42 @@ int main(int argc, char const *argv[])
         }
     }
 
-  
-    // 메모리 해제, data 백업 필요함
+    // data 백업
+    // 1. current_list -> ParkingLot.dat
+    fp = fopen(PARKINGLOT_SETTINGS_FILE_PATH, "wb");
+    Node *cur = current_list.head;
+    while (cur){
+        fwrite(((PARK *)cur->data), sizeof(PARK), 1, fp);
+        cur = cur->next;
+    }
+    fclose(fp);
+    
+    // 2. current_car_list -> Current.dat
+    fp = fopen(CURRENT_DATA_FILE_PATH, "wb");
+    Node *cur = current_car_list.head;
+    while (cur){
+        fwrite(((CAR_INFO *)cur->data), sizeof(CAR_INFO), 1, fp);
+        cur = cur->next;
+    }
+    fclose(fp);
+    
+    // 3. user_table -> User.dat
+    fp = fopen(USER_DATA_FILE_PATH, "wb");
+    NODE *cur;
+    void *tmp11, *tmp12;
+    hashGetFirstPostion(user, cur);
+    while (cur){
+        fwrite(((CAR_INFO *)cur->data), sizeof(CAR_INFO), 1, fp);
+        hashGetNextPostion(user, cur, tmp11, tmp12);
+    }
+    fclose(fp);
+
+
+    // 메모리 해제
+    list_clear(&current_list);
+    list_clear(&current_car_list);
+    hashDestroy(user);
+
 
     clearWidget(home);
     clearWidget(info);

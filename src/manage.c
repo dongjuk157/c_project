@@ -54,6 +54,15 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
                 ret = search_user(user_table, car_info->car_number, &user);      // 4 search user data with car_number
                 ret = update_current(menu, car_info, current_park, current_car); // 5. add current list 
                 ret = update_history(menu, car_info, user); // 6. add history
+                // 주차한 층에 값 증가, head부터 순회해서 같은 층의 정보를 받고, 해당 층의 total_car값을 증가시킴
+                Node *cur = current_park->head;
+                while (cur){
+                    if (((PARK*)cur->data)->floor == car_info->floor){
+                        ++(((PARK*)cur->data)->total_car);
+                        break;
+                    }
+                    cur = cur->next;
+                }
                 break;
             }
             case 'o':
@@ -63,6 +72,15 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
                 ret = search_user(user_table, car_info->car_number, &user); 
                 ret = update_current(menu, car_info, current_park, current_car); // 5. remove current list 
                 ret = update_history(menu, car_info, user); // 6. modify history
+                // 주차한 층에 값 감소
+                Node *cur = current_park->head;
+                while (cur){
+                    if (((PARK*)cur->data)->floor == car_info->floor){
+                        --(((PARK*)cur->data)->total_car);
+                        break;
+                    }
+                    cur = cur->next;
+                }
                 break;
             }
             case 'q':
