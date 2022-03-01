@@ -46,7 +46,7 @@ int min(int a, int b){
 	return (a<b) ? a : b;
 }
 // int date[] = {0,0,31,59,90,120,151,181,212,243,273,304,334,365};
-int calulate_fee(char* inDateTime, char* outDateTime){
+int calculate_fee(char* inDateTime, char* outDateTime){
     int inYear,outYear;
     int inMon,outMon;
     int inDay,outDay;
