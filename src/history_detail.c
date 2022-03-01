@@ -29,7 +29,7 @@ HISTORY_DETAIL_UI* createHistoryDetailUI(int type){
         setLabelText(input,"차량번호 입력(띄어쓰기 X) >> ");
     }
     else if(type == BY_NOT_PAID){
-        setLabelPos(input,10,26);
+        setLabelPos(input,10,32);
         setLabelText(input,"미정산 주차 이력");
     }
     else if(type == BY_DATE_IN){
@@ -85,6 +85,9 @@ int renderHistoryDetailByCarNum(HISTORY_DETAIL_UI* history){
         return HOME;
     }
     else{
+        Widget* historyData = createHistoryDetailSub();
+        renderWidget(historyData);
+        getch();
     }
 
     return HOME;
@@ -92,7 +95,9 @@ int renderHistoryDetailByCarNum(HISTORY_DETAIL_UI* history){
 
 int renderHistoryDetailByNotPaid(HISTORY_DETAIL_UI* history){
     renderWidget(history);
-    
+    Widget* historyData = createHistoryDetailSub();
+    renderWidget(historyData);
+
     char init[20];
     fgets(init,20,stdin);
     init[strlen(init)-1] = '\0';
