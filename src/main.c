@@ -105,7 +105,7 @@ int main(int argc, char const *argv[])
         case EXIT:
             break_sig = 1;
             break;
-            return 0;
+            // return 0;
         default:
             break;
         }
