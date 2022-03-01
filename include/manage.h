@@ -9,12 +9,12 @@
 #define FILE_ERROR    -1
 #define FORMAT_ERROR  -2
 
-#define CURRENT_DATA_FILE_PATH          "../data/Current.dat"
-#define SIMPLE_LOG_FILE_PATH    		"../data/history.log"
-#define USER_DATA_FILE_PATH     		"../data/User.dat"
-#define HISTORY_DATA_FILE_PATH     		"../data/History.dat"
-#define TEMP_HISTORY_DATA_FILE_PATH     "../data/History.tmp.dat"
-#define PARKINGLOT_SETTINGS_FILE_PATH   "../data/ParkingLot.dat"
+#define CURRENT_DATA_FILE_PATH          "./data/Current.dat"
+#define SIMPLE_LOG_FILE_PATH    		"./data/history.log"
+#define USER_DATA_FILE_PATH     		"./data/User.dat"
+#define HISTORY_DATA_FILE_PATH     		"./data/History.dat"
+#define TEMP_HISTORY_DATA_FILE_PATH     "./data/History.tmp.dat"
+#define PARKINGLOT_SETTINGS_FILE_PATH   "./data/ParkingLot.dat"
 
 
 int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *current_car);
