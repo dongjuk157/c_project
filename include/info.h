@@ -49,5 +49,7 @@ int readUserData(LPHASH *hash);
 int readParkingLot(LinkedList* list);
 int readCurrentData(LinkedList* list);
 
+int saveUserData(LPHASH hash);
+
 #endif // __INFO_H__
 
