@@ -6,7 +6,7 @@
 
 HISTORY_DETAIL_UI* createHistoryDetailUI(int type){
 
-    HISTORY_DETAIL_UI* history = (HISTORY_DETAIL_UI*)malloc(sizeof(HISTORY_DETAIL_UI));
+    HISTORY_DETAIL_UI* history = createWidget();
     setWidgetPos(history, DEFAULT_POSY,DEFAULT_POSX);
     setWidgetSize(history, 25, 81);
     setWidgetType(history, MAIN);
@@ -48,6 +48,7 @@ HISTORY_DETAIL_UI* createHistoryDetailUI(int type){
 
     return history;
 }
+
 Widget* createHistoryDetailSub(){
     Widget* historyData = createWidget();
     setWidgetPos(historyData,13,5);

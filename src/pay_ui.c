@@ -9,7 +9,7 @@
 // 결제하기 기능 선택시 나타날 UI 제작 -> 제작한 Widget 구조체의 포인터 리턴
 PAY_UI *createPayUI(){
 
-    PAY_UI *payUI = (PAY_UI *)malloc(sizeof(PAY_UI));
+    PAY_UI *payUI = createWidget();
 
     // 기본 위젯 Position 세팅
     setWidgetPos(payUI, DEFAULT_POSY,DEFAULT_POSX);

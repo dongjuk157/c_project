@@ -8,6 +8,7 @@ Widget* createWidget()
     Widget* widget = (Widget*)malloc(sizeof(Widget));
     setWidgetPos(widget,DEFAULT_POSY,DEFAULT_POSX);
     arrayCreate(&(widget->label));
+    arrayCreate(&(widget->subWidget));
     
     return widget;
 }
@@ -63,6 +64,11 @@ int renderWidget(Widget* widget)
     {
         printLabel(widget,(Label *)(widget->label->lpData)[i]);
     }
+    for (int i = 0; i < arraySize(widget->subWidget); i++)
+    {
+        renderWidget((Widget *)(widget->subWidget->lpData)[i]);
+    }
+    
     return True;
 }
 
@@ -71,6 +77,13 @@ bool addLabel(Widget *widget, Label *label)
     if(widget->label == NULL) return False;
 
     arrayAdd(widget->label, label);
+    return True;
+}
+
+int addWidget(Widget *widget, Widget *subWidget){
+    if(widget->subWidget == NULL) return False;
+
+    arrayAdd(widget->subWidget, subWidget);
     return True;
 }
 
@@ -115,7 +128,7 @@ int renderEmpty(Widget *widget){
 
 int clearWidget(Widget* widget){
     arrayDestroy(widget->label);
-
+    arrayDestroy(widget->subWidget);
     free(widget);
     return 0;
 }
