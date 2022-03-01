@@ -6,12 +6,12 @@
 HOME_UI* createHomeUI(){
     HOME_UI* home = (HOME_UI*)malloc(sizeof(HOME_UI));
     setWidgetPos(home, DEFAULT_POSY,DEFAULT_POSX);
-    setWidgetSize(home, 25, 70);
+    setWidgetSize(home, 25, 75);
     setWidgetType(home, MAIN);
     arrayCreate(&(home->label));
 
     Label* title = createLabel();
-    setLabelPos(title,5, 26);
+    setLabelPos(title,5, 28);
     setLabelText(title,"주차 관리 프로그램");
 
     Label* io_manage = createLabel();
