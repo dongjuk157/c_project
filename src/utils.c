@@ -37,3 +37,7 @@ int getch(void)
 	tcsetattr(0, TCSAFLUSH, &save);
 	return ch;
 }
+
+int min(int a, int b){
+	return (a<b) ? a : b;
+}
