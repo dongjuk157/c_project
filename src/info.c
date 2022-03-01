@@ -8,6 +8,9 @@ void printInfo(Info info){
 
 int readUserData(LPHASH *hash){
     FILE *fp = fopen(USER_DATA_FILE_PATH, "rb");
+    if(fp==NULL){
+        return -1;
+    }
     USER_INFO *tmp_user;
     while (1){
         tmp_user = (USER_INFO *)malloc(sizeof(USER_INFO));
@@ -21,6 +24,9 @@ int readUserData(LPHASH *hash){
 
 int readParkingLot(LinkedList* list){
     FILE* fp = fopen(PARKINGLOT_SETTINGS_FILE_PATH, "rb");
+    if(fp==NULL){
+        return -1;
+    }
     PARK *tmp_park;
     while (1){
         tmp_park = (PARK *)malloc(sizeof(PARK));
@@ -36,6 +42,9 @@ int readParkingLot(LinkedList* list){
 int readCurrentData(LinkedList* list){
     // 파일 current.dat 읽어서 리스트 생성
     FILE* fp = fopen(CURRENT_DATA_FILE_PATH, "rb");
+    if(fp==NULL){
+        return -1;
+    }
     CAR_INFO *tmp_car_info;
     while (1){
         tmp_car_info = (CAR_INFO *)malloc(sizeof(CAR_INFO));
