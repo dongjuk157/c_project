@@ -10,7 +10,6 @@
 
 extern LPHASH user;
 
-// 결제하기 기능 선택시 나타날 UI 제작 -> 제작한 Widget 구조체의 포인터 리턴
 PAY_UI *createPayUI(){
 
     PAY_UI *payUI = createWidget();
@@ -96,6 +95,9 @@ int calcFee(char *carNumber){
     
     FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"rb");
     if(fp == NULL){
+        gotoxy(10, 20);
+        printf("주차된 차량번호가 아닙니다!");
+        getchar();
         return 1;
     }
 

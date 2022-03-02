@@ -136,9 +136,10 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
 
         //file을 읽어서 carnumber랑 일치하는 carinfo->fee = 0으로 처리해서 파일다시쓰기
         while(fread(carInfo, sizeof(Info), 1, ifp)){
-            if(!strcmp(carNumber, carInfo->car_number) && strcmp(carInfo->out_datetime, ""))
+            if(!strcmp(carNumber, carInfo->car_number) && strcmp(carInfo->out_datetime, "")){
                 carInfo->fee = 0;
                 carInfo->is_paid = 1;
+            }
             fwrite(carInfo, sizeof(CAR_INFO), 1, ofp);
         }
         free(carInfo);
