@@ -3,11 +3,13 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <termios.h>
-#include "utils.h"
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
 
+#include "utils.h"
+#include "manage.h"
+#include "info.h"
 
 void gotoxy(int x, int y)
 {
@@ -152,3 +154,63 @@ int diff(int y1, int m1, int d1, int y2, int m2, int d2)
 	return b-a;
 }
 
+
+int printUserData(void){
+	FILE *fp = fopen(USER_DATA_FILE_PATH, "rb");
+	printf("name\tcar_num\tphone_num\trecentTicket\thas_ticket\n");
+	while (1) {
+		USER_INFO tmp;
+		fread(&tmp, sizeof(USER_INFO), 1, fp);
+		if (feof(fp)) break;
+		printf("%s\t%s\t%s\t%s\t%d\n", 
+			tmp.name, tmp.car_num, tmp.phone_num,
+			tmp.recentTicket, tmp.has_ticket
+		);
+	}
+	fclose(fp);
+}
+int printCurrentData(void){
+	FILE *fp = fopen(CURRENT_DATA_FILE_PATH, "rb");
+	printf("car_number\tcar_type\tfloor\tin_datetime\tout_datetime\tfee\tis_paid\n");
+	while (1) {
+		CAR_INFO tmp;
+		fread(&tmp, sizeof(CAR_INFO), 1, fp);
+		if (feof(fp)) break;
+		printf("%s\t%c\t%d\t%s\t%s\t%d\t%d\n", 
+			tmp.car_number, tmp.car_type, tmp.floor,
+			tmp.in_datetime, tmp.out_datetime,
+			tmp.fee, tmp.is_paid
+		);
+	}
+	fclose(fp);
+}
+int printHistoryData(void){
+	FILE *fp = fopen(HISTORY_DATA_FILE_PATH, "rb");
+	printf("car_number\tcar_type\tfloor\tin_datetime\tout_datetime\tfee\tis_paid\n");
+	while (1) {
+		CAR_INFO tmp;
+		fread(&tmp, sizeof(CAR_INFO), 1, fp);
+		if (feof(fp)) break;
+		printf("%s\t%c\t%d\t%s\t%s\t%d\t%d\n", 
+			tmp.car_number, tmp.car_type, tmp.floor,
+			tmp.in_datetime, tmp.out_datetime,
+			tmp.fee, tmp.is_paid
+		);
+	}
+	fclose(fp);
+}
+int printParkingLotData(void){
+	FILE *fp = fopen(PARKINGLOT_SETTINGS_FILE_PATH, "rb");
+	
+	printf("floor\ttotal\ttotal_car\telectric_charge\thandicapped\tlight_car\n");
+	while (1) {
+		PARK tmp;
+		fread(&tmp, sizeof(PARK), 1, fp);
+		if (feof(fp)) break;
+		printf("%d\t%d\t%d\t%d\t%d\t%d\n", 
+			tmp.floor, tmp.total, tmp.total_car, 
+			tmp.electric_charge, tmp.handicapped, tmp.light_car
+		);
+	}
+	fclose(fp);
+}
