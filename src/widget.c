@@ -16,12 +16,7 @@ Widget* createWidget()
 
 void printWidget(Widget* widget)
 {
-    if(widget->type == MAIN){
-
-        // setLabelText(bar,"                                                                         ━ ■ X ");
-
-       
-
+    if(widget->type == MAIN || widget->type == MSGBOX){
         gotoxy(widget->posx,widget->posy);
         printf("┏");
         for (int i = 1; i < widget->width-1; i++) printf("━");
@@ -41,7 +36,7 @@ void printWidget(Widget* widget)
         printf("┛\n");
 
 
-        gotoxy(0,3);
+        gotoxy(widget->posx, widget->posy + 2);
         printf("┣");
         
         for (int i = 0; i < widget->width-2; i++){
@@ -51,7 +46,7 @@ void printWidget(Widget* widget)
         printf("┫");
 
         printf("\x1b[%dm",44);
-        gotoxy(2,2);
+        gotoxy(widget->posx + 1, widget->posy + 1);
         for (int i = 0; i < widget->width-8; i++)
         {   
             printf(" ");
@@ -78,7 +73,7 @@ void printWidget(Widget* widget)
         for (int i = 1; i <widget->width-1; i++) printf("─");
         printf("┘\n");
     }
-   
+    
 }
 
 int renderWidget(Widget* widget)
@@ -108,6 +103,7 @@ bool addLabel(Widget *widget, Label *label)
 int addWidget(Widget *widget, Widget *subWidget){
     if(widget->subWidget == NULL) return False;
 
+    setWidgetPos(subWidget,widget->posy + subWidget->posy, widget->posx + subWidget->posx);
     arrayAdd(widget->subWidget, subWidget);
     return True;
 }

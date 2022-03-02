@@ -18,6 +18,7 @@
 
 #define MAIN 0
 #define SUB 1
+#define MSGBOX 2
 
 typedef struct Widget{
     int height;

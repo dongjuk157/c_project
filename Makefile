@@ -16,6 +16,7 @@ SRCS += $(SRC_DIR)/manage.c
 SRCS += $(SRC_DIR)/manage_ui.c
 SRCS += $(SRC_DIR)/manage_detail.c
 SRCS += $(SRC_DIR)/parkstatus_detail.c
+SRCS += $(SRC_DIR)/messagebox.c
 
 OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
 TARGET = main
