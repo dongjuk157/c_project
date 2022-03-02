@@ -8,6 +8,7 @@
 #include "manage_ui.h"
 #include "manage_detail.h"
 #include "info.h"
+#include "messagebox.h"
 
 extern LPHASH user;
 extern LinkedList current_list;
@@ -74,30 +75,24 @@ int renderManageUI(MANAGE_UI *manage){
     }
     else{
         int num = atoi(selectNumber);
+        int ret = 0;
         MANAGE_DETAIL_UI* detail;
         if(num == 1){
             // 입차
             detail = createManageDetailUI(IN_CAR);
             renderWidget(detail);
-            getValuesUI(manage,IN_CAR,&car_info);
+            ret = getValuesUI(manage,IN_CAR,&car_info);
+            if (ret){ 
+                // ret == 0 성공, 0 아니면 에러이므로 함수 종료
+                return ret;
+            }
             save_log(IN_CAR, car_info);
             searchUserUI(manage, car_info->car_number, &user_info, 'i');
             update_current(IN_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
             update_history(IN_CAR, car_info, user_info); // 6. add history
             
-
-            // Node *tmp = current_list.head;
-            // while(tmp){
-            //     PARK* buf = (PARK*)tmp->data;
-            //     if(buf->floor == car_info->floor){
-            //         buf->total_car+=1;
-            //         break;
-            //     }
-            //     tmp = tmp->next;
-            // }
-
             gotoxy(10,20);
-            printf("새로운 차량이 입차 정상적으로 입차 되었습니다.\n");
+            printf("새로운 차량이 정상적으로 입차 되었습니다.\n");
             getchar();
 
         } 
@@ -105,13 +100,15 @@ int renderManageUI(MANAGE_UI *manage){
             // 출차
             detail = createManageDetailUI(OUT_CAR);
             renderWidget(detail);
-            getValuesUI(manage,OUT_CAR,&car_info);
+            ret = getValuesUI(manage,OUT_CAR,&car_info);
+            if (ret){
+                return ret;
+            }
             int res;
             res = searchUserUI(manage, car_info->car_number, &user_info , 'o');
             if(res == -2){
-                printSiglelineWidget(manage,18,10,"해당 차량 정보가 존재하지 않습니다...");
-                getchar();
-                return HOME;
+                messageBox(manage,"차량 정보가 존재하지 않습니다.");
+                return IOMANAGE;
             }
 
             save_log(OUT_CAR, car_info);
@@ -135,20 +132,14 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
 
     *car_info = (CAR_INFO*) malloc(sizeof(CAR_INFO));
 
-    Label temp;
-    labelCreate(&temp);
     if(io == 'i'){
         getDateTime((*car_info)->in_datetime);
         
-        setLabelPos(&temp,8,10);
-        setLabelText(&temp,"차량 번호(123가1234)>> ");
-        printLabel(manage,&temp);
+        printSiglelineWidget(manage, 8,10, "차량 번호(123가1234)>> ", 0);
         fgets((*car_info)->car_number, 20, stdin);
         (*car_info)->car_number[strlen((*car_info)->car_number)-1] = '\0';
 
-        setLabelPos(&temp,10,10);
-        setLabelText(&temp,"차종 [e]lectric, [l]ight, [n]ormal >> ");
-        printLabel(manage,&temp);
+        printSiglelineWidget(manage, 10,10, "차종 [e]lectric, [l]ight, [n]ormal >> ", 0);
         scanf("%c", &(*car_info)->car_type); while(getchar()!='\n');
 
         switch ((*car_info)->car_type) {
@@ -159,9 +150,7 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
                 break;
         }
         
-        setLabelPos(&temp,12,10);
-        setLabelText(&temp,"주차 위치(층수 입력) >> ");
-        printLabel(manage,&temp);
+        printSiglelineWidget(manage, 12,10, "주차 위치(층수 입력) >> ", 0);
         scanf("%d", &(*car_info)->floor); while(getchar()!='\n');
 
         int find_flag = 0;
@@ -186,15 +175,12 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
         }
     }
     else if(io == 'o'){
-        setLabelPos(&temp,14,10);
-        setLabelText(&temp,"차량 번호(123가1234)>> ");
-        printLabel(manage,&temp);
+        printSiglelineWidget(manage,14,10,"차량 번호(123가1234)>> ", 0);
         fgets((*car_info)->car_number, 20, stdin);
         (*car_info)->car_number[strlen((*car_info)->car_number)-1] = '\0';
-
     }
     else {
-        return 0;
+        return -1;
     }
 
     return 0;
@@ -226,26 +212,18 @@ int saveUserUI(MANAGE_UI* manage, char *car_number, USER_INFO **user_data){
         *user_data = (USER_INFO *) malloc(sizeof(USER_INFO));
     }
 
-    Label temp;
-    labelCreate(&temp);
-
-    setLabelPos(&temp,14,10);
-    setLabelText(&temp,"차주 이름 >> ");
-    printLabel(manage,&temp);
-    // scanf("%s", (*user_data)->name); while(getchar()!='\n');
+    printSiglelineWidget(manage, 14, 10, "차주 이름 >> ", 0);
     fgets((*user_data)->name, 20, stdin);
     (*user_data)->name[strlen((*user_data)->name)-1] = '\0';
 
-    setLabelPos(&temp,16,10);
-    setLabelText(&temp,"차주 휴대폰 번호(010-1234-5678) >> ");
-    printLabel(manage,&temp);
-    // scanf("%s", (*user_data)->phone_num); while(getchar()!='\n');
+    printSiglelineWidget(manage, 16, 10, "차주 휴대폰 번호(010-1234-5678) >> ", 0);
     fgets((*user_data)->phone_num, 15, stdin);
     (*user_data)->phone_num[strlen((*user_data)->phone_num)-1] = '\0';
     
     strcpy((*user_data)->car_num, car_number);
     (*user_data)->has_ticket = 0;
 
+    strcpy((*user_data)->recentTicket, "0000-00-00");
     hashSetValue(user, car_number, *user_data);
 
     return OK;

@@ -9,53 +9,19 @@ HOME_UI* createHomeUI(){
     setWidgetSize(home, 25, 75);
     setWidgetType(home, MAIN);
 
-    Label* title = createLabel();
-    setLabelPos(title,5, 28);
-    setLabelText(title,"주차 관리 프로그램");
-
-    Label* io_manage = createLabel();
-    setLabelPos(io_manage,12,10);
-    setLabelText(io_manage,"1. 출입 차량 관리");
-
-    Label* pay_manage= createLabel();
-    setLabelPos(pay_manage,12,30);
-    setLabelText(pay_manage,"2. 결제 기능");
-
-    Label* park_status = createLabel();
-    setLabelPos(park_status,12,50);
-    setLabelText(park_status,"3. 주차 현황");
-
-    Label* vehicle_inquiry = createLabel();
-    setLabelPos(vehicle_inquiry,16,10);
-    setLabelText(vehicle_inquiry,"4. 차량 조회");
-
-    Label* park_history = createLabel();
-    setLabelPos(park_history,16,30);
-    setLabelText(park_history,"5. 주차 이력");
+    labelAdd(home,5,28,"주차 관리 프로그램", 0);
+    labelAdd(home,12,10,"1. 출입 차량 관리", 0);
+    labelAdd(home,12,30,"2. 결제 기능", 0);
+    labelAdd(home,12,50,"3. 주차 현황", 0);
+    labelAdd(home,16,10,"4. 차량 조회", 0);
+    labelAdd(home,16,30,"5. 주차 이력", 0);
 
     #ifdef TEST
-    
-    Label* dummy = createLabel();
-    setLabelPos(dummy,16,50);
-    setLabelText(dummy,"6. 데이터 확인");
-    addLabel(home, dummy);
+    labelAdd(home,16,50,"6. 데이터 확인", 0);
 
     #endif // TEST
-    
-   
 
-    Label* input = createLabel();
-    setLabelPos(input, 20, 10);
-    setLabelText(input,"메뉴를 선택해주세요 >> ");
-
-
-    addLabel(home, title);
-    addLabel(home,io_manage);
-    addLabel(home,pay_manage);
-    addLabel(home,park_status);
-    addLabel(home,vehicle_inquiry);
-    addLabel(home,park_history);
-    addLabel(home,input);
+    labelAdd(home,20,10,"메뉴를 선택해주세요 >> ", 0);
 
     return home;
 }
@@ -73,7 +39,7 @@ int checkinit(char *init){
         #ifdef TEST
         else if(num == 6) return 6;
         #endif
-        else return INPUTERROR;
+        else return WIDGET_NOT_VALID_INPUT;
     }
 }
 

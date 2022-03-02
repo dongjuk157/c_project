@@ -44,11 +44,11 @@ typedef struct park { // 주차장
 } PARK;
 
 
-typedef struct Car{
-	char car_number[20]; // 차량 번호
-  char in_datetime[20]; // 2022-02-28 21:44:42 : \0까지 해서 20자리
-	int car_type; // 차량 구분(경차 , 전기 , 일반 차량)
-} CAR;
+// typedef struct Car{
+// 	char car_number[20]; // 차량 번호
+//   char in_datetime[20]; // 2022-02-28 21:44:42 : \0까지 해서 20자리
+// 	int car_type; // 차량 구분(경차 , 전기 , 일반 차량)
+// } CAR;
 
 
 void printInfo(Info info);

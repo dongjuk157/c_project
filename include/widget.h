@@ -14,10 +14,16 @@
 #define PARKSTATUS 3
 #define CARINFO 4
 #define PARKHISTORY 5
-#define INPUTERROR -1000
+
+#define WIDGET_LABEL_NOT_CREATED -1003
+#define WIDGET_SUB_WIDGET_NOT_CREATED -1002
+#define WIDGET_TEXT_NOT_EXIST -1001
+#define WIDGET_NOT_VALID_INPUT -1000
+#define WIDGET_EOK 0
 
 #define MAIN 0
 #define SUB 1
+#define MSGBOX 2
 
 typedef struct Widget{
     int height;
@@ -29,15 +35,16 @@ typedef struct Widget{
 }Widget;
 
 Widget* createWidget();
-void printWidget(Widget* widget);
+int printWidget(Widget* widget);
 int renderWidget(Widget* widget);
-bool addLabel(Widget *widget, Label *label);
+int addLabel(Widget *widget, Label *label);
+int labelAdd(Widget* widget, int posy, int posx, const char* text, int color);
 int addWidget(Widget *widget, Widget *subWidget);
-void setWidgetPos(Widget *widget, int posy, int posx);
-void setWidgetSize(Widget *widget, int height, int width);
-void setWidgetType(Widget *Widget, int type);
-bool printLabel(Widget* widget, const Label* label);
+int setWidgetPos(Widget *widget, int posy, int posx);
+int setWidgetSize(Widget *widget, int height, int width);
+int setWidgetType(Widget *Widget, int type);
+int printLabel(Widget* widget, const Label* label);
 int clearWidget(Widget* widget);
 int renderEmpty(Widget *widget);
-int printSiglelineWidget(Widget* widget, int posy, int posx, const char* text);
+int printSiglelineWidget(Widget* widget,  int posy, int posx, const char* text, int color);
 #endif // __WIDGET_H__

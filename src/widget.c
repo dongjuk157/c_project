@@ -10,18 +10,12 @@ Widget* createWidget()
     arrayCreate(&(widget->label));
     arrayCreate(&(widget->subWidget));
 
-    
     return widget;
 }
 
-void printWidget(Widget* widget)
+int printWidget(Widget* widget)
 {
-    if(widget->type == MAIN){
-
-        // setLabelText(bar,"                                                                         ━ ■ X ");
-
-       
-
+    if(widget->type == MAIN || widget->type == MSGBOX){
         gotoxy(widget->posx,widget->posy);
         printf("┏");
         for (int i = 1; i < widget->width-1; i++) printf("━");
@@ -41,7 +35,7 @@ void printWidget(Widget* widget)
         printf("┛\n");
 
 
-        gotoxy(0,3);
+        gotoxy(widget->posx, widget->posy + 2);
         printf("┣");
         
         for (int i = 0; i < widget->width-2; i++){
@@ -51,7 +45,7 @@ void printWidget(Widget* widget)
         printf("┫");
 
         printf("\x1b[%dm",44);
-        gotoxy(2,2);
+        gotoxy(widget->posx + 1, widget->posy + 1);
         for (int i = 0; i < widget->width-8; i++)
         {   
             printf(" ");
@@ -78,7 +72,7 @@ void printWidget(Widget* widget)
         for (int i = 1; i <widget->width-1; i++) printf("─");
         printf("┘\n");
     }
-   
+    return WIDGET_EOK;
 }
 
 int renderWidget(Widget* widget)
@@ -94,26 +88,36 @@ int renderWidget(Widget* widget)
         renderWidget((Widget *)(widget->subWidget->lpData)[i]);
     }
     
-    return True;
+    return WIDGET_EOK;
 }
 
-bool addLabel(Widget *widget, Label *label)
+int addLabel(Widget *widget, Label *label)
 {
-    if(widget->label == NULL) return False;
+    if(widget->label == NULL) return WIDGET_LABEL_NOT_CREATED;
 
     arrayAdd(widget->label, label);
-    return True;
+    return WIDGET_EOK;
+}
+
+int labelAdd(Widget* widget, int posy, int posx, const char* text, int color){
+    Label *newLabel = createLabel();
+    setLabelPos(newLabel, posy, posx);
+    setLabelText(newLabel, text);
+    setLabelBackgrounColor(newLabel, color);
+    addLabel(widget, newLabel);
+    return WIDGET_EOK;
 }
 
 int addWidget(Widget *widget, Widget *subWidget){
-    if(widget->subWidget == NULL) return False;
+    if(widget->subWidget == NULL) return WIDGET_SUB_WIDGET_NOT_CREATED;
 
+    setWidgetPos(subWidget,widget->posy + subWidget->posy, widget->posx + subWidget->posx);
     arrayAdd(widget->subWidget, subWidget);
-    return True;
+    return WIDGET_EOK;
 }
 
-bool printLabel(Widget* widget, const Label* label){
-    if(label->text==NULL) return False;
+int printLabel(Widget* widget, const Label* label){
+    if(label->text == NULL) return WIDGET_TEXT_NOT_EXIST;
 
     gotoxy(widget->posx + label->posx, widget->posy + label->posy);
     if(label->color != 0){
@@ -122,25 +126,29 @@ bool printLabel(Widget* widget, const Label* label){
     printf("%s",label->text);    
     printf("\x1b[0m");
 
-    return True;
+    return WIDGET_EOK;
 }
 
-
-void setWidgetPos(Widget *widget, int posy, int posx)
+int setWidgetPos(Widget *widget, int posy, int posx)
 {
-    // if(posx<=0 || posy<=0) return;
+    if(posx<=0 || posy<=0) return WIDGET_NOT_VALID_INPUT;
     widget -> posy = posy;
     widget -> posx = posx;
+    return WIDGET_EOK;
 }
 
-void setWidgetSize(Widget *widget, int height, int width)
+int setWidgetSize(Widget *widget, int height, int width)
 {
+    if(height < 0 || width < 0) return WIDGET_NOT_VALID_INPUT;
     widget->height = height;
     widget->width = width;
+    return WIDGET_EOK;
 }
 
-void setWidgetType(Widget *Widget, int type){
+int setWidgetType(Widget *Widget, int type){
+    if(type != MAIN && type != SUB && type != MSGBOX) return WIDGET_NOT_VALID_INPUT;
     Widget->type = type;
+    return WIDGET_EOK;
 }
 
 int renderEmpty(Widget *widget){
@@ -152,22 +160,26 @@ int renderEmpty(Widget *widget){
             printf(" ");
         }
     }
-    return 0;
+    return WIDGET_EOK;
 }
 
 int clearWidget(Widget* widget){
     arrayDestroy(widget->label);
+    for (int i = 0; i < arraySize(widget->subWidget); i++)
+    {
+        Widget *tmp;
+        arrayGetAt(widget->subWidget,i,(LPDATA *)&tmp);
+        arrayDestroy(tmp->label);
+        arrayDestroy(tmp->subWidget);
+    }
     arrayDestroy(widget->subWidget);
     free(widget);
-    return 0;
+    return WIDGET_EOK;
 }
 
-int printSiglelineWidget(Widget* widget, int posy, int posx, const char* text){
+int printSiglelineWidget(Widget* widget, int posy, int posx, const char* text, int color){
     Label buf;
-    labelCreate(&buf);
-
-    setLabelPos(&buf, posy, posx);
-    setLabelText(&buf,text);
-
+    setLabel(&buf, posy, posx, text, 0);
     printLabel(widget,&buf);
+    return WIDGET_EOK;
 }

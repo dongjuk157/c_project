@@ -55,12 +55,12 @@ int renderFeeView(){
 
 int printFeeDetailView(char *carNumber, int fee, int hasTicket){
 
-    REPEAT:
-    {
     //계산된 fee 출력을 위해 int->string
     char feeStr[10];
     if(hasTicket){
         sprintf(feeStr, "%d", (int)(fee * ticketDisc));
+    }else{
+        sprintf(feeStr, "%d", fee);
     }
 
     Widget *feeDetailView = (Widget *)malloc(sizeof(Widget));
@@ -84,17 +84,13 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
 
     Label *label2 = createLabel();
     setLabelPos(label2, 11, 19);
-    setLabelText(label2, feeStr); // hasticket 여부로 *할인율 적용할지 판단
+    setLabelText(label2, feeStr);
 
     Label *label3 = createLabel();
     setLabelPos(label3, 11, 24);
     setLabelText(label3, "원 입니다.");
 
-    if(hasTicket){
-        Label *label2 = createLabel();
-        setLabelPos(label2, 11, 19);
-        setLabelText(label2, feeStr); // hasticket 여부로 *할인율 적용할지 판단
-
+    if(hasTicket){ //할인율 적용
         Label *label4 = createLabel();
         setLabelPos(label4, 11, 35);
         setLabelText(label4, "(정기권 할인 적용)");
@@ -127,33 +123,32 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
 
     if(!strcmp("Y", prompt)){
         
-        FILE *ifp = fopen(HISTORY_DATA_FILE_PATH,"rb");
-        FILE *ofp = fopen(HISTORY_DATA_FILE_PATH,"wb");
+        FILE *ifp = fopen(HISTORY_DATA_FILE_PATH,"rb+");
 
-        if(ifp == NULL || ofp == NULL){
+        if(ifp == NULL){
             return 1;
         }
 
         CAR_INFO *carInfo = (CAR_INFO *)malloc(sizeof(CAR_INFO));
 
         //file을 읽어서 carnumber랑 일치하는 carinfo->fee = 0으로 처리해서 파일다시쓰기
-        while(fread(carInfo, sizeof(Info), 1, ifp)){
-            if(!strcmp(carNumber, carInfo->car_number) && strcmp(carInfo->out_datetime, ""))
-                carInfo->fee = 0;
-            fwrite(carInfo, sizeof(CAR_INFO), 1, ofp);
+        while(fread(carInfo, sizeof(CAR_INFO), 1, ifp)){
+            if(!strcmp(carNumber, carInfo->car_number) && strcmp(carInfo->out_datetime, "")){
+                carInfo->is_paid = 1;
+            }
+            fseek(ifp,-sizeof(CAR_INFO),SEEK_CUR);
+            fwrite(carInfo, sizeof(CAR_INFO), 1, ifp);
         }
         free(carInfo);
         fclose(ifp);
-        fclose(ofp);
 
         printSingleLineView("주차요금 정산", "결제가 완료되었습니다!");
     } else if(!strcmp("N", prompt)){
         printSingleLineView("주차요금 정산", "결제가 취소되었습니다!");
         return 0;
     } else{
-        goto REPEAT;
     }
-    }
+
     return 0;
 }
 

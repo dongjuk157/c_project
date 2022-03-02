@@ -17,6 +17,7 @@
 #include "hash.h"
 #include "manage.h"
 #include "utils.h"
+#include "messagebox.h"
 
 typedef int (*FP)(Widget*);
 
@@ -25,18 +26,24 @@ LinkedList current_list;
 LinkedList current_car_list;
 
 void signalHandler(int sig){
-	if(sig == SIGINT){
-		saveCurrentCarData(current_car_list);
-        saveParkingLot(current_list);
-        saveUserData(user);
+	
+    saveCurrentCarData(current_car_list);
+    saveParkingLot(current_list);
+    saveUserData(user);
+    
+    if(messageBox(NULL,"정말로 종료하시겠습니까?")==ID_OK){
+        system("clear");
         exit(0);
-	}
+    }
+    
 }
 
 int main(int argc, char const *argv[])
 {
     // signal(SIGSTOP, signalHandler);
     signal(SIGINT, signalHandler);
+    signal(SIGHUP, signalHandler);
+    signal(SIGHUP, signalHandler);
     // user 해시테이블 생성
     // LPHASH user;
     hashCreate(&user); 
@@ -51,23 +58,23 @@ int main(int argc, char const *argv[])
     readCurrentData(&current_car_list);
 
 
+
     void *mainPage;
     FP render;
     
-    HOME_UI* home = createHomeUI();
-    MANAGE_UI *iomanage = createManageUI();
-    PAY_UI *pay = createPayUI();
-    PARKSTATUS_UI *parkStatus = createParkStatusUI();
-    INFO_UI* info = createInfoUI();
-    HISTORY_UI* history = createHistoryUI();
-    Info buf;
+    HOME_UI* home = createHomeUI(); //HOME UI
+    MANAGE_UI *iomanage = createManageUI(); // 입출차 관리 UI
+    PAY_UI *pay = createPayUI(); //정산 관리 UI
+    PARKSTATUS_UI *parkStatus = createParkStatusUI(); //주차장 현황 UI
+    INFO_UI* info = createInfoUI(); //차량 정보 UI
+    HISTORY_UI* history = createHistoryUI(); //주차 이력 UI
 
     mainPage = home;
     render = renderHomeUI;
-
+    int quit = 0;
     int page = 0;
     
-    while(1){
+    while(!quit){
         page = render(mainPage);
         switch (page)
         {
@@ -76,7 +83,6 @@ int main(int argc, char const *argv[])
             render = renderHomeUI;
             break;
         case IOMANAGE:
-            // page = manage_in_out(user, &current_list, &current_car_list);
             mainPage = iomanage;
             render = renderManageUI;
             break;
@@ -139,7 +145,11 @@ int main(int argc, char const *argv[])
             page = HOME;
             break;
         case EXIT:
-            return 0;
+            if(messageBox(NULL,"정말로 종료하시겠습니까?") == ID_OK){
+                quit = True;
+                system("clear");
+            }   
+            break;
         default:
             break;
         }
@@ -154,8 +164,6 @@ int main(int argc, char const *argv[])
     list_clear(&current_list);  
     list_clear(&current_car_list);
     hashDestroy(user);
-
-
 
     clearWidget(home);
     clearWidget(info);
