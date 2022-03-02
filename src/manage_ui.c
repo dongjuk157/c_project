@@ -23,7 +23,6 @@ MANAGE_UI* createManageUI(){
     setWidgetPos(manage, DEFAULT_POSY,DEFAULT_POSX);
     setWidgetSize(manage, 25, 70);
     setWidgetType(manage, MAIN);
-    arrayCreate(&(manage->label));
 
     // Label 세팅
     Label *title = createLabel();
@@ -107,12 +106,17 @@ int renderManageUI(MANAGE_UI *manage){
             detail = createManageDetailUI(OUT_CAR);
             renderWidget(detail);
             getValuesUI(manage,OUT_CAR,&car_info);
-            save_log(OUT_CAR, car_info);
+            int res;
+            res = searchUserUI(manage, car_info->car_number, &user_info , 'o');
+            if(res == -2){
+                printSiglelineWidget(manage,18,10,"해당 차량 정보가 존재하지 않습니다...");
+                getchar();
+                return HOME;
+            }
 
-            searchUserUI(manage, car_info->car_number, &user_info , 'o');
+            save_log(OUT_CAR, car_info);
             update_current(OUT_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
             update_history(OUT_CAR, car_info, user_info); // 6. add history
-            
         } 
         else{
             return IOMANAGE;
