@@ -9,6 +9,7 @@ Widget* createWidget()
     setWidgetPos(widget,DEFAULT_POSY,DEFAULT_POSX);
     arrayCreate(&(widget->label));
     arrayCreate(&(widget->subWidget));
+
     
     return widget;
 }
@@ -16,6 +17,11 @@ Widget* createWidget()
 void printWidget(Widget* widget)
 {
     if(widget->type == MAIN){
+
+        // setLabelText(bar,"                                                                         ━ ■ X ");
+
+       
+
         gotoxy(widget->posx,widget->posy);
         printf("┏");
         for (int i = 1; i < widget->width-1; i++) printf("━");
@@ -33,6 +39,25 @@ void printWidget(Widget* widget)
         printf("┗");
         for (int i = 1; i <widget->width-1; i++) printf("━");
         printf("┛\n");
+
+
+        gotoxy(0,3);
+        printf("┣");
+        
+        for (int i = 0; i < widget->width-2; i++){
+            printf("━");
+        }
+
+        printf("┫");
+
+        printf("\x1b[%dm",44);
+        gotoxy(2,2);
+        for (int i = 0; i < widget->width-8; i++)
+        {   
+            printf(" ");
+        }
+        printf("━ ■ X ");
+        printf("\x1b[0m");
     }
     else if(widget->type == SUB){
         gotoxy(widget->posx,widget->posy);
@@ -91,7 +116,11 @@ bool printLabel(Widget* widget, const Label* label){
     if(label->text==NULL) return False;
 
     gotoxy(widget->posx + label->posx, widget->posy + label->posy);
+    if(label->color != 0){
+        printf("\x1b[%dm",label->color);
+    }
     printf("%s",label->text);    
+    printf("\x1b[0m");
 
     return True;
 }
@@ -131,4 +160,14 @@ int clearWidget(Widget* widget){
     arrayDestroy(widget->subWidget);
     free(widget);
     return 0;
+}
+
+int printSiglelineWidget(Widget* widget, int posy, int posx, const char* text){
+    Label buf;
+    labelCreate(&buf);
+
+    setLabelPos(&buf, posy, posx);
+    setLabelText(&buf,text);
+
+    printLabel(widget,&buf);
 }
