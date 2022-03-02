@@ -5,7 +5,7 @@
 
 //내부에서만 사용할 메모리 할당 함수 
 //함수내에서 size의 값을 변경하면 컴파일 오류 발생하게 함
-static int _arrayCreate(LPARRAY lpArray, const int size)
+static int _arrayCreate(LPARRAY lpArray, int size)
 {
     LPDATA* lpData;
     

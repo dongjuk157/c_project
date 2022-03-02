@@ -1,4 +1,5 @@
 #include "messagebox.h"
+#include <stdio.h>
 
 int messageBox(Widget* mainWindow, char* message){
     Widget* msgBox = createWidget();
@@ -35,7 +36,7 @@ int messageBox(Widget* mainWindow, char* message){
 
     renderWidget(msgBox);
 
-    printSiglelineWidget(msgBox, 4,5,message);
+    printSiglelineWidget(msgBox, 4, 5, message, 0);
 
     clearWidget(msgBox);
 

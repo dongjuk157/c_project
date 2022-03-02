@@ -110,6 +110,8 @@ int calcFee(char *carNumber){
             fee += carInfo->fee;
         }
     }
+    // printf("fee얼마냐 : %d", fee);
+    // getchar();
     free(carInfo);
 
     //차번호로 user.dat조회 -> 정기권 여부 판단
@@ -125,7 +127,8 @@ int calcFee(char *carNumber){
 
     if(fee == 0){
         printSingleLineView("주차요금 정산", "미정산 요금이 없습니다!");
-    } else{
+    } 
+    else{
         printFeeDetailView(carNumber, fee, hasTicket);
     }
     return 0;
@@ -186,6 +189,7 @@ int extendTicket(USER_INFO *foundInfo){
     } 
     else{
     }
+    return 0;
 }
 
 int newTicket(USER_INFO *foundInfo){
@@ -213,25 +217,18 @@ int saveUser(char *carNumber, USER_INFO **foundInfo){
     setWidgetType(saveView, MAIN);
     arrayCreate(&(saveView->label));
 
-    Label tmp;
-    labelCreate(&tmp);
+    printSiglelineWidget(saveView, 13, 5, "해당 차량번호로 조회된 결과가 없습니다.", 0);
     
-    setLabelPos(&tmp, 13, 5);
-    setLabelText(&tmp, "해당 차량번호로 조회된 결과가 없습니다.");
-    printLabel(saveView, &tmp);
-
     *foundInfo = (USER_INFO *) malloc(sizeof(USER_INFO));
     // user_data에 값 저장
     char tmp_c;
-    setLabelPos(&tmp, 16, 10);
-    setLabelText(&tmp,"이름을 입력하세요 >> ");
-    printLabel(saveView, &tmp);
-    scanf("%s", (*foundInfo)->name); while((tmp_c=getchar())!='\n');
 
-    setLabelPos(&tmp, 19, 10);
-    setLabelText(&tmp,"휴대폰 번호를 입력하세요 >> ");
-    printLabel(saveView, &tmp);
-    scanf("%s", (*foundInfo)->phone_num); while((tmp_c=getchar())!='\n');
+    printSiglelineWidget(saveView, 16, 10, "이름을 입력하세요 >> ", 0);
+    scanf("%s", (*foundInfo)->name); while(getchar()!='\n');
+
+    printSiglelineWidget(saveView, 19, 10, "휴대폰 번호를 입력하세요 >> ", 0);
+    scanf("%s", (*foundInfo)->phone_num); while(getchar()!='\n');
+    
     // 차량 번호 자동 저장
     strcpy((*foundInfo)->car_num, carNumber);
     // 정기권 없음
