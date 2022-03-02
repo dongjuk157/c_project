@@ -233,7 +233,7 @@ int saveUserUI(MANAGE_UI* manage, char *car_number, USER_INFO **user_data){
     setLabelText(&temp,"차주 이름 >> ");
     printLabel(manage,&temp);
     // scanf("%s", (*user_data)->name); while(getchar()!='\n');
-    fgets((*user_data)->name, 10, stdin);
+    fgets((*user_data)->name, 20, stdin);
     (*user_data)->name[strlen((*user_data)->name)-1] = '\0';
 
     setLabelPos(&temp,16,10);
