@@ -1,5 +1,6 @@
 #include "info_ui.h"
 #include "info.h"
+#include "messagebox.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,7 +35,6 @@ INFO_UI* createInfoUI(){
 }
 
 
-
 int findInfo(char* carNumber, Info *info){
     USER_INFO* user_info;
     int res;
@@ -45,9 +45,9 @@ int findInfo(char* carNumber, Info *info){
     }
     
     Node *tmp = current_car_list.head;
-    CAR* car_info = NULL;
+    CAR_INFO* car_info = NULL;
     while(tmp){
-        CAR* buf = (CAR*)tmp->data;
+        CAR_INFO* buf = (CAR_INFO*)tmp->data;
         if(!strcmp(buf->car_number,carNumber)){
             car_info = buf;
             break;
@@ -93,12 +93,9 @@ int renderInfoUI(INFO_UI* info){
     Info data;
     char buffer[50];
     if(findInfo(carNumber, &data)==ERR_HASH_NOT_FOUND){
-        Label errorMsg;
-        labelCreate(&errorMsg);
-        setLabelPos(&errorMsg, 15,10);
-        setLabelText(&errorMsg,"해당 차량 정보가 존재하지 않습니다...");
-        printLabel(info, &errorMsg);
-        getchar();
+        messageBox(info, "차량 정보가 존재하지 않습니다.");
+        // printSiglelineWidget(info, 15, 10, "해당 차량 정보가 존재하지 않습니다...", 0);
+        // getchar();
         return CARINFO;
     }; //data에 차량번호와 일치하는 info 객체 담음 없다면 못담음
     Widget* dataWidget = createWidget();

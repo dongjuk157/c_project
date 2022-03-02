@@ -16,11 +16,11 @@ PARKSTATUS_UI* createParkStatusUI(){
 
     // Label 세팅
     Label *title = createLabel();
-    setLabelPos(title, 3, 26);
+    setLabelPos(title, 5, 26);
     setLabelText(title,"주차 관리 프로그램");
 
     Label *subTitle = createLabel();
-    setLabelPos(subTitle, 5, 31);
+    setLabelPos(subTitle, 7, 31);
     setLabelText(subTitle,"주차 현황");
 
     Label *selectOne = createLabel();
@@ -65,8 +65,6 @@ int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI){
         //all status
         PARK_DETAIL_UI* entry_detail = createParkDetailEntryUI();
         renderDetailEntry(entry_detail);
-
-
         clearWidget(entry_detail);
         getchar();
     } 
@@ -74,8 +72,6 @@ int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI){
         //floor status
         PARK_DETAIL_UI* floor_detail = createParkDetailFloorUI();
         renderDetailFloor(floor_detail);
-
-
         clearWidget(floor_detail);
         getchar();
     }

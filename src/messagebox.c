@@ -1,9 +1,10 @@
 #include "messagebox.h"
+#include <stdio.h>
 
 int messageBox(Widget* mainWindow, char* message){
     Widget* msgBox = createWidget();
-    setWidgetSize(msgBox, 10,32);
-    setWidgetPos(msgBox,7,22);
+    setWidgetSize(msgBox, 10,40);
+    setWidgetPos(msgBox,7,17);
     setWidgetType(msgBox,MSGBOX);
     renderEmpty(msgBox);
 
@@ -13,7 +14,7 @@ int messageBox(Widget* mainWindow, char* message){
     setWidgetType(okBtn,SUB);
 
     Widget* cancleBtn = createWidget();
-    setWidgetPos(cancleBtn,6,17);
+    setWidgetPos(cancleBtn,6,25);
     setWidgetSize(cancleBtn,3,10);
     setWidgetType(cancleBtn,SUB);
 
@@ -35,11 +36,11 @@ int messageBox(Widget* mainWindow, char* message){
 
     renderWidget(msgBox);
 
-    printSiglelineWidget(msgBox, 4,5,message);
+    printSiglelineWidget(msgBox, 4, 5, message, 0);
 
     clearWidget(msgBox);
 
-    char key = getch();
+    char key = getchar();
 
     if(key == '\n'){
         return ID_OK;
