@@ -2,47 +2,51 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "linkedlist.h"
+#include "hash.h"
 #include "manage.h"
 #include "manage_ui.h"
+#include "manage_detail.h"
+#include "info.h"
 
 extern LPHASH user;
 extern LinkedList current_list;
 extern LinkedList current_car_list;
 
 
-// °áÁ¦ÇÏ±â ±â´É ¼±ÅÃ½Ã ³ªÅ¸³¯ UI Á¦ÀÛ -> Á¦ÀÛÇÑ Widget ±¸Á¶Ã¼ÀÇ Æ÷ÀÎÅÍ ¸®ÅÏ
+// ê²°ì œí•˜ê¸° ê¸°ëŠ¥ ì„ íƒì‹œ ë‚˜íƒ€ë‚  UI ì œì‘ -> ì œì‘í•œ Widget êµ¬ì¡°ì²´ì˜ í¬ì¸í„° ë¦¬í„´
 MANAGE_UI* createManageUI(){
 
-    MANAGE_UI *manage = (MANAGE_UI *)malloc(sizeof(MANAGE_UI));
+    MANAGE_UI *manage = createWidget();
 
-    // ±âº» À§Á¬ Position ¼¼ÆÃ
+    // ê¸°ë³¸ ìœ„ì ¯ Position ì„¸íŒ…
     setWidgetPos(manage, DEFAULT_POSY,DEFAULT_POSX);
     setWidgetSize(manage, 25, 70);
     setWidgetType(manage, MAIN);
     arrayCreate(&(manage->label));
 
-    // Label ¼¼ÆÃ
+    // Label ì„¸íŒ…
     Label *title = createLabel();
     setLabelPos(title, 3, 26);
-    setLabelText(title,"ÁÖÂ÷ °ü¸® ÇÁ·Î±×·¥");
+    setLabelText(title,"ì£¼ì°¨ ê´€ë¦¬ í”„ë¡œê·¸ë¨");
 
     Label *subTitle = createLabel();
-    setLabelPos(subTitle, 5, 31);
-    setLabelText(subTitle,"ÀÔÃâÂ÷ °ü¸®");
+    setLabelPos(subTitle, 5, 30);
+    setLabelText(subTitle,"ì…ì¶œì°¨ ê´€ë¦¬");
 
     Label *selectOne = createLabel();
     setLabelPos(selectOne, 13, 10);
-    setLabelText(selectOne,"1. ÀÔÂ÷");
+    setLabelText(selectOne,"1. ì…ì°¨");
 
     Label *selectTwo = createLabel();
     setLabelPos(selectTwo, 16, 10);
-    setLabelText(selectTwo,"2. ÃâÂ÷");
+    setLabelText(selectTwo,"2. ì¶œì°¨");
 
     Label *prompt = createLabel();
     setLabelPos(prompt, 20, 10);
-    setLabelText(prompt,"±â´ÉÀ» ¼±ÅÃÇÏ¼¼¿ä >> ");
+    setLabelText(prompt,"ê¸°ëŠ¥ì„ ì„ íƒí•˜ì„¸ìš” >> ");
 
-    // ¼¼ÆÃÇÑ Label Widget.label µ¿Àû ¹è¿­¿¡ ´ã±â
+    // ì„¸íŒ…í•œ Label Widget.label ë™ì  ë°°ì—´ì— ë‹´ê¸°
     addLabel(manage, title);
     addLabel(manage, subTitle);
     addLabel(manage, selectOne);
@@ -53,37 +57,149 @@ MANAGE_UI* createManageUI(){
 }
 
 int renderManageUI(MANAGE_UI *manage){
-    //UI ÇÁ·¹ÀÓ ±×¸®±â
-    renderWidget(manage);
-    
-    //¼¼ÆÃµÈ label Ãâ·Â
-    for (int i = 0; i < arraySize(manage->label); i++)
-        printLabel(manage, (Label *)(manage->label->lpData)[i]);
+    //UI í”„ë ˆì„ ê·¸ë¦¬ê¸°
+    CAR_INFO* car_info = NULL;
+    USER_INFO* user_info = NULL;
 
-    //prompt·Î ¹ŞÀ» ¼±ÅÃ³Ñ¹ö | exit - home | 1,2 - °¢ Page·Î | ÀÌ¿Ü - ´Ù½ÃÀÔ·Â |
+    renderWidget(manage);
+
+    //promptë¡œ ë°›ì„ ì„ íƒë„˜ë²„ | exit - home | 1,2 - ê° Pageë¡œ | ì´ì™¸ - ë‹¤ì‹œì…ë ¥ |
     char selectNumber[8];
 
-    //User¿¡°Ô ÀÔ·Â¹Ş°í °³Çà¹®ÀÚ Á¦°Å
+    //Userì—ê²Œ ì…ë ¥ë°›ê³  ê°œí–‰ë¬¸ì ì œê±°
     fgets(selectNumber, 8, stdin);
     selectNumber[strlen(selectNumber)-1] = '\0';
     
-    if(!strcmp("exit", selectNumber))
+    if(!strcmp("exit", selectNumber)){
         return HOME;
-
-    int num = atoi(selectNumber);
-    if(num == 1){
-        // ÀÔÂ÷
-        getValuesUI('i');
-        
-    } else if(num == 2){
-        // ÃâÂ÷
-        getValuesUI('o');
-    } else{
-        system("clear");
     }
+    else{
+        int num = atoi(selectNumber);
+        MANAGE_DETAIL_UI* detail;
+        if(num == 1){
+            // ì…ì°¨
+            detail = createManageDetailUI(IN_CAR);
+            renderWidget(detail);
+            getValuesUI(manage,IN_CAR,&car_info);
+            save_log(IN_CAR, car_info);
+            searchUserUI(manage, car_info->car_number, &user_info);
+            update_current(IN_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
+            update_history(IN_CAR, car_info, user_info); // 6. add history
+            
+
+            Node *tmp = current_list.head;
+            while(tmp){
+                PARK* buf = (PARK*)tmp->data;
+                if(buf->floor == car_info->floor){
+                    buf->total_car+=1;
+                    break;
+                }
+                tmp = tmp->next;
+            }
+
+            gotoxy(10,20);
+            printf("ìƒˆë¡œìš´ ì°¨ëŸ‰ì´ ì…ì°¨ ì •ìƒì ìœ¼ë¡œ ì…ì°¨ ë˜ì—ˆìŠµë‹ˆë‹¤.\n");
+            getchar();
+
+        } 
+        else if(num == 2){
+            // ì¶œì°¨
+            detail = createManageDetailUI(OUT_CAR);
+            renderWidget(detail);
+            getValuesUI(manage,OUT_CAR,&car_info);
+            save_log(OUT_CAR, car_info);
+
+            searchUserUI(manage, car_info->car_number, &user_info);
+            update_current(OUT_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
+            update_history(OUT_CAR, car_info, user_info); // 6. add history
+            
+        } 
+        else{
+            return IOMANAGE;
+        }
+    }
+
+    
     return HOME;
 }
 
-int getValuesUI(char io){
+int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
 
+    *car_info = (CAR_INFO*) malloc(sizeof(CAR_INFO));
+
+    Label temp;
+    labelCreate(&temp);
+    if(io == 'i'){
+        getDateTime((*car_info)->in_datetime);
+        
+        setLabelPos(&temp,8,10);
+        setLabelText(&temp,"ì°¨ëŸ‰ ë²ˆí˜¸(123ê°€1234)>> ");
+        printLabel(manage,&temp);
+        fgets((*car_info)->car_number, 20, stdin);
+        (*car_info)->car_number[strlen((*car_info)->car_number)-1] = '\0';
+
+        setLabelPos(&temp,10,10);
+        setLabelText(&temp,"ì°¨ì¢… [e]lectric, [l]ight, [n]ormal >> ");
+        printLabel(manage,&temp);
+        scanf("%c", &(*car_info)->car_type); while(getchar()!='\n');
+        
+        setLabelPos(&temp,12,10);
+        setLabelText(&temp,"ì£¼ì°¨ ìœ„ì¹˜(ì¸µìˆ˜ ì…ë ¥) >> ");
+        printLabel(manage,&temp);
+        scanf("%d", &(*car_info)->floor); while(getchar()!='\n');
+    }
+    else if(io == 'o'){
+        setLabelPos(&temp,14,10);
+        setLabelText(&temp,"ì°¨ëŸ‰ ë²ˆí˜¸(123ê°€1234)>> ");
+        printLabel(manage,&temp);
+        fgets((*car_info)->car_number, 20, stdin);
+        (*car_info)->car_number[strlen((*car_info)->car_number)-1] = '\0';
+    }
+    else return HOME;
+
+    return HOME;
+}
+
+int searchUserUI(MANAGE_UI* manage,  char *car_number, USER_INFO **user_data){
+    USER_INFO *tmp_user = NULL;
+    hashGetValue(user, car_number, (LPDATA*)&tmp_user);
+    *user_data = (USER_INFO *) malloc(sizeof(USER_INFO));
+    if ((tmp_user) == NULL){ // hash ê°’ì´ ì—†ëŠ” ê²½ìš°
+        saveUserUI(manage, car_number, user_data);
+    }
+    else {
+        strcpy((*user_data)->name, tmp_user->name);
+        strcpy((*user_data)->phone_num, tmp_user->phone_num);
+        strcpy((*user_data)->car_num, tmp_user->car_num);
+        (*user_data)->has_ticket = tmp_user->has_ticket;
+        //printf("tmp_user: %s, %s\n", tmp_user->name, tmp_user->phone_num);
+    }
+	
+    return OK;
+}
+
+int saveUserUI(MANAGE_UI* manage, char *car_number, USER_INFO **user_data){
+    if(*user_data == NULL){
+        *user_data = (USER_INFO *) malloc(sizeof(USER_INFO));
+    }
+
+    Label temp;
+    labelCreate(&temp);
+
+    setLabelPos(&temp,14,10);
+    setLabelText(&temp,"ì°¨ì£¼ ì´ë¦„ >> ");
+    printLabel(manage,&temp);
+    scanf("%s", (*user_data)->name); while(getchar()!='\n');
+
+    setLabelPos(&temp,16,10);
+    setLabelText(&temp,"ì°¨ì£¼ íœ´ëŒ€í° ë²ˆí˜¸(010-1234-5678) >> ");
+    printLabel(manage,&temp);
+    scanf("%s", (*user_data)->phone_num); while(getchar()!='\n');
+    
+    strcpy((*user_data)->car_num, car_number);
+    (*user_data)->has_ticket = 0;
+
+    hashSetValue(user, car_number, *user_data);
+
+    return OK;
 }
