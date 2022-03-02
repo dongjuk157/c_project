@@ -229,7 +229,9 @@ int saveUser(char *carNumber, USER_INFO **foundInfo){
     setWidgetType(saveView, MAIN);
     arrayCreate(&(saveView->label));
 
-    Label *tmp = createLabel();
+    Label tmp;
+    labelCreate(&tmp);
+    
     setLabelPos(&tmp, 13, 5);
     setLabelText(&tmp, "해당 차량번호로 조회된 결과가 없습니다.");
     printLabel(saveView, &tmp);
