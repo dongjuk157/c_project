@@ -51,6 +51,9 @@ int readParkingLot(LinkedList* list);
 int readCurrentData(LinkedList* list);
 
 int saveUserData(LPHASH hash);
+int saveParkingLot(LinkedList list);
+int saveCurrentCarData(LinkedList list);
+
 
 #endif // __INFO_H__
 

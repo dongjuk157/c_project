@@ -68,7 +68,7 @@ int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI){
 
 
         clearWidget(entry_detail);
-        getch();
+        getchar();
     } 
     else if(num == 2){
         //floor status
@@ -77,8 +77,9 @@ int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI){
 
 
         clearWidget(floor_detail);
-        getch();
+        getchar();
     }
+    else return PARKSTATUS;
     
     return HOME;
 }

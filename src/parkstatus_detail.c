@@ -1,6 +1,8 @@
 #include "parkstatus_detail.h"
 #include "linkedlist.h"
 #include "info.h"
+#include <stdio.h>
+
 
 extern LinkedList current_list;
 
@@ -106,8 +108,8 @@ int renderDetailEntry(PARK_DETAIL_UI* park_detail){
     total.electric_charge = 0;
     total.handicapped = 0;
     total.light_car = 0;
-    Node* temp = current_list.head;
     
+    Node* temp = current_list.head;
     while(temp){
         PARK* buf = (PARK *)temp->data;
         total.total += buf->total;
@@ -139,7 +141,7 @@ int renderDetailEntry(PARK_DETAIL_UI* park_detail){
     setLabelText(&data,buffer);
     printLabel(park_detail,&data);
 
-    
+    return 0;
 }
 int renderDetailFloor(PARK_DETAIL_UI* park_detail){
     renderWidget(park_detail);
@@ -163,4 +165,5 @@ int renderDetailFloor(PARK_DETAIL_UI* park_detail){
         printLabel(park_detail,&data);
         temp = temp->next;
     }
+    return 0;
 }

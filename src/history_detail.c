@@ -115,7 +115,7 @@ int renderHistoryDetail(HISTORY_DETAIL_UI* history, int type){
             addLabel(historyData, temp);
         }
         renderWidget(historyData);
-        getch();
+        getchar();
         clearWidget(historyData);
         
         

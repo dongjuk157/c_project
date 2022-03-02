@@ -5,6 +5,7 @@
 #include <string.h>
 
 extern LPHASH user;
+extern LinkedList current_car_list;
 
 INFO_UI* createInfoUI(){
     INFO_UI* info = createWidget();
@@ -33,23 +34,43 @@ INFO_UI* createInfoUI(){
 }
 
 
+
 int findInfo(char* carNumber, Info *info){
     USER_INFO* user_info;
     int res;
     res = hashGetValue(user,carNumber,(LPDATA*)&user_info);
     if(res != ERR_HASH_OK){
         memset(info,0,sizeof(Info));
-        return -1;
+        return ERR_HASH_NOT_FOUND;
     }
+    
+    Node *tmp = current_car_list.head;
+    CAR* car_info = NULL;
+    while(tmp){
+        CAR* buf = (CAR*)tmp->data;
+        if(!strcmp(buf->car_number,carNumber)){
+            car_info = buf;
+            break;
+        } 
+        tmp = tmp->next;
+    }
+
 
     char datetime[20];
     getDateTime(datetime);
 
     strcpy(info->carNumber,carNumber);
-    strcpy(info->inDatetime, "2022-02-10 13:12");
+    if(car_info != NULL)
+        strcpy(info->inDatetime,car_info->in_datetime);
+    else   
+        strcpy(info->inDatetime,"");
     strcpy(info->name,user_info->name);
     strcpy(info->phoneNumber,user_info->phone_num);
-    info->fee = calculate_fee(info->inDatetime,datetime);
+    if(car_info != NULL)
+        info->fee = calculate_fee(info->inDatetime,datetime);
+    else   
+        info->fee = 0;
+    
 
     return NFD;
 }
@@ -65,16 +86,25 @@ int renderInfoUI(INFO_UI* info){
     if(!strcmp("exit",carNumber)){
         return HOME;
     }
+    else if(!strcmp("",carNumber)){
+        return CARINFO;
+    }
 
     Info data;
     char buffer[50];
-    findInfo(carNumber, &data); //data에 차량번호와 일치하는 info 객체 담음 없다면 못담음
- 
+    if(findInfo(carNumber, &data)==ERR_HASH_NOT_FOUND){
+        Label errorMsg;
+        labelCreate(&errorMsg);
+        setLabelPos(&errorMsg, 15,10);
+        setLabelText(&errorMsg,"해당 차량 정보가 존재하지 않습니다...");
+        printLabel(info, &errorMsg);
+        getchar();
+        return CARINFO;
+    }; //data에 차량번호와 일치하는 info 객체 담음 없다면 못담음
     Widget* dataWidget = createWidget();
     setWidgetPos(dataWidget,14,10);
     setWidgetSize(dataWidget,9,52);
     setWidgetType(dataWidget, SUB);
-
 
     Label* carNum = createLabel();
     setLabelPos(carNum,2,5);
@@ -109,7 +139,7 @@ int renderInfoUI(INFO_UI* info){
 
     renderWidget(dataWidget);
 
-    getch();
+    getchar();
     
     return HOME;
 }
