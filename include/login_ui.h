@@ -3,6 +3,9 @@
 
 #include "widget.h"
 
+typedef Widget LOGIN_UI;
 
+LOGIN_UI* createLoginUI();
 
+int renderLoginUI(LOGIN_UI* login);
 #endif // __LOGIN_H__
