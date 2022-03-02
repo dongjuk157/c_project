@@ -109,7 +109,7 @@ int main(int argc, char const *argv[])
         default:
             break;
         }
-        if (break_sig){
+        if (break_sig) {
             break;
         }
     }
