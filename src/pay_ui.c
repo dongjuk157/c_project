@@ -14,13 +14,11 @@ PAY_UI *createPayUI(){
 
     PAY_UI *payUI = createWidget();
 
-    // 기본 위젯 Position 세팅
     setWidgetPos(payUI, DEFAULT_POSY,DEFAULT_POSX);
     setWidgetSize(payUI, 25, 70);
     setWidgetType(payUI, MAIN);
     arrayCreate(&(payUI->label));
 
-    // Label 세팅
     Label *title = createLabel();
     setLabelPos(title, 3, 26);
     setLabelText(title,"주차 관리 프로그램");
@@ -41,7 +39,6 @@ PAY_UI *createPayUI(){
     setLabelPos(prompt, 20, 10);
     setLabelText(prompt,"기능을 선택하세요 >> ");
 
-    // 세팅한 Label Widget.label 동적 배열에 담기
     addLabel(payUI, title);
     addLabel(payUI, subTitle);
     addLabel(payUI, selectOne);
@@ -54,14 +51,11 @@ PAY_UI *createPayUI(){
 int renderPayUI(PAY_UI *pay){
     //UI 프레임 그리기
     renderWidget(pay);
-
     //세팅된 label 출력
     for (int i = 0; i < arraySize(pay->label); i++)
         printLabel(pay, (Label *)(pay->label->lpData)[i]);
 
     char selectNumber[8];
-
-    //User에게 입력받고 개행문자 제거
     fgets(selectNumber, 8, stdin);
     selectNumber[strlen(selectNumber)-1] = '\0';
     
@@ -74,13 +68,12 @@ int renderPayUI(PAY_UI *pay){
     } else{
         system("clear");
     }
-    return HOME;
+    return OK;
 }
 // 정산하기
 int payParkingFee(){
     //fee view load
     renderFeeView();
-
     //차량번호 입력받기
     char carNumber[20];
     fgets(carNumber,20,stdin);
@@ -88,7 +81,7 @@ int payParkingFee(){
 
     calcFee(carNumber);
 
-    return 0;
+    return OK;
 }
 
 int calcFee(char *carNumber){
@@ -98,7 +91,7 @@ int calcFee(char *carNumber){
         gotoxy(10, 20);
         printf("주차된 차량번호가 아닙니다!");
         getchar();
-        return 1;
+        return FILE_ERROR;
     }
 
     CAR_INFO *carInfo = (CAR_INFO *)malloc(sizeof(CAR_INFO));
@@ -111,8 +104,6 @@ int calcFee(char *carNumber){
                 fee += carInfo->fee;
         }
     }
-    // printf("fee얼마냐 : %d", fee);
-    // getchar();
     free(carInfo);
 
     //차번호로 user.dat조회 -> 정기권 여부 판단
@@ -128,11 +119,12 @@ int calcFee(char *carNumber){
 
     if(fee == 0){
         printSingleLineView("주차요금 정산", "미정산 요금이 없습니다!");
-    } 
-    else{
+        return OK;
+    } else{
         printFeeDetailView(carNumber, fee, hasTicket);
+        return OK;
     }
-    return 0;
+    return OK;
 }
 
 //정기권 등록
@@ -153,11 +145,9 @@ int buyTicket(){
     
     if (strcmp(foundInfo->recentTicket, "")==0){ // 이전 데이터 값에 null이 들어있는 경우
         strcpy(foundInfo->recentTicket, "0000-00-00");
-        sleep(20000);
     }
     checkRecentTicket(foundInfo);
-    
-    return 0;
+    return OK;
 }
 
 //foundInfo -> recentTicket의 날짜확인
@@ -167,10 +157,12 @@ int checkRecentTicket(USER_INFO *foundInfo){
     getTodayDate(today);
     if(strcmp(foundInfo->recentTicket, today) >= 0){
         extendTicket(foundInfo);
+        return OK;
     } else{
         newTicket(foundInfo);
+        return OK;
     }
-    return 0;
+    return OK;
 }
 
 int extendTicket(USER_INFO *foundInfo){
@@ -186,12 +178,12 @@ int extendTicket(USER_INFO *foundInfo){
 
     if(!strcmp("Y", buf)){
         renderExtendTicketDetailView(foundInfo);
-    } 
-    else if(!strcmp("N", buf)){
-    } 
-    else{
+    } else if(!strcmp("N", buf)){
+        return OK;
+    } else{
+        return OK;
     }
-    return 0;
+    return OK;
 }
 
 int newTicket(USER_INFO *foundInfo){
@@ -208,7 +200,9 @@ int newTicket(USER_INFO *foundInfo){
     if(!strcmp("Y", buf)){
         renderNewTicketDetailView(foundInfo);
     } else if(!strcmp("N", buf)){
+        return OK;
     } else{
+        return OK;
     }
 }
 
@@ -219,7 +213,7 @@ int saveUser(char *carNumber, USER_INFO **foundInfo){
     setWidgetType(saveView, MAIN);
     arrayCreate(&(saveView->label));
 
-    printSiglelineWidget(saveView, 13, 5, "해당 차량번호로 조회된 결과가 없습니다.", 0);
+    printSiglelineWidget(saveView, 12, 10, "해당 차량번호로 조회된 결과가 없습니다.", 0);
     
     *foundInfo = (USER_INFO *) malloc(sizeof(USER_INFO));
     // user_data에 값 저장
@@ -228,7 +222,7 @@ int saveUser(char *carNumber, USER_INFO **foundInfo){
     printSiglelineWidget(saveView, 16, 10, "이름을 입력하세요 >> ", 0);
     scanf("%s", (*foundInfo)->name); while(getchar()!='\n');
 
-    printSiglelineWidget(saveView, 19, 10, "휴대폰 번호를 입력하세요 >> ", 0);
+    printSiglelineWidget(saveView, 18, 10, "휴대폰 번호를 입력하세요 >> ", 0);
     scanf("%s", (*foundInfo)->phone_num); while(getchar()!='\n');
     
     // 차량 번호 자동 저장
@@ -240,5 +234,14 @@ int saveUser(char *carNumber, USER_INFO **foundInfo){
     // 해시 테이블에 저장
     hashSetValue(user, carNumber, *foundInfo);
 
-    return 0;
+    system("clear");
+
+    Widget *defaultView = (Widget *)malloc(sizeof(Widget));
+    setWidgetPos(defaultView, DEFAULT_POSY,DEFAULT_POSX);
+    setWidgetSize(defaultView, 25, 70);
+    setWidgetType(defaultView, MAIN);
+    arrayCreate(&(defaultView->label));    
+    printWidget(defaultView);
+
+    return OK;
 }

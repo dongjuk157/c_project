@@ -3,6 +3,8 @@
 
 #include "widget.h"
 #include "info.h"
+#define OK             0
+#define FILE_ERROR     -1
 
 int renderFeeView();
 int printFeeDetailView(char *carNumber, int fee, int hasTicket);

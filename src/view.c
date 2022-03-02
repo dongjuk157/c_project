@@ -6,13 +6,11 @@
 #include "manage.h"
 #include "utils.h"
 
-// extern int ticketFee;
 extern LPHASH user;
 
 //할인율
 float ticketDisc = 0.5;
-// float lCarDisc = 0.3;
-// float eCarDisc = 0.3;
+char ticketFee[6] = "13000";
 
 //정산하기
 int renderFeeView(){
@@ -49,13 +47,12 @@ int renderFeeView(){
     for (int i = 0; i < arraySize(feeView->label); i++)
         printLabel(feeView, (Label *)(feeView->label->lpData)[i]);
     
-    return 0;
+    return OK;
 }
 
 
 int printFeeDetailView(char *carNumber, int fee, int hasTicket){
 
-    //계산된 fee 출력을 위해 int->string
     char feeStr[10];
     if(hasTicket){
         sprintf(feeStr, "%d", (int)(fee * ticketDisc));
@@ -109,14 +106,12 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
     addLabel(feeDetailView, label5);
 
     system("clear");
-//UI 프레임 그리기
+
     printWidget(feeDetailView);
     
-//세팅된 label 출력
     for (int i = 0; i < arraySize(feeDetailView->label); i++)
         printLabel(feeDetailView, (Label *)(feeDetailView->label->lpData)[i]);
 
-//결제 여부 입력
     char prompt[10];
     fgets(prompt, 20, stdin);
     prompt[strlen(prompt) - 1] = '\0';
@@ -124,9 +119,8 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
     if(!strcmp("Y", prompt)){
         
         FILE *ifp = fopen(HISTORY_DATA_FILE_PATH,"rb+");
-
         if(ifp == NULL){
-            return 1;
+            return FILE_ERROR;
         }
 
         CAR_INFO *carInfo = (CAR_INFO *)malloc(sizeof(CAR_INFO));
@@ -145,11 +139,11 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
         printSingleLineView("주차요금 정산", "결제가 완료되었습니다!");
     } else if(!strcmp("N", prompt)){
         printSingleLineView("주차요금 정산", "결제가 취소되었습니다!");
-        return 0;
+        return OK;
     } else{
+        return OK;
     }
-
-    return 0;
+    return OK;
 }
 
 //정기권 뷰
@@ -185,7 +179,7 @@ int renderTicketView(){
 //세팅된 label 출력
     for (int i = 0; i < arraySize(ticketView->label); i++)
         printLabel(ticketView, (Label *)(ticketView->label->lpData)[i]);
-    return 0;
+    return OK;
 }
 
 
@@ -193,7 +187,6 @@ int renderExtendTicketDetailView(USER_INFO *foundInfo){
 
     getOneMonthAfterFromDate(foundInfo->recentTicket);
 
-REPEAT:
     system("clear");
 
     Widget *extendticketDetailView = (Widget *)malloc(sizeof(Widget));
@@ -234,7 +227,7 @@ REPEAT:
 
     Label *label6 = createLabel();
     setLabelPos(label6, 13, 17);
-    setLabelText(label6, "13000");  //나중에 전역변수 활용
+    setLabelText(label6, ticketFee);
 
     Label *label7 = createLabel();
     setLabelPos(label7, 13, 24);
@@ -255,39 +248,33 @@ REPEAT:
     addLabel(extendticketDetailView, label6);
     addLabel(extendticketDetailView, label7);
     addLabel(extendticketDetailView, label8);
-
-
 //UI 프레임 그리기
     printWidget(extendticketDetailView);
-    
 //세팅된 label 출력
     for (int i = 0; i < arraySize(extendticketDetailView->label); i++)
         printLabel(extendticketDetailView, (Label *)(extendticketDetailView->label->lpData)[i]);
     
-
     char prompt[10];
     fgets(prompt, 20, stdin);
     prompt[strlen(prompt) - 1] = '\0';
 
     if(!strcmp("Y", prompt)){
+        foundInfo->has_ticket = 1;
         hashSetValue(user, foundInfo->car_num, foundInfo);
-        printSingleLineView("정기권 등록 및 연장", "정기권 연장이 완료되었습니다!");
+        printSingleLineView("정기권 연장", "정기권 연장이 완료되었습니다!");
     } else if(!strcmp("N", prompt)){
-        printSingleLineView("정기권 등록 및 연장", "정기권 연장이 취소되었습니다!");
-        return 0;
+        printSingleLineView("정기권 연장", "정기권 연장이 취소되었습니다!");
+        return OK;
     } else{
-        goto REPEAT;
+        return OK;
     }
-
-
-    return 0;
+    return OK;
 }
 
 int renderNewTicketDetailView(USER_INFO *foundInfo){
 
     getOneMonthAfterFromToday(foundInfo->recentTicket);
 
-REPEAT:
     system("clear");
 
     Widget *newticketDetailView = (Widget *)malloc(sizeof(Widget));
@@ -327,8 +314,7 @@ REPEAT:
 
     Label *label6 = createLabel();
     setLabelPos(label6, 13, 22);
-    setLabelText(label6, "13000");  //나중에 전역변수 활용
-
+    setLabelText(label6, ticketFee);
     Label *label7 = createLabel();
     setLabelPos(label7, 13, 27);
     setLabelText(label7,"원 입니다.");
@@ -354,25 +340,22 @@ REPEAT:
 //세팅된 label 출력
     for (int i = 0; i < arraySize(newticketDetailView->label); i++)
         printLabel(newticketDetailView, (Label *)(newticketDetailView->label->lpData)[i]);
-    
 
     char prompt[10];
     fgets(prompt, 20, stdin);
     prompt[strlen(prompt) - 1] = '\0';
 
     if(!strcmp("Y", prompt)){
+        foundInfo->has_ticket = 1;
         hashSetValue(user, foundInfo->car_num, foundInfo);
         printSingleLineView("정기권 등록", "정기권 등록이 완료되었습니다!");
     } else if(!strcmp("N", prompt)){
-        printSingleLineView("정기권 연장", "정기권 등록이 취소되었습니다!");
-        return 0;
+        printSingleLineView("정기권 등록", "정기권 등록이 취소되었습니다!");
+        return OK;
     } else{
-        goto REPEAT;
+        return OK;
     }
-
-
-    return 0;
-
+    return OK;
 }
 
 
@@ -416,7 +399,7 @@ int printSingleLineView(char *currentMenu, char *defaultText){
     
     system("clear");
     
-    return 0;
+    return OK;
 }
 
 //정기권 뷰
@@ -450,5 +433,5 @@ int printSaveUserInfoView(){
     for (int i = 0; i < arraySize(saveView->label); i++)
         printLabel(saveView, (Label *)(saveView->label->lpData)[i]);
     
-    return 0;
+    return OK;
 }
