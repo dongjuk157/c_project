@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <string.h>
 #include <sys/types.h>
 #include "array.h"
 #include "widget.h"
@@ -28,6 +29,14 @@ LPHASH user;
 LinkedList current_list;
 LinkedList current_car_list;
 
+
+char *CURRENT_DATA_FILE_PATH;
+char *SIMPLE_LOG_FILE_PATH;    		
+char *USER_DATA_FILE_PATH;
+char *HISTORY_DATA_FILE_PATH;     		
+char *PARKINGLOT_SETTINGS_FILE_PATH;   
+
+
 void signalHandler(int sig){
 	
     saveCurrentCarData(current_car_list);
@@ -41,8 +50,38 @@ void signalHandler(int sig){
     
 }
 
+void setFilePath(char *id) {
+    char *tmp_path = (char*)malloc(sizeof(char)*100);
+
+    CURRENT_DATA_FILE_PATH = (char*)malloc(sizeof(char)*100);
+    sprintf(tmp_path, "./data/%s/Current.dat", id);
+    strcpy(CURRENT_DATA_FILE_PATH, tmp_path);
+
+    SIMPLE_LOG_FILE_PATH = (char*)malloc(sizeof(char)*100);
+    sprintf(tmp_path, "./data/%s/history.log", id);
+    strcpy(SIMPLE_LOG_FILE_PATH, tmp_path);
+
+    USER_DATA_FILE_PATH = (char*)malloc(sizeof(char)*100);
+    sprintf(tmp_path, "./data/%s/User.dat", id);
+    strcpy(USER_DATA_FILE_PATH, tmp_path);
+
+    HISTORY_DATA_FILE_PATH = (char*)malloc(sizeof(char)*100);
+    sprintf(tmp_path, "./data/%s/History.dat", id);
+    strcpy(HISTORY_DATA_FILE_PATH, tmp_path);
+
+    PARKINGLOT_SETTINGS_FILE_PATH = (char*)malloc(sizeof(char)*100);
+    sprintf(tmp_path, "./data/%s/ParkingLot.dat", id);
+    strcpy(PARKINGLOT_SETTINGS_FILE_PATH, tmp_path);
+
+    free(tmp_path);
+}
+
 int main(int argc, char const *argv[])
 {
+    // login()
+    // char id[20] = "default";
+    setFilePath(id);
+
     // signal(SIGSTOP, signalHandler);
     signal(SIGINT, signalHandler);
     signal(SIGHUP, signalHandler);
@@ -183,6 +222,13 @@ int main(int argc, char const *argv[])
     list_clear(&current_list);  
     list_clear(&current_car_list);
     hashDestroy(user);
+
+    free(CURRENT_DATA_FILE_PATH);
+    free(SIMPLE_LOG_FILE_PATH);
+    free(USER_DATA_FILE_PATH);
+    free(HISTORY_DATA_FILE_PATH);
+    free(PARKINGLOT_SETTINGS_FILE_PATH);
+
 
     clearWidget(home);
     clearWidget(info);
