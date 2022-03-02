@@ -15,23 +15,11 @@ extern LPHASH user;
 extern LinkedList current_car_list;
 extern LinkedList current_list;
 
-void gotoxy(int x, int y)
+int gotoxy(int x, int y)
 {
     printf("\033[%dd\033[%dG",y,x);
+	return UTILS_EOK;
 }
-
-// int kbhit(void)
-// {
-// 	struct termios oldt, newt;
-// 	int ch;
-// 	tcgetattr(STDIN_FILENO, &oldt);
-// 	newt = oldt;
-// 	newt.c_lflag &= ~(ICANON | ECHO);
-// 	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-// 	ch = getchar();
-// 	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-// 	return ch;
-// }
 
 int getDateTime(char *datetime){
     struct tm* today;
@@ -42,7 +30,7 @@ int getDateTime(char *datetime){
         today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
         today->tm_hour, today->tm_min
     );
-	return OK;
+	return UTILS_EOK;
 }
 
 int getTodayDate(char *datetime){
@@ -53,7 +41,7 @@ int getTodayDate(char *datetime){
     sprintf(datetime, "%4d-%02d-%02d", 
         today->tm_year+1900, today->tm_mon + 1, today->tm_mday
     );
-	return OK;
+	return UTILS_EOK;
 }
 //특정날짜 "0000-00-00" 입력 -> 30일뒤 날짜 계산해서 포맷
 int getOneMonthAfterFromDate(char *date){
@@ -69,7 +57,7 @@ int getOneMonthAfterFromDate(char *date){
 
 	sprintf(date, "%4d-%02d-%02d", t.tm_year+1900, t.tm_mon + 1, t.tm_mday);
 
-	return OK;
+	return UTILS_EOK;
 }
 //오늘날짜 기준 30일뒤 계산해서 포맷
 int getOneMonthAfterFromToday(char *date){
@@ -82,9 +70,8 @@ int getOneMonthAfterFromToday(char *date){
 	mktime(&t);
 
 	sprintf(date, "%4d-%02d-%02d", t.tm_year+1900, t.tm_mon + 1, t.tm_mday);
-	return OK;
+	return UTILS_EOK;
 }
-
 
 int getch(void) 
 {
@@ -137,6 +124,7 @@ int calculate_fee(char* inDateTime, char* outDateTime){
 	fee += (diffMin % 10) ? 100 : 0;
 	return fee;
 }
+
 int to_day(int y, int m, int d)
 {
 	int mon[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
@@ -151,13 +139,13 @@ int to_day(int y, int m, int d)
 	}
 	return day + d;
 }
+
 int diff(int y1, int m1, int d1, int y2, int m2, int d2)
 {
 	int a = to_day(y1, m1, d1);
 	int b = to_day(y2, m2, d2);
 	return b-a;
 }
-
 
 int printUserData(void){
 	FILE *fp = fopen(USER_DATA_FILE_PATH, "rb");
@@ -218,8 +206,6 @@ int printParkingLotData(void){
 	}
 	fclose(fp);
 }
-
-
 int printCurrentParkList(void){
 	printf("floor\ttotal\ttotal_car\telectric_charge\thandicapped\tlight_car\n");
 	

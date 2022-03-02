@@ -57,17 +57,19 @@ int main(int argc, char const *argv[])
     create_linked_list(&current_car_list);
     readCurrentData(&current_car_list);
 
+    printf("%d %d\n", list_size(&current_list), list_size(&current_car_list));
+
+    getchar();
 
     void *mainPage;
     FP render;
     
-    HOME_UI* home = createHomeUI();
-    MANAGE_UI *iomanage = createManageUI();
-    PAY_UI *pay = createPayUI();
-    PARKSTATUS_UI *parkStatus = createParkStatusUI();
-    INFO_UI* info = createInfoUI();
-    HISTORY_UI* history = createHistoryUI();
-    Info buf;
+    HOME_UI* home = createHomeUI(); //HOME UI
+    MANAGE_UI *iomanage = createManageUI(); // 입출차 관리 UI
+    PAY_UI *pay = createPayUI(); //정산 관리 UI
+    PARKSTATUS_UI *parkStatus = createParkStatusUI(); //주차장 현황 UI
+    INFO_UI* info = createInfoUI(); //차량 정보 UI
+    HISTORY_UI* history = createHistoryUI(); //주차 이력 UI
 
     mainPage = home;
     render = renderHomeUI;
@@ -83,7 +85,6 @@ int main(int argc, char const *argv[])
             render = renderHomeUI;
             break;
         case IOMANAGE:
-            // page = manage_in_out(user, &current_list, &current_car_list);
             mainPage = iomanage;
             render = renderManageUI;
             break;

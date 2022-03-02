@@ -13,24 +13,27 @@ Label* createLabel(){
     label->text = NULL;
     return label;
 }
-void labelCreate(Label* label){
-    label->posx = 0;
-    label->posy = 0;
-    label->text = 0;
+
+int setLabel(Label* label, int posy, int posx, const char* text, int color){
+    setLabelPos(label,posy,posx);
+    setLabelText(label, text);
+    label->color = color;
+
+    return LABEL_EOK;
 }
 
-bool setLabelPos(Label *label, int posy, int posx){
-    if(posx < 0 || posy < 0) return False;
+int setLabelPos(Label *label, int posy, int posx){
+    if(posx < 0 || posy < 0) return LABEL_NOT_VALID_INPUT;
 
     label->posx = posx;
     label->posy = posy;
     label->text = NULL;
 
-    return True;
+    return LABEL_EOK;
 }
 
-bool setLabelText(Label *label, const char *text){
-    if(text == NULL) return False;
+int setLabelText(Label *label, const char *text){
+    if(text == NULL) return LABEL_NOT_VALID_INPUT;
 
     if(label->text != NULL){
         free(label->text);
@@ -38,6 +41,10 @@ bool setLabelText(Label *label, const char *text){
     label->text = (char *)malloc(sizeof(char) * strlen(text) + 1);
     strcpy(label->text, text);
     
-    return True;
+    return LABEL_EOK;
 }
 
+int setLabelBackgrounColor(Label *label, int color){
+    label->color = color;
+    return LABEL_EOK;
+}

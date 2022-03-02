@@ -2,6 +2,8 @@
 #include "linkedlist.h"
 #include "info.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 extern LinkedList current_list;
@@ -14,11 +16,11 @@ PARK_DETAIL_UI* createParkDetailEntryUI(){
     arrayCreate(&(park_detail->label));
 
     Label *title = createLabel();
-    setLabelPos(title, 3, 26);
+    setLabelPos(title, 5, 26);
     setLabelText(title,"주차 관리 프로그램");
 
     Label *subTitle = createLabel();
-    setLabelPos(subTitle, 5, 24);
+    setLabelPos(subTitle, 7, 24);
     setLabelText(subTitle,"[주차 현황 - 전체 조회]");
 
     addLabel(park_detail, title);
@@ -60,18 +62,18 @@ PARK_DETAIL_UI* createParkDetailFloorUI(){
     arrayCreate(&(park_detail->label));
 
     Label *title = createLabel();
-    setLabelPos(title, 3, 31);
+    setLabelPos(title, 5, 31);
     setLabelText(title,"주차 관리 프로그램");
 
     Label *subTitle = createLabel();
-    setLabelPos(subTitle, 5, 29);
+    setLabelPos(subTitle, 7, 29);
     setLabelText(subTitle,"[주차 현황 - 층별 조회]");
 
     addLabel(park_detail, title);
     addLabel(park_detail, subTitle);
 
     Widget* detailSub = createWidget();
-    setWidgetPos(detailSub,8,6);
+    setWidgetPos(detailSub,8,5);
     setWidgetSize(detailSub,16,70);
     setWidgetType(detailSub,SUB);
 
@@ -98,16 +100,11 @@ PARK_DETAIL_UI* createParkDetailFloorUI(){
     return park_detail;
 }
 
-
 int renderDetailEntry(PARK_DETAIL_UI* park_detail){
     renderWidget(park_detail);
 
     PARK total;
-    total.total = 0;
-    total.total_car = 0;
-    total.electric_charge = 0;
-    total.handicapped = 0;
-    total.light_car = 0;
+    memset(&total,0,sizeof(PARK));
     
     Node* temp = current_list.head;
     while(temp){
@@ -121,16 +118,11 @@ int renderDetailEntry(PARK_DETAIL_UI* park_detail){
     }
 
     char buffer[100];
-    Label remain;
-    labelCreate(&remain);
-    setLabelPos(&remain,10,10);
-    sprintf(buffer,"현재 주차가능 공간 수는 %d개 입니다.", total.total - total.total_car);
-    setLabelText(&remain,buffer);
-    printLabel(park_detail, &remain);
 
-    Label data;
-    labelCreate(&data);
-    setLabelPos(&data,16,5);
+    sprintf(buffer,"현재 주차가능 공간 수는 %d개 입니다.", total.total - total.total_car);
+    printSiglelineWidget(park_detail, 10, 10, buffer, 0);
+
+
     sprintf(buffer," %5d      %5d         %4d         %4d         %4d", 
         total.total,
         total.total - total.total_car,
@@ -138,22 +130,21 @@ int renderDetailEntry(PARK_DETAIL_UI* park_detail){
         total.light_car,
         total.handicapped
     );
-    setLabelText(&data,buffer);
-    printLabel(park_detail,&data);
+    printSiglelineWidget(park_detail, 17, 5, buffer, 0);
+
 
     return 0;
 }
+
 int renderDetailFloor(PARK_DETAIL_UI* park_detail){
     renderWidget(park_detail);
-    int i = 0;
+
     Node* temp = current_list.head;
-    while(temp){
+    for (int i = 0; i < list_size(&current_list); i++)
+    {
         PARK* buf = (PARK *)temp->data;
-        Label data;
         char buffer[100];
-        labelCreate(&data);
-        setLabelPos(&data,10+i++,6);
-        sprintf(buffer," %4d   %5d       %5d        %4d          %4d        %4d", 
+        sprintf(buffer,"%2d층   %5d       %5d       %4d          %4d        %4d", 
             buf->floor,
             buf->total,
             buf->total - buf->total_car,
@@ -161,9 +152,9 @@ int renderDetailFloor(PARK_DETAIL_UI* park_detail){
             buf->light_car,
             buf->handicapped
         );
-        setLabelText(&data,buffer);
-        printLabel(park_detail,&data);
+        printSiglelineWidget(park_detail, 11 + i*2, 7, buffer, 0);
         temp = temp->next;
     }
+
     return 0;
 }
