@@ -8,4 +8,9 @@
 
 포팅 매뉴얼
 
-- 
+1. 리포지토리 클론
+
+   `git clone https://github.com/dongjuk157/c_project.git`
+
+2. 
+3. Makefile
