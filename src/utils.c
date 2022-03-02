@@ -11,6 +11,10 @@
 #include "manage.h"
 #include "info.h"
 
+extern LPHASH user;
+extern LinkedList current_car_list;
+extern LinkedList current_list;
+
 void gotoxy(int x, int y)
 {
     printf("\033[%dd\033[%dG",y,x);
@@ -213,4 +217,36 @@ int printParkingLotData(void){
 		);
 	}
 	fclose(fp);
+}
+
+
+int printCurrentParkList(void){
+	printf("floor\ttotal\ttotal_car\telectric_charge\thandicapped\tlight_car\n");
+	
+	Node* cur;
+	cur = current_list.head;
+	while (cur) {
+		PARK* tmp = (PARK*) cur->data;
+		printf("%d\t%d\t%d\t%d\t%d\t%d\n", 
+			tmp->floor, tmp->total, tmp->total_car, 
+			tmp->electric_charge, tmp->handicapped, tmp->light_car
+		);
+	}
+
+}
+int printCurrentCarList(void){
+	printf("car_number\tcar_type\tfloor\tin_datetime\tout_datetime\tfee\tis_paid\n");
+
+	Node* cur;
+	cur = current_car_list.head;
+	while (cur){
+		CAR_INFO* tmp;
+		tmp = (CAR_INFO*) cur->data;
+		printf("%s\t%c\t%d\t%s\t%s\t%d\t%d\n", 
+			tmp->car_number, tmp->car_type, tmp->floor,
+			tmp->in_datetime, tmp->out_datetime,
+			tmp->fee, tmp->is_paid
+		);
+		cur = cur->next;
+	}
 }

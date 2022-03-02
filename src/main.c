@@ -100,23 +100,32 @@ int main(int argc, char const *argv[])
             while (1){
                 system("clear");
                 int menu_no, break_flag=0;
-                printf("2. user.dat 3. current.dat 4.history.dat 5. parkinglot.dat ");
+                printf("1. user.dat 2. current.dat 3.history.dat 4.parkinglot.dat\n");
+                printf("5. current_list 6. current_car_list others. back");
                 scanf("%d", &menu_no); while(getchar()!='\n');
                 switch (menu_no){
-                    case 2:
+                    case 1:
                         printUserData();
                         getchar();
                         break;
-                    case 3:
+                    case 2:
                         printCurrentData();
                         getchar();
                         break;
-                    case 4:
+                    case 3:
                         printHistoryData();
                         getchar();
                         break;
-                    case 5:
+                    case 4:
                         printParkingLotData();
+                        getchar();
+                        break;
+                    case 5:
+                        printCurrentParkList();
+                        getchar();
+                        break;
+                    case 6:
+                        printCurrentCarList();
                         getchar();
                         break;
                     default:
