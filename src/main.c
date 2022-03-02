@@ -17,6 +17,7 @@
 #include "hash.h"
 #include "manage.h"
 #include "utils.h"
+#include "messagebox.h"
 
 typedef int (*FP)(Widget*);
 
@@ -25,18 +26,24 @@ LinkedList current_list;
 LinkedList current_car_list;
 
 void signalHandler(int sig){
-	if(sig == SIGINT){
-		saveCurrentCarData(current_car_list);
-        saveParkingLot(current_list);
-        saveUserData(user);
+	
+    saveCurrentCarData(current_car_list);
+    saveParkingLot(current_list);
+    saveUserData(user);
+    
+    if(messageBox(NULL,"정말로 종료하시겠습니까?")==ID_OK){
+        system("clear");
         exit(0);
-	}
+    }
+    
 }
 
 int main(int argc, char const *argv[])
 {
     // signal(SIGSTOP, signalHandler);
     signal(SIGINT, signalHandler);
+    signal(SIGHUP, signalHandler);
+    signal(SIGHUP, signalHandler);
     // user 해시테이블 생성
     // LPHASH user;
     hashCreate(&user); 
@@ -64,10 +71,10 @@ int main(int argc, char const *argv[])
 
     mainPage = home;
     render = renderHomeUI;
-
+    int quit = 0;
     int page = 0;
     
-    while(1){
+    while(!quit){
         page = render(mainPage);
         switch (page)
         {
@@ -139,7 +146,11 @@ int main(int argc, char const *argv[])
             page = HOME;
             break;
         case EXIT:
-            return 0;
+            if(messageBox(NULL,"정말로 종료하시겠습니까?") == ID_OK){
+                quit = True;
+                system("clear");
+            }   
+            break;
         default:
             break;
         }
@@ -154,8 +165,6 @@ int main(int argc, char const *argv[])
     list_clear(&current_list);  
     list_clear(&current_car_list);
     hashDestroy(user);
-
-
 
     clearWidget(home);
     clearWidget(info);
