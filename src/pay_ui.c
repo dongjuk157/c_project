@@ -107,7 +107,8 @@ int calcFee(char *carNumber){
     //History.dat file 검색하면서 입력받은 carnumber와 일치하는 구조체들 
     while(fread(carInfo, sizeof(CAR_INFO), 1, fp)){
         if(!strcmp(carNumber, carInfo->car_number) && (strcmp(carInfo->out_datetime, ""))){  
-            fee += carInfo->fee;
+            if(!carInfo->is_paid)
+                fee += carInfo->fee;
         }
     }
     // printf("fee얼마냐 : %d", fee);

@@ -57,9 +57,7 @@ int main(int argc, char const *argv[])
     create_linked_list(&current_car_list);
     readCurrentData(&current_car_list);
 
-    printf("%d %d\n", list_size(&current_list), list_size(&current_car_list));
 
-    getchar();
 
     void *mainPage;
     FP render;

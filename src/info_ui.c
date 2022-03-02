@@ -1,5 +1,6 @@
 #include "info_ui.h"
 #include "info.h"
+#include "messagebox.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -92,8 +93,9 @@ int renderInfoUI(INFO_UI* info){
     Info data;
     char buffer[50];
     if(findInfo(carNumber, &data)==ERR_HASH_NOT_FOUND){
-        printSiglelineWidget(info, 15, 10, "해당 차량 정보가 존재하지 않습니다...", 0);
-        getchar();
+        messageBox(info, "차량 정보가 존재하지 않습니다.");
+        // printSiglelineWidget(info, 15, 10, "해당 차량 정보가 존재하지 않습니다...", 0);
+        // getchar();
         return CARINFO;
     }; //data에 차량번호와 일치하는 info 객체 담음 없다면 못담음
     Widget* dataWidget = createWidget();
