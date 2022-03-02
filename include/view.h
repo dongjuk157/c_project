@@ -12,5 +12,6 @@ int renderExtendTicketDetailView(USER_INFO *foundInfo);
 int renderNewTicketDetailView(USER_INFO *foundInfo);
 
 int printSingleLineView(char *currentMenu, char *defaultText);
-
+int printTicketView();
+int printSaveUserInfoView();
 #endif

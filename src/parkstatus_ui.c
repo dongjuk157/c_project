@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "parkstatus_ui.h"
+#include "parkstatus_detail.h"
 
 PARKSTATUS_UI* createParkStatusUI(){
 
-    PARKSTATUS_UI *parkStatus_UI = (PARKSTATUS_UI *)malloc(sizeof(PARKSTATUS_UI));
+    PARKSTATUS_UI *parkStatus_UI = createWidget();
 
     // 기본 위젯 Position 세팅
     setWidgetPos(parkStatus_UI, DEFAULT_POSY,DEFAULT_POSX);
@@ -46,14 +47,8 @@ PARKSTATUS_UI* createParkStatusUI(){
 
 int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI){
 
-    REPEAT:
-    {
     //UI 프레임 그리기
     renderWidget(parkStatus_UI);
-    
-    //세팅된 label 출력
-    for (int i = 0; i < arraySize(parkStatus_UI->label); i++)
-        printLabel(parkStatus_UI, (Label *)(parkStatus_UI->label->lpData)[i]);
 
     //prompt로 받을 선택넘버 | exit - home | 1,2 - 각 Page로 | 이외 - 다시입력 |
     char selectNumber[8];
@@ -68,13 +63,22 @@ int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI){
     int num = atoi(selectNumber);
     if(num == 1){
         //all status
-    } else if(num == 2){
+        PARK_DETAIL_UI* entry_detail = createParkDetailEntryUI();
+        renderDetailEntry(entry_detail);
+
+
+        clearWidget(entry_detail);
+        getch();
+    } 
+    else if(num == 2){
         //floor status
-    } else{
-        system("clear");
-        goto REPEAT;
+        PARK_DETAIL_UI* floor_detail = createParkDetailFloorUI();
+        renderDetailFloor(floor_detail);
+
+
+        clearWidget(floor_detail);
+        getch();
     }
     
     return HOME;
-    }
 }

@@ -143,13 +143,13 @@ int hashGetValue(LPHASH lpHash, const char* key, LPDATA* value)
 		//링크드 리스트에서 key와 같은 노드를 찾는다.
 		if (0 == strcmp(lpNode->key, key)) {
 			*value = lpNode->value;
-			break;
+			return ERR_HASH_OK;
 		}
 		//다음 노드로 이동을 한다.
 		lpNode = lpNode->pNext;
 	}
 	
-	return ERR_HASH_OK;
+	return ERR_HASH_NOT_FOUND;
 }
 
 int hashSetValue(LPHASH lpHash, const char* key, const LPDATA value)

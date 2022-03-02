@@ -9,10 +9,12 @@
 
 extern LPHASH user;
 
+extern LPHASH user;
+
 // 결제하기 기능 선택시 나타날 UI 제작 -> 제작한 Widget 구조체의 포인터 리턴
 PAY_UI *createPayUI(){
 
-    PAY_UI *payUI = (PAY_UI *)malloc(sizeof(PAY_UI));
+    PAY_UI *payUI = createWidget();
 
     // 기본 위젯 Position 세팅
     setWidgetPos(payUI, DEFAULT_POSY,DEFAULT_POSX);
@@ -57,7 +59,7 @@ int renderPayUI(PAY_UI *pay){
     {
     //UI 프레임 그리기
     renderWidget(pay);
-    
+
     //세팅된 label 출력
     for (int i = 0; i < arraySize(pay->label); i++)
         printLabel(pay, (Label *)(pay->label->lpData)[i]);
@@ -71,7 +73,7 @@ int renderPayUI(PAY_UI *pay){
     
     if(!strcmp("exit", selectNumber))
         return HOME;
-
+    
     int num = atoi(selectNumber);
     if(num == 1){
         //ParkingFee // 1번을 선택한 상황
@@ -158,13 +160,19 @@ int buyTicket(){
     3. user.dat 의 car_num 존재 -> char *recentTicket값 체크 "2022-02-20" 시간과 현재 시간 차이 계산
                                 4일 남았습니다 연장하시겠습니까? 하면 20일 기준 30일 뒤로 등록
      */
-    USER_INFO *foundInfo;
+    USER_INFO *foundInfo = NULL;
     hashGetValue(user, carNumber, &foundInfo);
-
     if(foundInfo == NULL){  //차량번호 조회불가
-        //저장하고 foundInfo에 값 담아줌
-    }  
-    checkRecentTicket(foundInfo); 
+        //save data
+        saveUser(carNumber, &foundInfo);
+    }  //번호 조회함
+    
+    checkRecentTicket(foundInfo);
+
+    if (strcmp(foundInfo->recentTicket, "")==0){ // 이전 데이터 값에 null이 들어있는 경우
+        strcpy(foundInfo->recentTicket, "0000-00-00");
+    }
+    
     return 0;
 }
 
@@ -214,3 +222,49 @@ int newTicket(USER_INFO *foundInfo){
 }
 
 
+int checkRecentTicket(USER_INFO *foundInfo){    
+}
+
+int extendTicket(){
+}
+
+int newTicket(){
+}
+
+
+int saveUser(char *carNumber, USER_INFO **foundInfo){
+    Widget *saveView = (Widget *)malloc(sizeof(Widget));
+    setWidgetPos(saveView, DEFAULT_POSY,DEFAULT_POSX);
+    setWidgetSize(saveView, 25, 70);
+    setWidgetType(saveView, MAIN);
+    arrayCreate(&(saveView->label));
+
+    Label *tmp = createLabel();
+    setLabelPos(&tmp, 13, 5);
+    setLabelText(&tmp, "해당 차량번호로 조회된 결과가 없습니다.");
+    printLabel(saveView, &tmp);
+
+    USER_INFO *tmp_user;
+    *foundInfo = (USER_INFO *) malloc(sizeof(USER_INFO));
+    // user_data에 값 저장
+    char tmp_c;
+    setLabelPos(&tmp, 16, 10);
+    setLabelText(&tmp,"이름을 입력하세요 >> ");
+    printLabel(saveView, &tmp);
+    scanf("%s", (*foundInfo)->name); while((tmp_c=getchar())!='\n');
+
+    setLabelPos(&tmp, 19, 10);
+    setLabelText(&tmp,"휴대폰 번호를 입력하세요 >> ");
+    printLabel(saveView, &tmp);
+    scanf("%s", (*foundInfo)->phone_num); while((tmp_c=getchar())!='\n');
+    // 차량 번호 자동 저장
+    strcpy((*foundInfo)->car_num, carNumber);
+    // 정기권 없음
+    (*foundInfo)->has_ticket = 0;
+
+    strcpy((*foundInfo)->recentTicket, "0000-00-00");
+    // 해시 테이블에 저장
+    hashSetValue(user, carNumber, *foundInfo);
+
+    return 0;
+}

@@ -418,3 +418,36 @@ int printSingleLineView(char *currentMenu, char *defaultText){
     return 0;
 }
 
+//정기권 뷰
+int printSaveUserInfoView(){
+    Widget *saveView = (Widget *)malloc(sizeof(Widget));
+    setWidgetPos(saveView, DEFAULT_POSY,DEFAULT_POSX);
+    setWidgetSize(saveView, 25, 70);
+    setWidgetType(saveView, MAIN);
+    arrayCreate(&(saveView->label));
+
+    Label *text = createLabel();
+    setLabelPos(text, 13, 10);
+    setLabelText(text, "해당 차량번호로 조회된 결과가 없습니다.");
+
+    Label *prompt = createLabel();
+    setLabelPos(prompt, 16, 10);
+    setLabelText(prompt,"이름을 입력하세요 >> ");
+
+    Label *prompt2 = createLabel();
+    setLabelPos(prompt2, 19, 10);
+    setLabelText(prompt2,"휴대폰 번호를 입력하세요 >> ");
+
+    addLabel(saveView, text);
+    addLabel(saveView, prompt);
+    addLabel(saveView, prompt2);
+
+//UI 프레임 그리기
+    printWidget(saveView);
+    
+//세팅된 label 출력
+    for (int i = 0; i < arraySize(saveView->label); i++)
+        printLabel(saveView, (Label *)(saveView->label->lpData)[i]);
+    
+    return 0;
+}

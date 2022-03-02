@@ -65,6 +65,15 @@ int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *curre
                 ret = search_user(user_table, car_info->car_number, &user); 
                 ret = update_current(menu, car_info, current_park, current_car); // 5. remove current list 
                 ret = update_history(menu, car_info, user); // 6. modify history
+                // 주차한 층에 값 감소
+                Node *cur = current_park->head;
+                while (cur){
+                    if (((PARK*)cur->data)->floor == car_info->floor){
+                        --(((PARK*)cur->data)->total_car);
+                        break;
+                    }
+                    cur = cur->next;
+                }
                 break;
             }
             case 'q':
@@ -160,8 +169,8 @@ int search_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
         strcpy((*user_data)->name, tmp_user->name);
         strcpy((*user_data)->phone_num, tmp_user->phone_num);
         strcpy((*user_data)->car_num, tmp_user->car_num);
-        strcpy((*user_data)->recentTicket, "");
-        // strcpy(*user_data)->recentTicket = tmp_user->recentTicket;
+        (*user_data)->has_ticket = tmp_user->has_ticket;
+        strcpy((*user_data)->recentTicket,tmp_user->recentTicket);
         //printf("tmp_user: %s, %s\n", tmp_user->name, tmp_user->phone_num);
     }
 	
@@ -177,7 +186,8 @@ int save_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
     // 차량 번호 자동 저장
     strcpy((*user_data)->car_num, car_number);
     // 정기권 없음
-    strcpy((*user_data)->recentTicket, "");
+    (*user_data)->has_ticket = 0;
+    strcpy((*user_data)->recentTicket, "0000-0");
     // 해시 테이블에 저장
     hashSetValue(user_table, car_number, *user_data);
 
