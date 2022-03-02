@@ -6,6 +6,31 @@
 #include <sys/types.h>
 #include <errno.h>
 
+int login(char *id, char *password){
+    // 1. 파일 열기 data/user
+    FILE *fp = fopen("./data/user.dat", "rb");
+    if (!fp){
+        return -1; // file error
+    }
+    // 2. 파일 내 같은 id 있는지 확인
+    USER *tmp = (USER*)malloc(sizeof(USER));
+    while (1){
+        fread(tmp, sizeof(USER), 1, fp);
+        if (feof(fp))
+            break;
+        if (strcmp(tmp->id, id) == 0) { // search same id
+            // check password
+            // 암호화된 password로 비교하고싶다...
+            if (strcmp(tmp->passward, password) == 0) {
+                return 0; // success
+            } else {
+                return -2; // login failed
+            }
+        }
+    }    
+    return -3; // not found
+}
+
 int join(char *id, char *password){
     // 1. 파일 열기 data/user
     FILE *fp = fopen("./data/user.dat", "rb+");
