@@ -223,7 +223,7 @@ int newTicket(USER_INFO *foundInfo){
 
 
 int saveUser(char *carNumber, USER_INFO **foundInfo){
-    Widget *saveView = (Widget *)malloc(sizeof(Widget));
+    Widget *saveView = createWidget();
     setWidgetPos(saveView, DEFAULT_POSY,DEFAULT_POSX);
     setWidgetSize(saveView, 25, 70);
     setWidgetType(saveView, MAIN);
