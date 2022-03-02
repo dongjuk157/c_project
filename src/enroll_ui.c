@@ -60,7 +60,7 @@ int renderEnrollUI(ENROLL_UI* enroll){
     fgets(passwordCheck, 20, stdin);
     passwordCheck[strlen(passwordCheck)-1] = '\0';
 
-    if(!strcpy(password, passwordCheck)){
+    if(!strcmp(password, passwordCheck)){
         int res = join(id,password);
         if(res == -2) {
             messageBox(enroll,"해당 아이디가 이미 존재합니다.");
@@ -71,6 +71,7 @@ int renderEnrollUI(ENROLL_UI* enroll){
         }
     }
     else{
+        messageBox(enroll,"비밀번호가 서로 다릅니다.");
         return ENROLLUSER;
     }
 

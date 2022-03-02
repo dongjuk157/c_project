@@ -1,4 +1,6 @@
 #include "login_ui.h"
+#include "join.h"
+#include "messagebox.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -49,6 +51,19 @@ int renderLoginUI(LOGIN_UI* login){
     gotoxy(27,13);
     fgets(password, 20, stdin);
     password[strlen(password)-1] = '\0';
+
+    int res = loginCheck(id,password);
+    if(res == -3){
+        messageBox(login,"잘못된 아이디 입니다.");
+        return LOGIN;
+    }
+    else if(res == -2){
+        messageBox(login,"비밀번호를 다시 입력해주세요.");
+        return LOGIN;
+    }
+    else if(res == 0){
+        messageBox(login,"로그인 성공");
+    }
     
     return HOME;
 }

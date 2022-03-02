@@ -1,4 +1,7 @@
 #include "setting_ui.h"
+#include "linkedlist.h"
+#include "info.h"
+#include "join.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -101,19 +104,30 @@ int renderSettingUI(SETTING_UI* setting){
 
     gotoxy(30,13);
     fgets(buffer, 20, stdin);
-    lowerNum = atoi(buffer);
+    lowerNum = -1 * atoi(buffer);
+
+    LinkedList *list = create_linked_list_ptr();
 
     for (int i = upperNum; i >= lowerNum; i--)
     {
-        if(i==0)continue;
+        if(i==0) continue;
+        PARK* park = (PARK*)malloc(sizeof(PARK));
+        park->floor = i;
         SETTING_DETAIL_UI* detail = createSettingDetailUI(i);
-        renderSettingDetailUI(detail); 
+        renderSettingDetailUI(detail, &park); 
+        
+        list_push_back(list,(LPDATA)park);
+
+        clearWidget(detail);
     }
     
+
+    createParkingLot("sonk55",list);
+
     return HOME;
 }
 
-int renderSettingDetailUI(SETTING_DETAIL_UI* detail){
+int renderSettingDetailUI(SETTING_DETAIL_UI* detail, PARK** park){
     renderWidget(detail);
     int total, electric, light, handicapped;
     char buffer[20];
@@ -134,4 +148,13 @@ int renderSettingDetailUI(SETTING_DETAIL_UI* detail){
     fgets(buffer, 20, stdin);
     handicapped = atoi(buffer);   
 
+    (*park)->total = total;
+    (*park)->electric_charge = electric;
+    (*park)->light_car = light;
+    (*park)->handicapped = handicapped;
+    (*park)->total_car = 0;
+    
+    //valid check
+
+    return 0;
 }

@@ -80,7 +80,7 @@ int main(int argc, char const *argv[])
 {
     // login()
     // char id[20] = "default";
-    setFilePath(id);
+    // setFilePath(id);
 
     // signal(SIGSTOP, signalHandler);
     signal(SIGINT, signalHandler);

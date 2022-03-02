@@ -15,6 +15,7 @@ extern LPHASH user;
 extern LinkedList current_car_list;
 extern LinkedList current_list;
 
+
 int gotoxy(int x, int y)
 {
     printf("\033[%dd\033[%dG",y,x);
@@ -192,7 +193,7 @@ int printHistoryData(void){
 	fclose(fp);
 }
 int printParkingLotData(void){
-	FILE *fp = fopen(PARKINGLOT_SETTINGS_FILE_PATH, "rb");
+	FILE *fp = fopen("./data/sonk55/ParkingLot.dat", "rb");
 	
 	printf("floor\ttotal\ttotal_car\telectric_charge\thandicapped\tlight_car\n");
 	while (1) {

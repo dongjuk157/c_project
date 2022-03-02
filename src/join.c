@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <errno.h>
 
-int login(char *id, char *password){
+int loginCheck(char *id, char *password){
     // 1. 파일 열기 data/user
     FILE *fp = fopen("./data/user.dat", "rb");
     if (!fp){
@@ -54,6 +54,7 @@ int join(char *id, char *password){
     fwrite(tmp, sizeof(USER), 1, fp); // 파일에 값  추가
     fclose(fp); 
     free(tmp);
+    createNewFiles(id);
     return 0;
 }
 
@@ -142,8 +143,9 @@ int createParkingLot(char *id, LinkedList* list){
         return -1;
     
     Node* cur = list->head;
-    PARK *tmp = (PARK *)malloc(sizeof(PARK));
+    PARK *tmp;
     while (cur) {
+        tmp = (PARK*)cur->data;
         fwrite(tmp, sizeof(PARK), 1, fp);
         cur = cur->next;
     }
