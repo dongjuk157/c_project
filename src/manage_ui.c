@@ -74,28 +74,22 @@ int renderManageUI(MANAGE_UI *manage){
     }
     else{
         int num = atoi(selectNumber);
+        int ret = 0;
         MANAGE_DETAIL_UI* detail;
         if(num == 1){
             // 입차
             detail = createManageDetailUI(IN_CAR);
             renderWidget(detail);
-            getValuesUI(manage,IN_CAR,&car_info);
+            ret = getValuesUI(manage,IN_CAR,&car_info);
+            if (ret){ 
+                // ret == 0 성공, 0 아니면 에러이므로 함수 종료
+                return ret;
+            }
             save_log(IN_CAR, car_info);
             searchUserUI(manage, car_info->car_number, &user_info, 'i');
             update_current(IN_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
             update_history(IN_CAR, car_info, user_info); // 6. add history
             
-
-            // Node *tmp = current_list.head;
-            // while(tmp){
-            //     PARK* buf = (PARK*)tmp->data;
-            //     if(buf->floor == car_info->floor){
-            //         buf->total_car+=1;
-            //         break;
-            //     }
-            //     tmp = tmp->next;
-            // }
-
             gotoxy(10,20);
             printf("새로운 차량이 입차 정상적으로 입차 되었습니다.\n");
             getchar();
@@ -105,7 +99,10 @@ int renderManageUI(MANAGE_UI *manage){
             // 출차
             detail = createManageDetailUI(OUT_CAR);
             renderWidget(detail);
-            getValuesUI(manage,OUT_CAR,&car_info);
+            ret = getValuesUI(manage,OUT_CAR,&car_info);
+            if (ret){
+                return ret;
+            }
             int res;
             res = searchUserUI(manage, car_info->car_number, &user_info , 'o');
             if(res == -2){
@@ -194,7 +191,7 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
 
     }
     else {
-        return 0;
+        return -1;
     }
 
     return 0;
