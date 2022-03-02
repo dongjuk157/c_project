@@ -92,7 +92,7 @@ int renderPayUI(PAY_UI *pay){
 // 정산하기
 int payParkingFee(){
     //fee view load
-    renderFeeView();
+    printFeeView();
 
     //차량번호 입력받기
     char carNumber[20];
@@ -143,7 +143,7 @@ int calcFee(char *carNumber){
 int buyTicket(){
 
 //fee view load
-    renderTicketView();
+    printTicketView();
 
     //차량번호 입력받기
     char carNumber[20];
@@ -188,8 +188,8 @@ int newTicket(){
 }
 
 
-int save_user(char *carNumber, USER_INFO **foundInfo){
-    printSaveUserInforView();
+int saveUser(char *carNumber, USER_INFO **foundInfo){
+    printSaveUserInfoView();
     // user_data에 값 저장
     char tmp;
     // printf("차주 이름 >> ");

@@ -6,7 +6,7 @@
 #include "widget.h"
 #include "label.h"
 #include "home_ui.h"
-#include "manage_ui.h"
+// #include "manage_ui.h"
 #include "pay_ui.h"
 #include "parkstatus_ui.h"
 #include "info_ui.h"
@@ -41,7 +41,7 @@ int main(int argc, char const *argv[])
     FP render;
     
     HOME_UI* home = createHomeUI();
-    MANAGE_UI *iomanage = createManageUI();
+    // MANAGE_UI *iomanage = createManageUI();
     PAY_UI *pay = createPayUI();
     PARKSTATUS_UI *parkStatus = createParkStatusUI();
     INFO_UI* info = createInfoUI();
@@ -64,8 +64,8 @@ int main(int argc, char const *argv[])
             break;
         case IOMANAGE:
             // page = manage_in_out(user, &current_list, &current_car_list);
-            mainPage = iomanage;
-            render = renderManageUI;
+            // mainPage = iomanage;
+            // render = renderManageUI;
             break;
         case PAY:
             mainPage = pay;

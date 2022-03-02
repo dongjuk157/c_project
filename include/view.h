@@ -9,5 +9,5 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket);
 int printSingleLineView(char *currentMenu, char *defaultText);
 
 int printTicketView();
-
+int printSaveUserInfoView();
 #endif

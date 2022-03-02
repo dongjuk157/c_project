@@ -1,8 +1,8 @@
 #ifndef MANAGE_UI_H
 #define MANAGE_UI_H
 #include "widget.h"
-#include OK             0
-#include FILE_ERROR     -1
+#define OK             0
+#define FILE_ERROR     -1
 typedef Widget MANAGE_UI;
 
 MANAGE_UI* createManageUI();
