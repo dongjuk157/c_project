@@ -6,10 +6,12 @@
 #include "info.h"
 #include "view.h"
 
+extern LPHASH user;
+
 // 결제하기 기능 선택시 나타날 UI 제작 -> 제작한 Widget 구조체의 포인터 리턴
 PAY_UI *createPayUI(){
 
-    PAY_UI *payUI = createWidget();
+    PAY_UI *payUI = (PAY_UI *)malloc(sizeof(PAY_UI));
 
     // 기본 위젯 Position 세팅
     setWidgetPos(payUI, DEFAULT_POSY,DEFAULT_POSX);
@@ -90,7 +92,7 @@ int renderPayUI(PAY_UI *pay){
 // 정산하기
 int payParkingFee(){
     //fee view load
-    printFeeView();
+    renderFeeView();
 
     //차량번호 입력받기
     char carNumber[20];
@@ -141,7 +143,7 @@ int calcFee(char *carNumber){
 int buyTicket(){
 
 //fee view load
-    printTicketView();
+    renderTicketView();
 
     //차량번호 입력받기
     char carNumber[20];
@@ -149,11 +151,58 @@ int buyTicket(){
     fgets(carNumber,20,stdin);
     carNumber[strlen(carNumber)-1] = '\0';
 
-    calcFee(carNumber);
+    /*
+    1. user.dat 의 car_num이 존재 하지 않는다 -> 등록된 차량 정보 없습니다. 이름 , 번호, 차량종류 입력받기
+    2. user.dat 의 car_num 존재 -> char *recentTicekt값 체크 "" 이면 등록하시겠습니까
+    3. user.dat 의 car_num 존재 -> char *recentTicket값 체크 "2022-02-20" 시간과 현재 시간 차이 계산
+                                4일 남았습니다 연장하시겠습니까? 하면 20일 기준 30일 뒤로 등록
+     */
+    USER_INFO *foundInfo;
+    hashGetValue(user, carNumber, &foundInfo);
 
+    if(foundInfo == NULL){  //차량번호 조회불가
+        //save data
+        saveUser(carNumber, &foundInfo);
+
+    }  //번호 조회함
+    if (strcmp(foundInfo->recentTicket, "")==0){ // 이전 데이터 값에 null이 들어있는 경우
+        strcpy(foundInfo->recentTicket, "0000-00-00");
+    }
+
+    
+        // "0000-00-00"  -> 재등록
+        // "2022-03-01"  -> 재등록 
+        // "2022-03-03"  -> 연장
+    
     return 0;
 }
 
-int hasTicket(char *carNumber, int hasTicket){
+//foundInfo -> recentTicket의 날짜확인
+int checkRecentTicket(USER_INFO *foundInfo){    
+}
 
+int extendTicket(){
+}
+
+int newTicket(){
+}
+
+
+int save_user(char *carNumber, USER_INFO **foundInfo){
+    printSaveUserInforView();
+    // user_data에 값 저장
+    char tmp;
+    // printf("차주 이름 >> ");
+    scanf("%s", (*foundInfo)->name); while((tmp=getchar())!='\n');
+    // printf("차주 휴대폰 번호 >> ");
+    scanf("%s", (*foundInfo)->phone_num); while((tmp=getchar())!='\n');
+    // 차량 번호 자동 저장
+    strcpy((*foundInfo)->car_num, carNumber);
+    // 정기권 없음
+    (*foundInfo)->has_ticket = 0;
+    strcpy((*foundInfo)->recentTicket, "0000-00-00");
+    // 해시 테이블에 저장
+    hashSetValue(user, carNumber, *foundInfo);
+
+    return 0;
 }
