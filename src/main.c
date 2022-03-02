@@ -19,6 +19,9 @@
 #include "manage.h"
 #include "utils.h"
 #include "messagebox.h"
+#include "login_ui.h"
+#include "enroll_ui.h"
+#include "setting_ui.h"
 
 typedef int (*FP)(Widget*);
 
@@ -107,11 +110,15 @@ int main(int argc, char const *argv[])
     PARKSTATUS_UI *parkStatus = createParkStatusUI(); //주차장 현황 UI
     INFO_UI* info = createInfoUI(); //차량 정보 UI
     HISTORY_UI* history = createHistoryUI(); //주차 이력 UI
+    LOGIN_UI* login = createLoginUI();
+    ENROLL_UI* enroll = createEnrollUI();
+    SETTING_UI* setting = createSettingUI();
 
     mainPage = home;
     render = renderHomeUI;
+
     int quit = 0;
-    int page = 0;
+    int page = LOGIN;
     
     while(!quit){
         page = render(mainPage);

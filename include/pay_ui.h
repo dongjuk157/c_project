@@ -2,6 +2,8 @@
 #define PAY_UI_H
 #include "widget.h"
 #include "info.h"
+#define OK             0
+#define FILE_ERROR     -1
 
 typedef Widget PAY_UI;
 

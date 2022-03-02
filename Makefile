@@ -1,5 +1,5 @@
-CC = gcc
-#  CC = c:/sysgcc/raspberry/bin/arm-linux-gnueabihf-gcc.exe
+# CC = gcc
+ CC = c:/sysgcc/raspberry/bin/arm-linux-gnueabihf-gcc.exe
 
 SRC_DIR = src
 OBJ_DIR = obj
@@ -17,6 +17,9 @@ SRCS += $(SRC_DIR)/manage_ui.c
 SRCS += $(SRC_DIR)/manage_detail.c
 SRCS += $(SRC_DIR)/parkstatus_detail.c
 SRCS += $(SRC_DIR)/messagebox.c
+SRCS += $(SRC_DIR)/login_ui.c
+SRCS += $(SRC_DIR)/enroll_ui.c
+SRCS += $(SRC_DIR)/setting_ui.c
 
 OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
 TARGET = main
