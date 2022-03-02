@@ -2,6 +2,12 @@
 #define __INFO_H__
 #include "linkedlist.h"
 #include "hash.h"
+
+typedef struct User {
+  char id[20];
+  char passward[20];
+} USER;
+
 typedef struct Info{
     char carNumber[20];
     char name[10];
