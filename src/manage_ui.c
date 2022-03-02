@@ -227,12 +227,16 @@ int saveUserUI(MANAGE_UI* manage, char *car_number, USER_INFO **user_data){
     setLabelPos(&temp,14,10);
     setLabelText(&temp,"차주 이름 >> ");
     printLabel(manage,&temp);
-    scanf("%s", (*user_data)->name); while(getchar()!='\n');
+    // scanf("%s", (*user_data)->name); while(getchar()!='\n');
+    fgets((*user_data)->name, 10, stdin);
+    (*user_data)->name[strlen((*user_data)->name)-1] = '\0';
 
     setLabelPos(&temp,16,10);
     setLabelText(&temp,"차주 휴대폰 번호(010-1234-5678) >> ");
     printLabel(manage,&temp);
-    scanf("%s", (*user_data)->phone_num); while(getchar()!='\n');
+    // scanf("%s", (*user_data)->phone_num); while(getchar()!='\n');
+    fgets((*user_data)->phone_num, 15, stdin);
+    (*user_data)->phone_num[strlen((*user_data)->phone_num)-1] = '\0';
     
     strcpy((*user_data)->car_num, car_number);
     (*user_data)->has_ticket = 0;
