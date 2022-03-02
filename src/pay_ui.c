@@ -186,6 +186,7 @@ int extendTicket(USER_INFO *foundInfo){
     } 
     else{
     }
+    return 0;
 }
 
 int newTicket(USER_INFO *foundInfo){

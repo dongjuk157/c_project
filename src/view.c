@@ -82,17 +82,13 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
 
     Label *label2 = createLabel();
     setLabelPos(label2, 11, 19);
-    setLabelText(label2, feeStr); // hasticket 여부로 *할인율 적용할지 판단
+    setLabelText(label2, feeStr);
 
     Label *label3 = createLabel();
     setLabelPos(label3, 11, 24);
     setLabelText(label3, "원 입니다.");
 
-    if(hasTicket){
-        Label *label2 = createLabel();
-        setLabelPos(label2, 11, 19);
-        setLabelText(label2, feeStr); // hasticket 여부로 *할인율 적용할지 판단
-
+    if(hasTicket){ //할인율 적용
         Label *label4 = createLabel();
         setLabelPos(label4, 11, 35);
         setLabelText(label4, "(정기권 할인 적용)");
