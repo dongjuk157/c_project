@@ -1,5 +1,10 @@
+<<<<<<< Updated upstream
 CC = gcc
 #  CC = c:/sysgcc/raspberry/bin/arm-linux-gnueabihf-gcc.exe
+=======
+# CC = gcc
+CC = c:/sysgcc/raspberry/bin/arm-linux-gnueabihf-gcc.exe
+>>>>>>> Stashed changes
 
 SRC_DIR = src
 OBJ_DIR = obj

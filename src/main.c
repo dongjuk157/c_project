@@ -103,6 +103,7 @@ int main(int argc, char const *argv[])
             page = HOME;
             break;
         case EXIT:
+<<<<<<< Updated upstream
             break_sig = 1;
             break;
             // return 0;
@@ -112,6 +113,12 @@ int main(int argc, char const *argv[])
         if (break_sig) {
             break;
         }
+=======
+            return 0;
+        default:
+            break;
+        }
+>>>>>>> Stashed changes
     }
 
     // data 백업
