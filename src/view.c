@@ -259,7 +259,6 @@ REPEAT:
     addLabel(extendticketDetailView, label8);
 
 
-
 //UI 프레임 그리기
     printWidget(extendticketDetailView);
     

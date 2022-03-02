@@ -151,6 +151,7 @@ int buyTicket(){
     
     if (strcmp(foundInfo->recentTicket, "")==0){ // 이전 데이터 값에 null이 들어있는 경우
         strcpy(foundInfo->recentTicket, "0000-00-00");
+        sleep(20000);
     }
     checkRecentTicket(foundInfo);
     
