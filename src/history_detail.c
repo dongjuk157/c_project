@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "manage.h"
 
 HISTORY_DETAIL_UI* createHistoryDetailUI(int type){
 
@@ -127,7 +128,7 @@ int renderHistoryDetail(HISTORY_DETAIL_UI* history, int type){
 
 int getHistoryDetail(int type, char* data, LPARRAY* datas){
     arrayCreate(datas);
-    FILE* fp = fopen("./data/History.dat","rb");
+    FILE* fp = fopen(HISTORY_DATA_FILE_PATH,"rb");
     if(fp<=0){
         return 1;
     }

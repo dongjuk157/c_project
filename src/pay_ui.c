@@ -6,8 +6,7 @@
 #include "info.h"
 #include "view.h"
 #include "utils.h"
-
-extern LPHASH user;
+#include "manage.h"
 
 extern LPHASH user;
 
@@ -55,8 +54,6 @@ PAY_UI *createPayUI(){
 
 int renderPayUI(PAY_UI *pay){
 
-    REPEAT:
-    {
     //UI 프레임 그리기
     renderWidget(pay);
 
@@ -64,7 +61,6 @@ int renderPayUI(PAY_UI *pay){
     for (int i = 0; i < arraySize(pay->label); i++)
         printLabel(pay, (Label *)(pay->label->lpData)[i]);
 
-    //prompt로 받을 선택넘버 | exit - home | 1,2 - 각 Page로 | 이외 - 다시입력 |
     char selectNumber[8];
 
     //User에게 입력받고 개행문자 제거
@@ -82,9 +78,8 @@ int renderPayUI(PAY_UI *pay){
         buyTicket(); //정기권 등록 및 연장 선택
     } else{
         system("clear");
-        goto REPEAT;
     }
-    }
+    
     return HOME;
 }
 // 정산하기
@@ -104,7 +99,7 @@ int payParkingFee(){
 
 int calcFee(char *carNumber){
     
-    FILE *fp = fopen("./data/history.dat","rb");
+    FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"rb");
     if(fp == NULL){
         return 1;
     }
@@ -114,15 +109,21 @@ int calcFee(char *carNumber){
     int fee = 0;
     //History.dat file 검색하면서 입력받은 carnumber와 일치하는 구조체들 
     while(fread(carInfo, sizeof(CAR_INFO), 1, fp)){
-        if(!strcmp(carNumber, carInfo->car_number) && (strcmp(carInfo->out_datetime, "xxx"))){  
+        if(!strcmp(carNumber, carInfo->car_number) && (strcmp(carInfo->out_datetime, ""))){  
             fee += carInfo->fee;
         }
     }
     free(carInfo);
 
-    //carNumber와 일치하는 user 찾기 -> hash? 이게 되면 할인권 적용 가능
-    int hasTicket = 1;
-
+    //차번호로 user.dat조회 -> 정기권 여부 판단
+    int hasTicket = 0;
+    USER_INFO *foundInfo = NULL;
+    hashGetValue(user, carNumber, (LPDATA *)&foundInfo);
+    if(foundInfo != NULL){  //차량번호 일치하는 user 없음
+        if(foundInfo->has_ticket){
+            hasTicket = 1;
+        }
+    }
     fclose(fp);
 
     if(fee == 0){
