@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <sys/select.h>
+#include <signal.h>
+#include <sys/types.h>
 #include <termios.h>
 #include "utils.h"
 #include <time.h>
@@ -34,6 +36,7 @@ int getDateTime(char *datetime){
         today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
         today->tm_hour, today->tm_min
     );
+	return 0;
 }
 
 
@@ -108,3 +111,4 @@ int diff(int y1, int m1, int d1, int y2, int m2, int d2)
 	int b = to_day(y2, m2, d2);
 	return b-a;
 }
+
