@@ -31,9 +31,9 @@ PARKSTATUS_UI* createParkStatusUI(){
     setLabelPos(selectTwo, 13, 10);
     setLabelText(selectTwo,"2. 층별 현황 조회");
 
-    Label *selectTwo = createLabel();
-    setLabelPos(selectTwo, 16, 10);
-    setLabelText(selectTwo,"3. 타 주차장 현황 조회");
+    Label *selectThree = createLabel();
+    setLabelPos(selectThree, 16, 10);
+    setLabelText(selectThree,"3. 타 주차장 현황 조회");
 
     Label *prompt = createLabel();
     setLabelPos(prompt, 20, 10);
@@ -44,6 +44,7 @@ PARKSTATUS_UI* createParkStatusUI(){
     addLabel(parkStatus_UI, subTitle);
     addLabel(parkStatus_UI, selectOne);
     addLabel(parkStatus_UI, selectTwo);
+    addLabel(parkStatus_UI, selectThree);
     addLabel(parkStatus_UI, prompt);
 
     return parkStatus_UI;
@@ -81,7 +82,7 @@ int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI){
     }
     else if(num == 3){
         // other parkinglot status
-        PARK_DETAIL_UI* other_entry = createOtherParkUI();
+        PARK_DETAIL_UI* other_entry = createParkDetailOtherUI();
         renderDetailOther(other_entry);
         clearWidget(other_entry);
         getchar();
