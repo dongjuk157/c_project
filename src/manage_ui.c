@@ -246,6 +246,7 @@ int saveUserUI(MANAGE_UI* manage, char *car_number, USER_INFO **user_data){
     strcpy((*user_data)->car_num, car_number);
     (*user_data)->has_ticket = 0;
 
+    strcpy((*user_data)->recentTicket, "0000-00-00");
     hashSetValue(user, car_number, *user_data);
 
     return OK;
