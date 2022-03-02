@@ -4,10 +4,14 @@
 #include "widget.h"
 #include "info.h"
 
-int printFeeView();
+int renderFeeView();
 int printFeeDetailView(char *carNumber, int fee, int hasTicket);
-int printSingleLineView(char *currentMenu, char *defaultText);
 
+int renderTicketView();
+int renderExtendTicketDetailView(USER_INFO *foundInfo);
+int renderNewTicketDetailView(USER_INFO *foundInfo);
+
+int printSingleLineView(char *currentMenu, char *defaultText);
 int printTicketView();
 int printSaveUserInfoView();
 #endif

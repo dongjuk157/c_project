@@ -1,11 +1,19 @@
 #include <stdio.h>
 #include <sys/select.h>
+#include <signal.h>
+#include <sys/types.h>
 #include <termios.h>
-#include "utils.h"
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
 
+#include "utils.h"
+#include "manage.h"
+#include "info.h"
+
+extern LPHASH user;
+extern LinkedList current_car_list;
+extern LinkedList current_list;
 
 void gotoxy(int x, int y)
 {
@@ -34,6 +42,47 @@ int getDateTime(char *datetime){
         today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
         today->tm_hour, today->tm_min
     );
+	return OK;
+}
+
+int getTodayDate(char *datetime){
+	struct tm* today;
+    time_t rawTime = time(NULL);
+    today = localtime(&rawTime);  
+
+    sprintf(datetime, "%4d-%02d-%02d", 
+        today->tm_year+1900, today->tm_mon + 1, today->tm_mday
+    );
+	return OK;
+}
+//특정날짜 "0000-00-00" 입력 -> 30일뒤 날짜 계산해서 포맷
+int getOneMonthAfterFromDate(char *date){
+	
+	int year, month, day;
+	sscanf(date, "%4d-%02d-%02d", &year, &month, &day);
+
+	struct tm t = {0};
+	t.tm_year = year - 1900;
+	t.tm_mon = month - 1;
+	t.tm_mday = day + 30;
+	mktime(&t);
+
+	sprintf(date, "%4d-%02d-%02d", t.tm_year+1900, t.tm_mon + 1, t.tm_mday);
+
+	return OK;
+}
+//오늘날짜 기준 30일뒤 계산해서 포맷
+int getOneMonthAfterFromToday(char *date){
+	
+	time_t now;
+	struct tm t;
+	time(&now);
+	t = *localtime(&now);
+	t.tm_mday += 30;
+	mktime(&t);
+
+	sprintf(date, "%4d-%02d-%02d", t.tm_year+1900, t.tm_mon + 1, t.tm_mday);
+	return OK;
 }
 
 
@@ -107,4 +156,97 @@ int diff(int y1, int m1, int d1, int y2, int m2, int d2)
 	int a = to_day(y1, m1, d1);
 	int b = to_day(y2, m2, d2);
 	return b-a;
+}
+
+
+int printUserData(void){
+	FILE *fp = fopen(USER_DATA_FILE_PATH, "rb");
+	printf("name\tcar_num\tphone_num\trecentTicket\thas_ticket\n");
+	while (1) {
+		USER_INFO tmp;
+		fread(&tmp, sizeof(USER_INFO), 1, fp);
+		if (feof(fp)) break;
+		printf("%s\t%s\t%s\t%s\t%d\n", 
+			tmp.name, tmp.car_num, tmp.phone_num,
+			tmp.recentTicket, tmp.has_ticket
+		);
+	}
+	fclose(fp);
+}
+int printCurrentData(void){
+	FILE *fp = fopen(CURRENT_DATA_FILE_PATH, "rb");
+	printf("car_number\tcar_type\tfloor\tin_datetime\tout_datetime\tfee\tis_paid\n");
+	while (1) {
+		CAR_INFO tmp;
+		fread(&tmp, sizeof(CAR_INFO), 1, fp);
+		if (feof(fp)) break;
+		printf("%s\t%c\t%d\t%s\t%s\t%d\t%d\n", 
+			tmp.car_number, tmp.car_type, tmp.floor,
+			tmp.in_datetime, tmp.out_datetime,
+			tmp.fee, tmp.is_paid
+		);
+	}
+	fclose(fp);
+}
+int printHistoryData(void){
+	FILE *fp = fopen(HISTORY_DATA_FILE_PATH, "rb");
+	printf("car_number\tcar_type\tfloor\tin_datetime\tout_datetime\tfee\tis_paid\n");
+	while (1) {
+		CAR_INFO tmp;
+		fread(&tmp, sizeof(CAR_INFO), 1, fp);
+		if (feof(fp)) break;
+		printf("%s\t%c\t%d\t%s\t%s\t%d\t%d\n", 
+			tmp.car_number, tmp.car_type, tmp.floor,
+			tmp.in_datetime, tmp.out_datetime,
+			tmp.fee, tmp.is_paid
+		);
+	}
+	fclose(fp);
+}
+int printParkingLotData(void){
+	FILE *fp = fopen(PARKINGLOT_SETTINGS_FILE_PATH, "rb");
+	
+	printf("floor\ttotal\ttotal_car\telectric_charge\thandicapped\tlight_car\n");
+	while (1) {
+		PARK tmp;
+		fread(&tmp, sizeof(PARK), 1, fp);
+		if (feof(fp)) break;
+		printf("%d\t%d\t%d\t%d\t%d\t%d\n", 
+			tmp.floor, tmp.total, tmp.total_car, 
+			tmp.electric_charge, tmp.handicapped, tmp.light_car
+		);
+	}
+	fclose(fp);
+}
+
+
+int printCurrentParkList(void){
+	printf("floor\ttotal\ttotal_car\telectric_charge\thandicapped\tlight_car\n");
+	
+	Node* cur;
+	cur = current_list.head;
+	while (cur) {
+		PARK* tmp = (PARK*) cur->data;
+		printf("%d\t%d\t%d\t%d\t%d\t%d\n", 
+			tmp->floor, tmp->total, tmp->total_car, 
+			tmp->electric_charge, tmp->handicapped, tmp->light_car
+		);
+	}
+
+}
+int printCurrentCarList(void){
+	printf("car_number\tcar_type\tfloor\tin_datetime\tout_datetime\tfee\tis_paid\n");
+
+	Node* cur;
+	cur = current_car_list.head;
+	while (cur){
+		CAR_INFO* tmp;
+		tmp = (CAR_INFO*) cur->data;
+		printf("%s\t%c\t%d\t%s\t%s\t%d\t%d\n", 
+			tmp->car_number, tmp->car_type, tmp->floor,
+			tmp->in_datetime, tmp->out_datetime,
+			tmp->fee, tmp->is_paid
+		);
+		cur = cur->next;
+	}
 }

@@ -64,7 +64,7 @@ int renderHistoryUI(HISTORY_UI* history){
     else{
         HISTORY_DETAIL_UI* history_detail;
         int type = atoi(init);
-        if(type < 1 || type > 4) return HOME;
+        if(type < 1 || type > 4) return PARKHISTORY;
         else{
             history_detail = createHistoryDetailUI(type);
             renderHistoryDetail(history_detail, type);

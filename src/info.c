@@ -1,6 +1,7 @@
 #include "info.h"
 #include "manage.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 void printInfo(Info info){
     
@@ -20,6 +21,7 @@ int readUserData(LPHASH *hash){
         hashSetValue(*hash, tmp_user->car_num, tmp_user);
     }
     fclose(fp);
+    return 0;
 }
 
 int readParkingLot(LinkedList* list){
@@ -36,6 +38,7 @@ int readParkingLot(LinkedList* list){
         list_push_back(list, tmp_park);
     }
     fclose(fp);
+    return 0;
 }
 
 int readCurrentData(LinkedList* list){
@@ -50,9 +53,10 @@ int readCurrentData(LinkedList* list){
         fread(tmp_car_info, sizeof(CAR_INFO), 1, fp);
         if (feof(fp)) 
             break;
-        list_push_back(&list, tmp_car_info);
+        list_push_back(list, tmp_car_info);
     }
     fclose(fp);
+    return 0;
 }
 
 int saveUserData(LPHASH hash){
@@ -60,7 +64,7 @@ int saveUserData(LPHASH hash){
     if(fp==NULL){
         return -1;
     }
-	LPNODE lpNode, lpTemp;
+	LPNODE lpNode;
     for (int i=0; i < hash->nHashSize; i++) {
 		lpNode = hash->array[i];
 		while (lpNode) {
@@ -72,3 +76,35 @@ int saveUserData(LPHASH hash){
     fclose(fp);
     return 0;
 }
+
+int saveParkingLot(LinkedList list){
+    FILE* fp = fopen(PARKINGLOT_SETTINGS_FILE_PATH, "wb");
+    if(fp==NULL){
+        return -1;
+    }
+	Node *tmp = list.head;
+    while(tmp){
+        fwrite(tmp->data,sizeof(PARK),1,fp);
+        tmp=tmp->next;
+    }
+    fclose(fp);
+    return 0;
+}
+
+
+int saveCurrentCarData(LinkedList list){
+    FILE* fp = fopen(CURRENT_DATA_FILE_PATH, "wb");
+    if(fp==NULL){
+        return -1;
+    }
+	Node *tmp = list.head;
+    while(tmp){
+        fwrite(tmp->data,sizeof(CAR),1,fp);
+        tmp=tmp->next;
+    }
+    fclose(fp);
+    return 0;
+}
+
+
+

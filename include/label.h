@@ -4,6 +4,7 @@
 
 typedef struct Label{
     int posx, posy;
+    int color;
     char* text;
 }Label;
 
