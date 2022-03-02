@@ -87,15 +87,15 @@ int renderManageUI(MANAGE_UI *manage){
             update_history(IN_CAR, car_info, user_info); // 6. add history
             
 
-            Node *tmp = current_list.head;
-            while(tmp){
-                PARK* buf = (PARK*)tmp->data;
-                if(buf->floor == car_info->floor){
-                    buf->total_car+=1;
-                    break;
-                }
-                tmp = tmp->next;
-            }
+            // Node *tmp = current_list.head;
+            // while(tmp){
+            //     PARK* buf = (PARK*)tmp->data;
+            //     if(buf->floor == car_info->floor){
+            //         buf->total_car+=1;
+            //         break;
+            //     }
+            //     tmp = tmp->next;
+            // }
 
             gotoxy(10,20);
             printf("새로운 차량이 입차 정상적으로 입차 되었습니다.\n");
@@ -113,6 +113,9 @@ int renderManageUI(MANAGE_UI *manage){
             update_current(OUT_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
             update_history(OUT_CAR, car_info, user_info); // 6. add history
             
+            gotoxy(10,20);
+            printf("정상적으로 출차 되었습니다.\n");
+            getchar();
         } 
         else{
             return IOMANAGE;
@@ -142,11 +145,40 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
         setLabelText(&temp,"차종 [e]lectric, [l]ight, [n]ormal >> ");
         printLabel(manage,&temp);
         scanf("%c", &(*car_info)->car_type); while(getchar()!='\n');
+
+        switch ((*car_info)->car_type) {
+            case 'e': case 'l':
+                break;
+            default:
+                (*car_info)->car_type = 'n';
+                break;
+        }
         
         setLabelPos(&temp,12,10);
         setLabelText(&temp,"주차 위치(층수 입력) >> ");
         printLabel(manage,&temp);
         scanf("%d", &(*car_info)->floor); while(getchar()!='\n');
+
+        int find_flag = 0;
+        Node *tmp = current_list.head;
+        while(tmp){
+            PARK* buf = (PARK*)tmp->data;
+            if(buf->floor == (*car_info)->floor){
+                find_flag = 1;      // 찾으면 flag = 1
+
+                if (buf->total_car < buf->total){ // total_car: 현재 주차된 차량 < total:주차공간 
+                    buf->total_car+=1;  // 해당 층의 자동차 수 하나 증가
+                }
+                else {
+                    return -4; // 자동차 수 초과
+                }
+                break; // 
+            }
+            tmp = tmp->next;
+        }
+        if (!find_flag) {  // 해당 층이 등록되지 않은 경우
+            return -3; // there is not enrolled floor.
+        }
     }
     else if(io == 'o'){
         setLabelPos(&temp,14,10);
@@ -154,10 +186,13 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
         printLabel(manage,&temp);
         fgets((*car_info)->car_number, 20, stdin);
         (*car_info)->car_number[strlen((*car_info)->car_number)-1] = '\0';
-    }
-    else return HOME;
 
-    return HOME;
+    }
+    else {
+        return 0;
+    }
+
+    return 0;
 }
 
 int searchUserUI(MANAGE_UI* manage,  char *car_number, USER_INFO **user_data, char io){
@@ -192,12 +227,16 @@ int saveUserUI(MANAGE_UI* manage, char *car_number, USER_INFO **user_data){
     setLabelPos(&temp,14,10);
     setLabelText(&temp,"차주 이름 >> ");
     printLabel(manage,&temp);
-    scanf("%s", (*user_data)->name); while(getchar()!='\n');
+    // scanf("%s", (*user_data)->name); while(getchar()!='\n');
+    fgets((*user_data)->name, 10, stdin);
+    (*user_data)->name[strlen((*user_data)->name)-1] = '\0';
 
     setLabelPos(&temp,16,10);
     setLabelText(&temp,"차주 휴대폰 번호(010-1234-5678) >> ");
     printLabel(manage,&temp);
-    scanf("%s", (*user_data)->phone_num); while(getchar()!='\n');
+    // scanf("%s", (*user_data)->phone_num); while(getchar()!='\n');
+    fgets((*user_data)->phone_num, 15, stdin);
+    (*user_data)->phone_num[strlen((*user_data)->phone_num)-1] = '\0';
     
     strcpy((*user_data)->car_num, car_number);
     (*user_data)->has_ticket = 0;
