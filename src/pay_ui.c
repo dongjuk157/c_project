@@ -10,7 +10,6 @@
 
 extern LPHASH user;
 
-// 결제하기 기능 선택시 나타날 UI 제작 -> 제작한 Widget 구조체의 포인터 리턴
 PAY_UI *createPayUI(){
 
     PAY_UI *payUI = createWidget();
@@ -68,12 +67,13 @@ int renderPayUI(PAY_UI *pay){
     
     if(!strcmp("exit", selectNumber)) return HOME;
     
-    int num = atoi(selectNumber);
-    
-    if(num == 1) payParkingFee();   //주차요금 정산 선택
-    else if(num == 2) buyTicket(); //정기권 등록 및 연장 선택
-    else return PAY;
-
+    if(!strcmp("1", selectNumber)){
+        payParkingFee();   //주차요금 정산 선택
+    } else if(!strcmp("2", selectNumber)){
+        buyTicket(); //정기권 등록 및 연장 선택
+    } else{
+        system("clear");
+    }
     return HOME;
 }
 // 정산하기
@@ -95,6 +95,9 @@ int calcFee(char *carNumber){
     
     FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"rb");
     if(fp == NULL){
+        gotoxy(10, 20);
+        printf("주차된 차량번호가 아닙니다!");
+        getchar();
         return 1;
     }
 
@@ -107,13 +110,15 @@ int calcFee(char *carNumber){
             fee += carInfo->fee;
         }
     }
+    // printf("fee얼마냐 : %d", fee);
+    // getchar();
     free(carInfo);
 
     //차번호로 user.dat조회 -> 정기권 여부 판단
     int hasTicket = 0;
     USER_INFO *foundInfo = NULL;
     hashGetValue(user, carNumber, (LPDATA *)&foundInfo);
-    if(foundInfo != NULL){  //차량번호 일치하는 user 없음
+    if(foundInfo != NULL){  //차량번호 일치하는 user 찾음
         if(foundInfo->has_ticket){
             hasTicket = 1;
         }
@@ -126,13 +131,11 @@ int calcFee(char *carNumber){
     else{
         printFeeDetailView(carNumber, fee, hasTicket);
     }
-     
     return 0;
 }
 
 //정기권 등록
 int buyTicket(){
-
     //ticket view load
     renderTicketView();
 
@@ -141,12 +144,6 @@ int buyTicket(){
     fgets(carNumber,20,stdin);
     carNumber[strlen(carNumber)-1] = '\0';
 
-    /*
-    1. user.dat 의 car_num이 존재 하지 않는다 -> 등록된 차량 정보 없습니다. 이름 , 번호, 차량종류 입력받기
-    2. user.dat 의 car_num 존재 -> char *recentTicekt값 체크 "" 이면 등록하시겠습니까
-    3. user.dat 의 car_num 존재 -> char *recentTicket값 체크 "2022-02-20" 시간과 현재 시간 차이 계산
-                                4일 남았습니다 연장하시겠습니까? 하면 20일 기준 30일 뒤로 등록
-     */
     USER_INFO *foundInfo = NULL;
     hashGetValue(user, carNumber, (LPDATA *)&foundInfo);
     if(foundInfo == NULL){  //차량번호 조회불가
@@ -156,7 +153,6 @@ int buyTicket(){
     if (strcmp(foundInfo->recentTicket, "")==0){ // 이전 데이터 값에 null이 들어있는 경우
         strcpy(foundInfo->recentTicket, "0000-00-00");
     }
-
     checkRecentTicket(foundInfo);
     
     return 0;
@@ -193,6 +189,7 @@ int extendTicket(USER_INFO *foundInfo){
     } 
     else{
     }
+    return 0;
 }
 
 int newTicket(USER_INFO *foundInfo){
