@@ -188,15 +188,30 @@ int newTicket(){
 
 
 int saveUser(char *carNumber, USER_INFO **foundInfo){
-    printSaveUserInfoView();
+    Widget *saveView = (Widget *)malloc(sizeof(Widget));
+    setWidgetPos(saveView, DEFAULT_POSY,DEFAULT_POSX);
+    setWidgetSize(saveView, 25, 70);
+    setWidgetType(saveView, MAIN);
+    arrayCreate(&(saveView->label));
+
+    Label *tmp = createLabel();
+    setLabelPos(&tmp, 13, 5);
+    setLabelText(&tmp, "해당 차량번호로 조회된 결과가 없습니다.");
+    printLabel(saveView, &tmp);
+
     USER_INFO *tmp_user;
     *foundInfo = (USER_INFO *) malloc(sizeof(USER_INFO));
     // user_data에 값 저장
-    char tmp;
-    // printf("차주 이름 >> ");
-    scanf("%s", (*foundInfo)->name); while((tmp=getchar())!='\n');
-    // printf("차주 휴대폰 번호 >> ");
-    scanf("%s", (*foundInfo)->phone_num); while((tmp=getchar())!='\n');
+    char tmp_c;
+    setLabelPos(&tmp, 16, 10);
+    setLabelText(&tmp,"이름을 입력하세요 >> ");
+    printLabel(saveView, &tmp);
+    scanf("%s", (*foundInfo)->name); while((tmp_c=getchar())!='\n');
+
+    setLabelPos(&tmp, 19, 10);
+    setLabelText(&tmp,"휴대폰 번호를 입력하세요 >> ");
+    printLabel(saveView, &tmp);
+    scanf("%s", (*foundInfo)->phone_num); while((tmp_c=getchar())!='\n');
     // 차량 번호 자동 저장
     strcpy((*foundInfo)->car_num, carNumber);
     // 정기권 없음
