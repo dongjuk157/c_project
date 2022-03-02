@@ -161,7 +161,7 @@ int buyTicket(){
                                 4일 남았습니다 연장하시겠습니까? 하면 20일 기준 30일 뒤로 등록
      */
     USER_INFO *foundInfo = NULL;
-    hashGetValue(user, carNumber, &foundInfo);
+    hashGetValue(user, carNumber, (LPDATA *)&foundInfo);
     if(foundInfo == NULL){  //차량번호 조회불가
         //save data
         saveUser(carNumber, &foundInfo);

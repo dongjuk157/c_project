@@ -64,8 +64,8 @@ int main(int argc, char const *argv[])
     mainPage = home;
     render = renderHomeUI;
 
-    int page = 0, break_sig;
-    
+    int page = 0;
+
     while(1){
         page = render(mainPage);
         switch (page)
@@ -120,9 +120,6 @@ int main(int argc, char const *argv[])
             break;
             // return 0;
         default:
-            break;
-        }
-        if (break_sig){
             break;
         }
     }

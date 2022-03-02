@@ -53,7 +53,7 @@ int readCurrentData(LinkedList* list){
         fread(tmp_car_info, sizeof(CAR_INFO), 1, fp);
         if (feof(fp)) 
             break;
-        list_push_back(&list, tmp_car_info);
+        list_push_back(list, tmp_car_info);
     }
     fclose(fp);
     return 0;

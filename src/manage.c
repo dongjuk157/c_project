@@ -37,73 +37,73 @@ flow
 extern LinkedList current_car_list;
 extern LinkedList current_list;
 
-int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *current_car){
-    // 차량의 출입 로그 기록 및 데이터 입력
-    char menu, tmp;
-    int ret=0;//, error_cnt=0;
-    CAR_INFO *car_info; 
-    USER_INFO *user;
+// int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *current_car){
+//     // 차량의 출입 로그 기록 및 데이터 입력
+//     char menu, tmp;
+//     int ret=0;//, error_cnt=0;
+//     CAR_INFO *car_info; 
+//     USER_INFO *user;
 
-    while (1){
-        // 1. 메뉴 입력(입차, 출차, 메뉴 종료)
-        // char 하나만 받으며 그 이후의 값은 getchar가 처리했으니 안심하라구!
-        system("clear");
-        printf("입차 등록(i), 출차 등록(o), 돌아가기(q)\nselect >> ");
-        scanf("%c", &menu);  while((tmp=getchar())!='\n');
-        switch (menu){
-            case 'i': {
-                ret = get_values(menu, &car_info);  // 2. 데이터 입력 및 생성(입차)
-                ret = save_log(menu, car_info);     // 3. save simple log
-                ret = search_user(user_table, car_info->car_number, &user);      // 4 search user data with car_number
-                ret = update_current(menu, car_info, current_park, current_car); // 5. add current list 
-                ret = update_history(menu, car_info, user); // 6. add history
+//     while (1){
+//         // 1. 메뉴 입력(입차, 출차, 메뉴 종료)
+//         // char 하나만 받으며 그 이후의 값은 getchar가 처리했으니 안심하라구!
+//         system("clear");
+//         printf("입차 등록(i), 출차 등록(o), 돌아가기(q)\nselect >> ");
+//         scanf("%c", &menu);  while((tmp=getchar())!='\n');
+//         switch (menu){
+//             case 'i': {
+//                 ret = get_values(menu, &car_info);  // 2. 데이터 입력 및 생성(입차)
+//                 ret = save_log(menu, car_info);     // 3. save simple log
+//                 ret = search_user(user_table, car_info->car_number, &user);      // 4 search user data with car_number
+//                 ret = update_current(menu, car_info, current_park, current_car); // 5. add current list 
+//                 ret = update_history(menu, car_info, user); // 6. add history
 
-                Node *tmp = current_park ->head;
-                while(tmp){
-                    PARK** buf = (PARK**)&tmp->data;
-                    if((*buf)->floor == car_info->floor){
-                        (*buf)->total_car+=1;
-                        break;
-                    }
-                    tmp = tmp->data;
-                }
+//                 Node *tmp = current_park ->head;
+//                 while(tmp){
+//                     PARK** buf = (PARK**)&tmp->data;
+//                     if((*buf)->floor == car_info->floor){
+//                         (*buf)->total_car+=1;
+//                         break;
+//                     }
+//                     tmp = tmp->data;
+//                 }
 
 
-                break;
-            }
-            case 'o':
-            {
-                ret = get_values(menu, &car_info); // 2. 데이터 입력 및 생성(출차)
-                ret = save_log(menu, car_info); // 3. save simple log
-                ret = search_user(user_table, car_info->car_number, &user); 
-                ret = update_current(menu, car_info, current_park, current_car); // 5. remove current list 
-                ret = update_history(menu, car_info, user); // 6. modify history
-                // 주차한 층에 값 감소
-                Node *tmp = current_park ->head;
-                while(tmp){
-                    PARK** buf = (PARK**)&tmp->data;
-                    if((*buf)->floor == car_info->floor){
-                        (*buf)->total_car+=1;
-                        break;
-                    }
-                    tmp = tmp->data;
-                }
-                break;
-            }
-            case 'q':
-                // 1-1. 메뉴 종료시 함수 종료
-                return OK;
-                break;
-            default:
-                return HOME;
-                break;
-        }
-        printf("press any buttons");
-        getchar();
-    }
+//                 break;
+//             }
+//             case 'o':
+//             {
+//                 ret = get_values(menu, &car_info); // 2. 데이터 입력 및 생성(출차)
+//                 ret = save_log(menu, car_info); // 3. save simple log
+//                 ret = search_user(user_table, car_info->car_number, &user); 
+//                 ret = update_current(menu, car_info, current_park, current_car); // 5. remove current list 
+//                 ret = update_history(menu, car_info, user); // 6. modify history
+//                 // 주차한 층에 값 감소
+//                 Node *tmp = current_park ->head;
+//                 while(tmp){
+//                     PARK** buf = (PARK**)&tmp->data;
+//                     if((*buf)->floor == car_info->floor){
+//                         (*buf)->total_car+=1;
+//                         break;
+//                     }
+//                     tmp = tmp->data;
+//                 }
+//                 break;
+//             }
+//             case 'q':
+//                 // 1-1. 메뉴 종료시 함수 종료
+//                 return OK;
+//                 break;
+//             default:
+//                 return HOME;
+//                 break;
+//         }
+//         printf("press any buttons");
+//         getchar();
+//     }
 	
-    return OK;
-}
+//     return OK;
+// }
 
 int get_values(char io, CAR_INFO **car_info) {
     char tmp;

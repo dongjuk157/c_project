@@ -36,7 +36,7 @@ int getDateTime(char *datetime){
         today->tm_year+1900, today->tm_mon + 1, today->tm_mday,
         today->tm_hour, today->tm_min
     );
-	return 0;
+	return OK;
 }
 
 int getTodayDate(char *datetime){
@@ -47,6 +47,7 @@ int getTodayDate(char *datetime){
     sprintf(datetime, "%4d-%02d-%02d", 
         today->tm_year+1900, today->tm_mon + 1, today->tm_mday
     );
+	return OK;
 }
 //특정날짜 "0000-00-00" 입력 -> 30일뒤 날짜 계산해서 포맷
 int getOneMonthAfterFromDate(char *date){
@@ -61,6 +62,8 @@ int getOneMonthAfterFromDate(char *date){
 	mktime(&t);
 
 	sprintf(date, "%4d-%02d-%02d", t.tm_year+1900, t.tm_mon + 1, t.tm_mday);
+
+	return OK;
 }
 //오늘날짜 기준 30일뒤 계산해서 포맷
 int getOneMonthAfterFromToday(char *date){
@@ -73,6 +76,7 @@ int getOneMonthAfterFromToday(char *date){
 	mktime(&t);
 
 	sprintf(date, "%4d-%02d-%02d", t.tm_year+1900, t.tm_mon + 1, t.tm_mday);
+	return OK;
 }
 
 

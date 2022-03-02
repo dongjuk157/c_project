@@ -2,6 +2,8 @@
 #define __UTILS_H__
 #define False 0
 #define True 1
+
+#define OK 0
 typedef char bool;
 void gotoxy(int x, int y);
 int min(int a, int b);
