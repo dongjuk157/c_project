@@ -16,6 +16,7 @@
 #include "linkedlist.h"
 #include "hash.h"
 #include "manage.h"
+#include "utils.h"
 
 typedef int (*FP)(Widget*);
 
@@ -96,22 +97,36 @@ int main(int argc, char const *argv[])
             render = renderHistoryUI;
             break;
         case 6:
-            printf("차량번호 >> ");
-            scanf("%s",buf.carNumber);
-            printf("이름 >> ");
-            scanf("%s",buf.name);
-            printf("연락처 >> ");
-            scanf("%s",buf.phoneNumber);
-            sprintf(buf.inDatetime,"2022년 02월 27일 13시 27분");
-            buf.fee = 0;
-
-            FILE* fp;
-            fp = fopen("data/Current.dat","ab");
-            if(fp == NULL){
-                return 0;
+            while (1){
+                system("clear");
+                int menu_no, break_flag=0;
+                printf("2. user.dat 3. current.dat 4.history.dat 5. parkinglot.dat ");
+                scanf("%d", &menu_no); while(getchar()!='\n');
+                switch (menu_no){
+                    case 2:
+                        printUserData();
+                        getchar();
+                        break;
+                    case 3:
+                        printCurrentData();
+                        getchar();
+                        break;
+                    case 4:
+                        printHistoryData();
+                        getchar();
+                        break;
+                    case 5:
+                        printParkingLotData();
+                        getchar();
+                        break;
+                    default:
+                        break_flag = 1;
+                        break;
+                }
+                if (break_flag){
+                    break;
+                }
             }
-            fwrite(&buf,sizeof(Info),1,fp);
-            fclose(fp);
             page = HOME;
             break;
         case EXIT:

@@ -37,7 +37,7 @@ HOME_UI* createHomeUI(){
     
     Label* dummy = createLabel();
     setLabelPos(dummy,16,50);
-    setLabelText(dummy,"6. 더미데이터 입력");
+    setLabelText(dummy,"6. 데이터 확인");
     addLabel(home, dummy);
 
     #endif // TEST

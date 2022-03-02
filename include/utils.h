@@ -17,4 +17,9 @@ int getTodayDate(char *datetime);
 int getOneMonthAfterFromDate(char *date);
 int getOneMonthAfterFromToday(char *date);
 
+int printUserData(void);
+int printCurrentData(void);
+int printHistoryData(void);
+int printParkingLotData(void);
+
 #endif // __UTILS_H__
