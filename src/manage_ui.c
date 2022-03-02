@@ -8,6 +8,7 @@
 #include "manage_ui.h"
 #include "manage_detail.h"
 #include "info.h"
+#include "messagebox.h"
 
 extern LPHASH user;
 extern LinkedList current_list;
@@ -91,7 +92,7 @@ int renderManageUI(MANAGE_UI *manage){
             update_history(IN_CAR, car_info, user_info); // 6. add history
             
             gotoxy(10,20);
-            printf("새로운 차량이 입차 정상적으로 입차 되었습니다.\n");
+            printf("새로운 차량이 정상적으로 입차 되었습니다.\n");
             getchar();
 
         } 
@@ -106,9 +107,8 @@ int renderManageUI(MANAGE_UI *manage){
             int res;
             res = searchUserUI(manage, car_info->car_number, &user_info , 'o');
             if(res == -2){
-                printSiglelineWidget(manage,18,10,"해당 차량 정보가 존재하지 않습니다...", 0);
-                getchar();
-                return HOME;
+                messageBox(manage,"차량 정보가 존재하지 않습니다.");
+                return IOMANAGE;
             }
 
             save_log(OUT_CAR, car_info);
