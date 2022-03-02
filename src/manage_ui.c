@@ -75,12 +75,17 @@ int renderManageUI(MANAGE_UI *manage){
     }
     else{
         int num = atoi(selectNumber);
+        int ret = 0;
         MANAGE_DETAIL_UI* detail;
         if(num == 1){
             // 입차
             detail = createManageDetailUI(IN_CAR);
             renderWidget(detail);
-            getValuesUI(manage,IN_CAR,&car_info);
+            ret = getValuesUI(manage,IN_CAR,&car_info);
+            if (ret){ 
+                // ret == 0 성공, 0 아니면 에러이므로 함수 종료
+                return ret;
+            }
             save_log(IN_CAR, car_info);
             searchUserUI(manage, car_info->car_number, &user_info, 'i');
             update_current(IN_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
@@ -95,7 +100,10 @@ int renderManageUI(MANAGE_UI *manage){
             // 출차
             detail = createManageDetailUI(OUT_CAR);
             renderWidget(detail);
-            getValuesUI(manage,OUT_CAR,&car_info);
+            ret = getValuesUI(manage,OUT_CAR,&car_info);
+            if (ret){
+                return ret;
+            }
             int res;
             res = searchUserUI(manage, car_info->car_number, &user_info , 'o');
             if(res == -2){
@@ -172,7 +180,7 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
         (*car_info)->car_number[strlen((*car_info)->car_number)-1] = '\0';
     }
     else {
-        return 0;
+        return -1;
     }
 
     return 0;
