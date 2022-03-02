@@ -167,11 +167,11 @@ int buyTicket(){
         saveUser(carNumber, &foundInfo);
     }  //번호 조회함
     
-    checkRecentTicket(foundInfo);
-
     if (strcmp(foundInfo->recentTicket, "")==0){ // 이전 데이터 값에 null이 들어있는 경우
         strcpy(foundInfo->recentTicket, "0000-00-00");
     }
+
+    checkRecentTicket(foundInfo);
     
     return 0;
 }
@@ -219,16 +219,6 @@ int newTicket(USER_INFO *foundInfo){
     } else if(!strcmp("N", buf)){
     } else{
     }
-}
-
-
-int checkRecentTicket(USER_INFO *foundInfo){    
-}
-
-int extendTicket(){
-}
-
-int newTicket(){
 }
 
 
