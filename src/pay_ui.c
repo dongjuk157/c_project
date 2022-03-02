@@ -110,6 +110,8 @@ int calcFee(char *carNumber){
             fee += carInfo->fee;
         }
     }
+    // printf("fee얼마냐 : %d", fee);
+    // getchar();
     free(carInfo);
 
     //차번호로 user.dat조회 -> 정기권 여부 판단

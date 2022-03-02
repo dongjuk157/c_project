@@ -59,6 +59,8 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
     char feeStr[10];
     if(hasTicket){
         sprintf(feeStr, "%d", (int)(fee * ticketDisc));
+    }else{
+        sprintf(feeStr, "%d", fee);
     }
 
     Widget *feeDetailView = (Widget *)malloc(sizeof(Widget));
