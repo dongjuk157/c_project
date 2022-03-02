@@ -5,6 +5,6 @@
 typedef Widget ENROLL_UI;
 
 ENROLL_UI* createEnrollUI();
-int renderEnrollUI(ENROLL_UI* enroll);
+int renderEnrollUI(ENROLL_UI* enroll, char *id);
 
 #endif // __ENROLL_UI_H__

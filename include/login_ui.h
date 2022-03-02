@@ -7,5 +7,5 @@ typedef Widget LOGIN_UI;
 
 LOGIN_UI* createLoginUI();
 
-int renderLoginUI(LOGIN_UI* login);
+int renderLoginUI(LOGIN_UI* login, char *id);
 #endif // __LOGIN_H__

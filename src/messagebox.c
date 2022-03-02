@@ -1,10 +1,10 @@
 #include "messagebox.h"
 #include <stdio.h>
 
-int messageBox(Widget* mainWindow, char* message){
+int messageBox(Widget* mainWindow, int posy, int posx ,char* message){
     Widget* msgBox = createWidget();
     setWidgetSize(msgBox, 10,40);
-    setWidgetPos(msgBox,7,17);
+    setWidgetPos(msgBox,posy,posx);
     setWidgetType(msgBox,MSGBOX);
     renderEmpty(msgBox);
 

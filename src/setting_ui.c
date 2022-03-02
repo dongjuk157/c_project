@@ -90,7 +90,7 @@ SETTING_UI* createSettingDetailUI(int floor){
     return setting;
 }
 
-int renderSettingUI(SETTING_UI* setting){
+int renderSettingUI(SETTING_UI* setting, char *id){
     renderWidget(setting);
     int upperNum;
     int lowerNum;
@@ -122,9 +122,9 @@ int renderSettingUI(SETTING_UI* setting){
     }
     
 
-    createParkingLot("sonk55",list);
+    createParkingLot(id,list);
 
-    return HOME;
+    return LOGIN;
 }
 
 int renderSettingDetailUI(SETTING_DETAIL_UI* detail, PARK** park){

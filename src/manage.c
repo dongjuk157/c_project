@@ -36,6 +36,11 @@ flow
 
 extern LinkedList current_car_list;
 extern LinkedList current_list;
+extern char *CURRENT_DATA_FILE_PATH;
+extern char *SIMPLE_LOG_FILE_PATH;    		
+extern char *USER_DATA_FILE_PATH;
+extern char *HISTORY_DATA_FILE_PATH;     		
+extern char *PARKINGLOT_SETTINGS_FILE_PATH;  
 
 // int manage_in_out(LPHASH user_table, LinkedList *current_park, LinkedList *current_car){
 //     // 차량의 출입 로그 기록 및 데이터 입력

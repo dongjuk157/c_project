@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern char *CURRENT_DATA_FILE_PATH;
+extern char *SIMPLE_LOG_FILE_PATH;    		
+extern char *USER_DATA_FILE_PATH;
+extern char *HISTORY_DATA_FILE_PATH;     		
+extern char *PARKINGLOT_SETTINGS_FILE_PATH;  
+
 void printInfo(Info info){
     
 }

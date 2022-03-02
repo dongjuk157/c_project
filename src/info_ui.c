@@ -93,7 +93,7 @@ int renderInfoUI(INFO_UI* info){
     Info data;
     char buffer[50];
     if(findInfo(carNumber, &data)==ERR_HASH_NOT_FOUND){
-        messageBox(info, "차량 정보가 존재하지 않습니다.");
+        messageBox(info,7,17, "차량 정보가 존재하지 않습니다.");
         // printSiglelineWidget(info, 15, 10, "해당 차량 정보가 존재하지 않습니다...", 0);
         // getchar();
         return CARINFO;

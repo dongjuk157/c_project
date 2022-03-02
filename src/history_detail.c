@@ -5,6 +5,12 @@
 #include <string.h>
 #include "manage.h"
 
+extern char *CURRENT_DATA_FILE_PATH;
+extern char *SIMPLE_LOG_FILE_PATH;    		
+extern char *USER_DATA_FILE_PATH;
+extern char *HISTORY_DATA_FILE_PATH;     		
+extern char *PARKINGLOT_SETTINGS_FILE_PATH;  
+
 HISTORY_DETAIL_UI* createHistoryDetailUI(int type){
 
     HISTORY_DETAIL_UI* history = createWidget();

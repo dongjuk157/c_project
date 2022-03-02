@@ -34,7 +34,9 @@ char *CURRENT_DATA_FILE_PATH;
 char *SIMPLE_LOG_FILE_PATH;    		
 char *USER_DATA_FILE_PATH;
 char *HISTORY_DATA_FILE_PATH;     		
-char *PARKINGLOT_SETTINGS_FILE_PATH;   
+char *PARKINGLOT_SETTINGS_FILE_PATH;
+
+extern char globalId[20];
 
 
 void signalHandler(int sig){
@@ -43,7 +45,7 @@ void signalHandler(int sig){
     saveParkingLot(current_list);
     saveUserData(user);
     
-    if(messageBox(NULL,"정말로 종료하시겠습니까?")==ID_OK){
+    if(messageBox(NULL,7,17,"정말로 종료하시겠습니까?")==ID_OK){
         system("clear");
         exit(0);
     }
@@ -73,16 +75,7 @@ void setFilePath(char *id) {
     sprintf(tmp_path, "./data/%s/ParkingLot.dat", id);
     strcpy(PARKINGLOT_SETTINGS_FILE_PATH, tmp_path);
 
-    free(tmp_path);
-}
-
-int main(int argc, char const *argv[])
-{
-    // login()
-    // char id[20] = "default";
-    // setFilePath(id);
-
-    // signal(SIGSTOP, signalHandler);
+      // signal(SIGSTOP, signalHandler);
     signal(SIGINT, signalHandler);
     signal(SIGHUP, signalHandler);
     signal(SIGHUP, signalHandler);
@@ -99,8 +92,14 @@ int main(int argc, char const *argv[])
     create_linked_list(&current_car_list);
     readCurrentData(&current_car_list);
 
+    free(tmp_path);
+}
 
-
+int main(int argc, char const *argv[])
+{
+    // login()
+    // char id[20] = "default";
+    // setFilePath(id);
     void *mainPage;
     FP render;
     
@@ -114,50 +113,65 @@ int main(int argc, char const *argv[])
     ENROLL_UI* enroll = createEnrollUI();
     SETTING_UI* setting = createSettingUI();
 
-    mainPage = home;
-    render = renderHomeUI;
+    mainPage = login;
+    render = renderLoginUI;
 
     int quit = 0;
     int page = LOGIN;
+    char id[20];
     
     while(!quit){
-        page = render(mainPage);
+        // page = render(mainPage);
         switch (page)
         {
         case HOME:
-            mainPage = home;
-            render = renderHomeUI;
+            page = renderHomeUI(home);
+            // mainPage = home;
+            // render = renderHomeUI;
             break;
         case IOMANAGE:
-            mainPage = iomanage;
-            render = renderManageUI;
+            page = renderManageUI(iomanage);
+            // mainPage = iomanage;
+            // render = renderManageUI;
             break;
         case PAY:
-            mainPage = pay;
-            render = renderPayUI;
+            page = renderPayUI(pay);
+            // mainPage = pay;
+            // render = renderPayUI;
             break;
         case PARKSTATUS:
-            mainPage = parkStatus;
-            render = renderParkStatusUI;
+            page = renderParkStatusUI(parkStatus);
+            // mainPage = parkStatus;
+            // render = renderParkStatusUI;
             break;
         case CARINFO:
-            mainPage = info;
-            render = renderInfoUI;
+            page = renderInfoUI(info);
+            // mainPage = info;
+            // render = renderInfoUI;
             break;
         case PARKHISTORY:
-            mainPage = history;
-            render = renderHistoryUI;
+            page = renderHistoryUI(history);
+            // mainPage = history;
+            // render = renderHistoryUI;
             break;
         case LOGIN:
-            mainPage = login;
-            render = renderLoginUI;
+            page = renderLoginUI(login,id);
+            // mainPage = login;
+            // render = renderLoginUI;
+            if(page == HOME){
+                // getchar();
+                setFilePath(id);
+            }
+            
             break;
         case ENROLLUSER:
-            mainPage = enroll;
-            render = renderEnrollUI;
+            page = renderEnrollUI(enroll, id);
+            // mainPage = enroll;
+            // render = renderEnrollUI;
             break;
         case SETTING:
-            mainPage = setting;
+            page = renderSettingUI(setting, id);
+            // mainPage = setting;
             render = renderSettingUI;
             break;
         case 9:
@@ -203,7 +217,7 @@ int main(int argc, char const *argv[])
             page = HOME;
             break;
         case EXIT:
-            if(messageBox(NULL,"정말로 종료하시겠습니까?") == ID_OK){
+            if(messageBox(NULL,7,17,"정말로 종료하시겠습니까?") == ID_OK){
                 quit = True;
                 system("clear");
             }   

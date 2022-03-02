@@ -179,7 +179,7 @@ int clearWidget(Widget* widget){
 
 int printSiglelineWidget(Widget* widget, int posy, int posx, const char* text, int color){
     Label buf;
-    setLabel(&buf, posy, posx, text, 0);
+    setLabel(&buf, posy, posx, text, color);
     printLabel(widget,&buf);
     return WIDGET_EOK;
 }

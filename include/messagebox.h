@@ -8,6 +8,6 @@
 
 typedef Widget MessageBox;
 
-int messageBox(Widget* mainWindow, char* message);
+int messageBox(Widget* mainWindow, int posy, int posx, char* message);
 
 #endif // __MESSAGE_BOX_H__

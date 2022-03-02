@@ -107,7 +107,7 @@ int renderManageUI(MANAGE_UI *manage){
             int res;
             res = searchUserUI(manage, car_info->car_number, &user_info , 'o');
             if(res == -2){
-                messageBox(manage,"차량 정보가 존재하지 않습니다.");
+                messageBox(manage,7,17,"차량 정보가 존재하지 않습니다.");
                 return IOMANAGE;
             }
 

@@ -43,9 +43,8 @@ ENROLL_UI* createEnrollUI(){
 
 }
 
-int renderEnrollUI(ENROLL_UI* enroll){
+int renderEnrollUI(ENROLL_UI* enroll, char* id){
     renderWidget(enroll);
-    char id[20];
     char password[20];
     char passwordCheck[20];
     gotoxy(30,11);
@@ -63,17 +62,17 @@ int renderEnrollUI(ENROLL_UI* enroll){
     if(!strcmp(password, passwordCheck)){
         int res = join(id,password);
         if(res == -2) {
-            messageBox(enroll,"해당 아이디가 이미 존재합니다.");
+            messageBox(enroll,7,17, "해당 아이디가 이미 존재합니다.");
             return ENROLLUSER;
         }
         else if(res == 0){
-            messageBox(enroll,"회원가입 완료");
+            messageBox(enroll,7,17,"회원가입 완료");
         }
     }
     else{
-        messageBox(enroll,"비밀번호가 서로 다릅니다.");
+        messageBox(enroll,7,17,"비밀번호가 서로 다릅니다.");
         return ENROLLUSER;
     }
 
-    return HOME;
+    return SETTING;
 }

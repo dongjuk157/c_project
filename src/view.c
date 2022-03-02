@@ -7,6 +7,11 @@
 #include "utils.h"
 
 extern LPHASH user;
+extern char *CURRENT_DATA_FILE_PATH;
+extern char *SIMPLE_LOG_FILE_PATH;    		
+extern char *USER_DATA_FILE_PATH;
+extern char *HISTORY_DATA_FILE_PATH;     		
+extern char *PARKINGLOT_SETTINGS_FILE_PATH;  
 
 //할인율
 float ticketDisc = 0.5;

@@ -16,6 +16,12 @@ extern LinkedList current_car_list;
 extern LinkedList current_list;
 
 
+extern char *CURRENT_DATA_FILE_PATH;
+extern char *SIMPLE_LOG_FILE_PATH;    		
+extern char *USER_DATA_FILE_PATH;
+extern char *HISTORY_DATA_FILE_PATH;     		
+extern char *PARKINGLOT_SETTINGS_FILE_PATH;  
+
 int gotoxy(int x, int y)
 {
     printf("\033[%dd\033[%dG",y,x);
