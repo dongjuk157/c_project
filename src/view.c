@@ -3,9 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "utils.h"
+
+// extern int ticketFee;
 
 //정산하기
-int printFeeView(){
+int renderFeeView(){
 
     system("clear");
 
@@ -143,7 +146,7 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
 }
 
 //정기권 뷰
-int printTicketView(){
+int renderTicketView(){
     system("clear");
 
     Widget *ticketView = (Widget *)malloc(sizeof(Widget));
@@ -180,9 +183,198 @@ int printTicketView(){
 }
 
 
+int renderExtendTicketDetailView(USER_INFO *foundInfo){
+
+    getOneMonthAfterFromDate(foundInfo->recentTicket);
+
+REPEAT:
+    system("clear");
+
+    Widget *extendticketDetailView = (Widget *)malloc(sizeof(Widget));
+
+    setWidgetPos(extendticketDetailView, DEFAULT_POSY,DEFAULT_POSX);
+    setWidgetSize(extendticketDetailView, 25, 70);
+    setWidgetType(extendticketDetailView, MAIN);
+    arrayCreate(&(extendticketDetailView->label));
+
+    Label *title = createLabel();
+    setLabelPos(title, 3, 26);
+    setLabelText(title,"주차 관리 프로그램");
+
+    Label *subTitle = createLabel();
+    setLabelPos(subTitle, 5, 26);
+    setLabelText(subTitle,"정기권 등록 및 연장");
+
+    Label *label1 = createLabel();
+    setLabelPos(label1, 10, 10);
+    setLabelText(label1, foundInfo->name);
+
+    Label *label2 = createLabel();
+    setLabelPos(label2, 10, 18);
+    setLabelText(label2,"님, 정기권을");
 
 
-//
+    Label *label3 = createLabel();
+    setLabelPos(label3, 10, 24);
+    setLabelText(label3, foundInfo->recentTicket);
+
+    Label *label4 = createLabel();
+    setLabelPos(label4, 10, 31);
+    setLabelText(label4,"까지 연장합니다.");
+
+    Label *label5 = createLabel();
+    setLabelPos(label5, 13, 10);
+    setLabelText(label5,"결제할 요금은");
+
+    Label *label6 = createLabel();
+    setLabelPos(label6, 13, 17);
+    setLabelText(label6, "13000");  //나중에 전역변수 활용
+
+    Label *label7 = createLabel();
+    setLabelPos(label7, 13, 24);
+    setLabelText(label7,"원 입니다.");
+
+    
+    Label *label8 = createLabel();
+    setLabelPos(label8, 16, 10);
+    setLabelText(label8,"결제하시겠습니까? (Y/N)");
+
+    addLabel(extendticketDetailView, title);
+    addLabel(extendticketDetailView, subTitle);
+    addLabel(extendticketDetailView, label1);
+    addLabel(extendticketDetailView, label2);
+    addLabel(extendticketDetailView, label3);
+    addLabel(extendticketDetailView, label4);
+    addLabel(extendticketDetailView, label5);
+    addLabel(extendticketDetailView, label6);
+    addLabel(extendticketDetailView, label7);
+    addLabel(extendticketDetailView, label8);
+
+
+
+//UI 프레임 그리기
+    printWidget(extendticketDetailView);
+    
+//세팅된 label 출력
+    for (int i = 0; i < arraySize(extendticketDetailView->label); i++)
+        printLabel(extendticketDetailView, (Label *)(extendticketDetailView->label->lpData)[i]);
+    
+
+    char prompt[10];
+    fgets(prompt, 20, stdin);
+    prompt[strlen(prompt) - 1] = '\0';
+
+    if(!strcmp("Y", prompt)){
+
+        //여기서 foundinfo 다시 저장
+
+        printSingleLineView("정기권 등록 및 연장", "정기권 연장이 완료되었습니다!");
+    } else if(!strcmp("N", prompt)){
+        printSingleLineView("정기권 등록 및 연장", "정기권 연장이 취소되었습니다!");
+        return 0;
+    } else{
+        goto REPEAT;
+    }
+
+
+    return 0;
+}
+
+int renderNewTicketDetailView(USER_INFO *foundInfo){
+
+    getOneMonthAfterFromToday(foundInfo->recentTicket);
+
+REPEAT:
+    system("clear");
+
+    Widget *newticketDetailView = (Widget *)malloc(sizeof(Widget));
+
+    setWidgetPos(newticketDetailView, DEFAULT_POSY,DEFAULT_POSX);
+    setWidgetSize(newticketDetailView, 25, 70);
+    setWidgetType(newticketDetailView, MAIN);
+    arrayCreate(&(newticketDetailView->label));
+
+    Label *title = createLabel();
+    setLabelPos(title, 3, 26);
+    setLabelText(title,"주차 관리 프로그램");
+
+    Label *subTitle = createLabel();
+    setLabelPos(subTitle, 5, 26);
+    setLabelText(subTitle,"정기권 등록 및 연장");
+
+    Label *label1 = createLabel();
+    setLabelPos(label1, 10, 10);
+    setLabelText(label1, foundInfo->name);
+
+    Label *label2 = createLabel();
+    setLabelPos(label2, 10, 18);
+    setLabelText(label2,"님, 정기권을");
+
+    Label *label3 = createLabel();
+    setLabelPos(label3, 10, 24);
+    setLabelText(label3, foundInfo->recentTicket);
+
+    Label *label4 = createLabel();
+    setLabelPos(label4, 10, 31);
+    setLabelText(label4,"까지 등록합니다");
+
+    Label *label5 = createLabel();
+    setLabelPos(label5, 13, 10);
+    setLabelText(label5,"결제할 요금은");
+
+    Label *label6 = createLabel();
+    setLabelPos(label6, 13, 17);
+    setLabelText(label6, "13000");  //나중에 전역변수 활용
+
+    Label *label7 = createLabel();
+    setLabelPos(label7, 13, 24);
+    setLabelText(label7,"원 입니다.");
+
+    Label *label8 = createLabel();
+    setLabelPos(label8, 16, 10);
+    setLabelText(label8,"결제하시겠습니까? (Y/N)");
+
+    addLabel(newticketDetailView, title);
+    addLabel(newticketDetailView, subTitle);
+    addLabel(newticketDetailView, label1);
+    addLabel(newticketDetailView, label2);
+    addLabel(newticketDetailView, label3);
+    addLabel(newticketDetailView, label4);
+    addLabel(newticketDetailView, label5);
+    addLabel(newticketDetailView, label6);
+    addLabel(newticketDetailView, label7);
+    addLabel(newticketDetailView, label8);
+
+//UI 프레임 그리기
+    printWidget(newticketDetailView);
+    
+//세팅된 label 출력
+    for (int i = 0; i < arraySize(newticketDetailView->label); i++)
+        printLabel(newticketDetailView, (Label *)(newticketDetailView->label->lpData)[i]);
+    
+
+    char prompt[10];
+    fgets(prompt, 20, stdin);
+    prompt[strlen(prompt) - 1] = '\0';
+
+    if(!strcmp("Y", prompt)){
+
+        //여기서 foundinfo 저장
+
+        printSingleLineView("정기권 등록 및 연장", "정기권 등록이 완료되었습니다!");
+    } else if(!strcmp("N", prompt)){
+        printSingleLineView("정기권 등록 및 연장", "정기권 등록이 취소되었습니다!");
+        return 0;
+    } else{
+        goto REPEAT;
+    }
+
+
+    return 0;
+
+}
+
+
 int printSingleLineView(char *currentMenu, char *defaultText){
 
     system("clear");

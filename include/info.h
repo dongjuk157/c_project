@@ -24,7 +24,7 @@ typedef struct user_information {
   char name[10]; // 출입자 성명
   char phone_num[15]; // 출입자 폰번호
   char car_num[20]; // 출입자 차번호	
-  int has_ticket; // 정기권 등록여부, 1이면 등록된 사용자
+  char recentTicket[20] // has_ticket 삭제, ""이면 등록 안됨, "2022-02-28"
 } USER_INFO;
 
 typedef struct park { // 주차장

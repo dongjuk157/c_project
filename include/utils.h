@@ -11,4 +11,8 @@ int to_day(int y, int m, int d);
 int diff(int y1, int m1, int d1, int y2, int m2, int d2);
 int calculate_fee(char* inDateTime, char* outDateTime);
 int getDateTime(char *datetime);
+int getTodayDate(char *datetime);
+int getOneMonthAfterFromDate(char *date);
+int getOneMonthAfterFromToday(char *date);
+
 #endif // __UTILS_H__

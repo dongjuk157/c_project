@@ -9,5 +9,9 @@ int renderPayUI(PAY_UI *pay);
 int payParkingFee();
 int calcFee(char *carNumber);
 int buyTicket();
+int checkUserData(char *carNumber);
+int getOneMonthAfterFromDate(char *date);
+
+
 
 #endif // __PAY_UI_H__

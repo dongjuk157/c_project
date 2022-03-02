@@ -131,7 +131,7 @@ int hashGetValue(LPHASH lpHash, const char* key, LPDATA* value)
 		return ERR_HASH_MAGICCODE;
 	}
 
-	//node의 buckey의 위치를 구한다.
+	//node의 bucket의 위치를 구한다.
 	nHashBucket = hashValue % lpHash->nHashSize;
 	//vlaue의 값을 초기화한다.
 	*value = NULL;

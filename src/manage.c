@@ -160,7 +160,8 @@ int search_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
         strcpy((*user_data)->name, tmp_user->name);
         strcpy((*user_data)->phone_num, tmp_user->phone_num);
         strcpy((*user_data)->car_num, tmp_user->car_num);
-        (*user_data)->has_ticket = tmp_user->has_ticket;
+        strcpy((*user_data)->recentTicket, "");
+        // strcpy(*user_data)->recentTicket = tmp_user->recentTicket;
         //printf("tmp_user: %s, %s\n", tmp_user->name, tmp_user->phone_num);
     }
 	
@@ -176,7 +177,7 @@ int save_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
     // 차량 번호 자동 저장
     strcpy((*user_data)->car_num, car_number);
     // 정기권 없음
-    (*user_data)->has_ticket = 0;
+    strcpy((*user_data)->recentTicket, "");
     // 해시 테이블에 저장
     hashSetValue(user_table, car_number, *user_data);
 
