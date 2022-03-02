@@ -34,7 +34,6 @@ int readParkingLot(LinkedList* list){
         fread(tmp_park, sizeof(PARK), 1, fp);
         if (feof(fp)) 
             break;
-        printf("%d\n", tmp_park->total);
         list_push_back(list, tmp_park);
     }
     fclose(fp);
@@ -45,7 +44,6 @@ int readCurrentData(LinkedList* list){
     // 파일 current.dat 읽어서 리스트 생성
     FILE* fp = fopen(CURRENT_DATA_FILE_PATH, "rb");
     if(fp==NULL){
-        printf("file open error\n");
         return -1;
     }
     
@@ -55,7 +53,6 @@ int readCurrentData(LinkedList* list){
   
         if (feof(fp)) 
             break;
-        printf("%s\n", tmp_car_info->car_number);
         list_push_back(list, tmp_car_info);
     }
     fclose(fp);
