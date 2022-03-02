@@ -18,6 +18,7 @@
 
 #define MAIN 0
 #define SUB 1
+#define MSGBOX 2
 
 typedef struct Widget{
     int height;
@@ -39,4 +40,5 @@ void setWidgetType(Widget *Widget, int type);
 bool printLabel(Widget* widget, const Label* label);
 int clearWidget(Widget* widget);
 int renderEmpty(Widget *widget);
+int printSiglelineWidget(Widget* widget, int posy, int posx, const char* text);
 #endif // __WIDGET_H__

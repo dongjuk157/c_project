@@ -53,7 +53,6 @@ PAY_UI *createPayUI(){
 }
 
 int renderPayUI(PAY_UI *pay){
-
     //UI 프레임 그리기
     renderWidget(pay);
 
@@ -67,8 +66,7 @@ int renderPayUI(PAY_UI *pay){
     fgets(selectNumber, 8, stdin);
     selectNumber[strlen(selectNumber)-1] = '\0';
     
-    if(!strcmp("exit", selectNumber))
-        return HOME;
+    if(!strcmp("exit", selectNumber)) return HOME;
     
     if(!strcmp("1", selectNumber)){
         payParkingFee();   //주차요금 정산 선택
@@ -181,8 +179,10 @@ int extendTicket(USER_INFO *foundInfo){
 
     if(!strcmp("Y", buf)){
         renderExtendTicketDetailView(foundInfo);
-    } else if(!strcmp("N", buf)){
-    } else{
+    } 
+    else if(!strcmp("N", buf)){
+    } 
+    else{
     }
 }
 
@@ -218,7 +218,6 @@ int saveUser(char *carNumber, USER_INFO **foundInfo){
     setLabelText(&tmp, "해당 차량번호로 조회된 결과가 없습니다.");
     printLabel(saveView, &tmp);
 
-    USER_INFO *tmp_user;
     *foundInfo = (USER_INFO *) malloc(sizeof(USER_INFO));
     // user_data에 값 저장
     char tmp_c;

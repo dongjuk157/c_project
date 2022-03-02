@@ -9,6 +9,7 @@ Label* createLabel(){
     Label* label = (Label*)malloc(sizeof(Label));
     label->posx = 0;
     label->posy = 0;
+    label->color = 0;
     label->text = NULL;
     return label;
 }

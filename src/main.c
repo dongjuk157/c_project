@@ -16,6 +16,8 @@
 #include "linkedlist.h"
 #include "hash.h"
 #include "manage.h"
+#include "utils.h"
+#include "messagebox.h"
 
 typedef int (*FP)(Widget*);
 
@@ -24,18 +26,24 @@ LinkedList current_list;
 LinkedList current_car_list;
 
 void signalHandler(int sig){
-	if(sig == SIGINT){
-		saveCurrentCarData(current_car_list);
-        saveParkingLot(current_list);
-        saveUserData(user);
+	
+    saveCurrentCarData(current_car_list);
+    saveParkingLot(current_list);
+    saveUserData(user);
+    
+    if(messageBox(NULL,"정말로 종료하시겠습니까?")==ID_OK){
+        system("clear");
         exit(0);
-	}
+    }
+    
 }
 
 int main(int argc, char const *argv[])
 {
     // signal(SIGSTOP, signalHandler);
     signal(SIGINT, signalHandler);
+    signal(SIGHUP, signalHandler);
+    signal(SIGHUP, signalHandler);
     // user 해시테이블 생성
     // LPHASH user;
     hashCreate(&user); 
@@ -63,10 +71,10 @@ int main(int argc, char const *argv[])
 
     mainPage = home;
     render = renderHomeUI;
-
+    int quit = 0;
     int page = 0;
     
-    while(1){
+    while(!quit){
         page = render(mainPage);
         switch (page)
         {
@@ -96,26 +104,53 @@ int main(int argc, char const *argv[])
             render = renderHistoryUI;
             break;
         case 6:
-            printf("차량번호 >> ");
-            scanf("%s",buf.carNumber);
-            printf("이름 >> ");
-            scanf("%s",buf.name);
-            printf("연락처 >> ");
-            scanf("%s",buf.phoneNumber);
-            sprintf(buf.inDatetime,"2022년 02월 27일 13시 27분");
-            buf.fee = 0;
-
-            FILE* fp;
-            fp = fopen("data/Current.dat","ab");
-            if(fp == NULL){
-                return 0;
+            while (1){
+                system("clear");
+                int menu_no, break_flag=0;
+                printf("1. user.dat 2. current.dat 3.history.dat 4.parkinglot.dat\n");
+                printf("5. current_list 6. current_car_list others. back");
+                scanf("%d", &menu_no); while(getchar()!='\n');
+                switch (menu_no){
+                    case 1:
+                        printUserData();
+                        getchar();
+                        break;
+                    case 2:
+                        printCurrentData();
+                        getchar();
+                        break;
+                    case 3:
+                        printHistoryData();
+                        getchar();
+                        break;
+                    case 4:
+                        printParkingLotData();
+                        getchar();
+                        break;
+                    case 5:
+                        printCurrentParkList();
+                        getchar();
+                        break;
+                    case 6:
+                        printCurrentCarList();
+                        getchar();
+                        break;
+                    default:
+                        break_flag = 1;
+                        break;
+                }
+                if (break_flag){
+                    break;
+                }
             }
-            fwrite(&buf,sizeof(Info),1,fp);
-            fclose(fp);
             page = HOME;
             break;
         case EXIT:
-            return 0;
+            if(messageBox(NULL,"정말로 종료하시겠습니까?") == ID_OK){
+                quit = True;
+                system("clear");
+            }   
+            break;
         default:
             break;
         }
@@ -130,8 +165,6 @@ int main(int argc, char const *argv[])
     list_clear(&current_list);  
     list_clear(&current_car_list);
     hashDestroy(user);
-
-
 
     clearWidget(home);
     clearWidget(info);
