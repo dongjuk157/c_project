@@ -50,4 +50,5 @@ int renderLoginUI(LOGIN_UI* login){
     fgets(password, 20, stdin);
     password[strlen(password)-1] = '\0';
     
+    return HOME;
 }

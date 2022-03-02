@@ -1,6 +1,8 @@
 #include "enroll_ui.h"
+#include "messagebox.h"
 #include <stdio.h>
 #include <string.h>
+#include <join.h>
 
 ENROLL_UI* createEnrollUI(){
     ENROLL_UI* enroll = createWidget();
@@ -57,4 +59,20 @@ int renderEnrollUI(ENROLL_UI* enroll){
     gotoxy(30,15);
     fgets(passwordCheck, 20, stdin);
     passwordCheck[strlen(passwordCheck)-1] = '\0';
+
+    if(!strcpy(password, passwordCheck)){
+        int res = join(id,password);
+        if(res == -2) {
+            messageBox(enroll,"해당 아이디가 이미 존재합니다.");
+            return ENROLLUSER;
+        }
+        else if(res == 0){
+            messageBox(enroll,"회원가입 완료");
+        }
+    }
+    else{
+        return ENROLLUSER;
+    }
+
+    return HOME;
 }

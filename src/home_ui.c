@@ -36,8 +36,11 @@ int checkinit(char *init){
         else if(num == PARKSTATUS) return PARKSTATUS;
         else if(num == CARINFO) return CARINFO;
         else if(num == PARKHISTORY) return PARKHISTORY;
+        else if(num == LOGIN) return LOGIN;
+        else if(num == ENROLLUSER) return ENROLLUSER;
+        else if(num == SETTING) return SETTING;
         #ifdef TEST
-        else if(num == 6) return 6;
+        else if(num == 9) return 9;
         #endif
         else return WIDGET_NOT_VALID_INPUT;
     }

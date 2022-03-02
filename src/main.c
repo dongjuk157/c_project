@@ -109,7 +109,19 @@ int main(int argc, char const *argv[])
             mainPage = history;
             render = renderHistoryUI;
             break;
-        case 6:
+        case LOGIN:
+            mainPage = login;
+            render = renderLoginUI;
+            break;
+        case ENROLLUSER:
+            mainPage = enroll;
+            render = renderEnrollUI;
+            break;
+        case SETTING:
+            mainPage = setting;
+            render = renderSettingUI;
+            break;
+        case 9:
             while (1){
                 system("clear");
                 int menu_no, break_flag=0;
