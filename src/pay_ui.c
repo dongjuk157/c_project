@@ -76,13 +76,10 @@ int renderPayUI(PAY_UI *pay){
     
     int num = atoi(selectNumber);
     if(num == 1){
-        //ParkingFee // 1번을 선택한 상황
-        payParkingFee();
-        
+        payParkingFee();   //주차요금 정산 선택
     } else if(num == 2){
         //buyTicket
-        buyTicket();
-
+        buyTicket(); //정기권 등록 및 연장 선택
     } else{
         system("clear");
         goto REPEAT;
@@ -90,8 +87,6 @@ int renderPayUI(PAY_UI *pay){
     }
     return HOME;
 }
-
-
 // 정산하기
 int payParkingFee(){
     //fee view load
@@ -99,7 +94,6 @@ int payParkingFee(){
 
     //차량번호 입력받기
     char carNumber[20];
-
     fgets(carNumber,20,stdin);
     carNumber[strlen(carNumber)-1] = '\0';
 
@@ -136,21 +130,18 @@ int calcFee(char *carNumber){
     } else{
         printFeeDetailView(carNumber, fee, hasTicket);
     }
-
      
     return 0;
 }
 
 //정기권 등록
-
 int buyTicket(){
 
-//fee view load
+    //ticket view load
     renderTicketView();
 
     //차량번호 입력받기
     char carNumber[20];
-
     fgets(carNumber,20,stdin);
     carNumber[strlen(carNumber)-1] = '\0';
 
@@ -163,7 +154,6 @@ int buyTicket(){
     USER_INFO *foundInfo = NULL;
     hashGetValue(user, carNumber, (LPDATA *)&foundInfo);
     if(foundInfo == NULL){  //차량번호 조회불가
-        //save data
         saveUser(carNumber, &foundInfo);
     }  //번호 조회함
     
@@ -191,7 +181,9 @@ int checkRecentTicket(USER_INFO *foundInfo){
 
 int extendTicket(USER_INFO *foundInfo){
 
+    gotoxy(11, 13);
     printf("현재 %s님의 정기권 만료일은 %s일 입니다.\n", foundInfo->name, foundInfo->recentTicket);
+    gotoxy(11, 15);
     printf("연장하시겠습니까? (Y/N)");
 
     char buf[4];
@@ -206,8 +198,10 @@ int extendTicket(USER_INFO *foundInfo){
 }
 
 int newTicket(USER_INFO *foundInfo){
-
+    
+    gotoxy(11, 13);
     printf("%s님,\n", foundInfo->name);
+    gotoxy(11, 15);
     printf("정기권을 등록하시겠습니까? (Y/N)");
 
     char buf[4];
@@ -220,7 +214,6 @@ int newTicket(USER_INFO *foundInfo){
     } else{
     }
 }
-
 
 int saveUser(char *carNumber, USER_INFO **foundInfo){
     Widget *saveView = (Widget *)malloc(sizeof(Widget));

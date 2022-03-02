@@ -6,6 +6,7 @@
 #include "utils.h"
 
 // extern int ticketFee;
+extern LPHASH user;
 
 //정산하기
 int renderFeeView(){
@@ -265,9 +266,7 @@ REPEAT:
     prompt[strlen(prompt) - 1] = '\0';
 
     if(!strcmp("Y", prompt)){
-
-        //여기서 foundinfo 다시 저장
-
+        hashSetValue(user, foundInfo->car_num, foundInfo);
         printSingleLineView("정기권 등록 및 연장", "정기권 연장이 완료되었습니다!");
     } else if(!strcmp("N", prompt)){
         printSingleLineView("정기권 등록 및 연장", "정기권 연장이 취소되었습니다!");
@@ -303,35 +302,35 @@ REPEAT:
     setLabelText(subTitle,"정기권 등록 및 연장");
 
     Label *label1 = createLabel();
-    setLabelPos(label1, 10, 10);
+    setLabelPos(label1, 10, 8);
     setLabelText(label1, foundInfo->name);
 
     Label *label2 = createLabel();
-    setLabelPos(label2, 10, 18);
+    setLabelPos(label2, 10, 14);
     setLabelText(label2,"님, 정기권을");
 
     Label *label3 = createLabel();
-    setLabelPos(label3, 10, 24);
+    setLabelPos(label3, 10, 27);
     setLabelText(label3, foundInfo->recentTicket);
 
     Label *label4 = createLabel();
-    setLabelPos(label4, 10, 31);
+    setLabelPos(label4, 10, 38);
     setLabelText(label4,"까지 등록합니다");
 
     Label *label5 = createLabel();
-    setLabelPos(label5, 13, 10);
+    setLabelPos(label5, 13, 8);
     setLabelText(label5,"결제할 요금은");
 
     Label *label6 = createLabel();
-    setLabelPos(label6, 13, 17);
+    setLabelPos(label6, 13, 22);
     setLabelText(label6, "13000");  //나중에 전역변수 활용
 
     Label *label7 = createLabel();
-    setLabelPos(label7, 13, 24);
+    setLabelPos(label7, 13, 27);
     setLabelText(label7,"원 입니다.");
 
     Label *label8 = createLabel();
-    setLabelPos(label8, 16, 10);
+    setLabelPos(label8, 16, 8);
     setLabelText(label8,"결제하시겠습니까? (Y/N)");
 
     addLabel(newticketDetailView, title);
@@ -358,12 +357,10 @@ REPEAT:
     prompt[strlen(prompt) - 1] = '\0';
 
     if(!strcmp("Y", prompt)){
-
-        //여기서 foundinfo 저장
-
-        printSingleLineView("정기권 등록 및 연장", "정기권 등록이 완료되었습니다!");
+        hashSetValue(user, foundInfo->car_num, foundInfo);
+        printSingleLineView("정기권 등록", "정기권 등록이 완료되었습니다!");
     } else if(!strcmp("N", prompt)){
-        printSingleLineView("정기권 등록 및 연장", "정기권 등록이 취소되었습니다!");
+        printSingleLineView("정기권 연장", "정기권 등록이 취소되었습니다!");
         return 0;
     } else{
         goto REPEAT;

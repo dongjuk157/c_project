@@ -82,7 +82,7 @@ int renderManageUI(MANAGE_UI *manage){
             renderWidget(detail);
             getValuesUI(manage,IN_CAR,&car_info);
             save_log(IN_CAR, car_info);
-            searchUserUI(manage, car_info->car_number, &user_info);
+            searchUserUI(manage, car_info->car_number, &user_info, 'i');
             update_current(IN_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
             update_history(IN_CAR, car_info, user_info); // 6. add history
             
@@ -109,7 +109,7 @@ int renderManageUI(MANAGE_UI *manage){
             getValuesUI(manage,OUT_CAR,&car_info);
             save_log(OUT_CAR, car_info);
 
-            searchUserUI(manage, car_info->car_number, &user_info);
+            searchUserUI(manage, car_info->car_number, &user_info , 'o');
             update_current(OUT_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
             update_history(OUT_CAR, car_info, user_info); // 6. add history
             
@@ -160,12 +160,15 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
     return HOME;
 }
 
-int searchUserUI(MANAGE_UI* manage,  char *car_number, USER_INFO **user_data){
+int searchUserUI(MANAGE_UI* manage,  char *car_number, USER_INFO **user_data, char io){
     USER_INFO *tmp_user = NULL;
     hashGetValue(user, car_number, (LPDATA*)&tmp_user);
     *user_data = (USER_INFO *) malloc(sizeof(USER_INFO));
     if ((tmp_user) == NULL){ // hash 값이 없는 경우
-        saveUserUI(manage, car_number, user_data);
+        if (io == 'i'){
+            saveUserUI(manage, car_number, user_data);
+        }
+        return -2; // NOT SEARCH USER
     }
     else {
         strcpy((*user_data)->name, tmp_user->name);

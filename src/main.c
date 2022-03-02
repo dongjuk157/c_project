@@ -65,7 +65,7 @@ int main(int argc, char const *argv[])
     render = renderHomeUI;
 
     int page = 0;
-
+    
     while(1){
         page = render(mainPage);
         switch (page)
@@ -115,19 +115,22 @@ int main(int argc, char const *argv[])
             page = HOME;
             break;
         case EXIT:
-        
-
-            break;
-            // return 0;
+            return 0;
         default:
             break;
         }
     }
 
+    // 데이터 백업
+    saveCurrentCarData(current_car_list);
+    saveParkingLot(current_list);
+    saveUserData(user);
+    
     // 메모리 해제
     list_clear(&current_list);  
     list_clear(&current_car_list);
     hashDestroy(user);
+
 
 
     clearWidget(home);
