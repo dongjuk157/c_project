@@ -231,6 +231,7 @@ int printCurrentParkList(void){
 			tmp->floor, tmp->total, tmp->total_car, 
 			tmp->electric_charge, tmp->handicapped, tmp->light_car
 		);
+		cur = cur->next;
 	}
 
 }
