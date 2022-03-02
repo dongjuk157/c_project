@@ -181,7 +181,7 @@ int hashSetValue(LPHASH lpHash, const char* key, const LPDATA value)
 	
 	//hash table에 key가 존재하는지 확인한다.
 	hashIsKey(lpHash, key, &isExist);
-	if (TRUE == isExist) {
+	if (isExist == TRUE) {
 	
 		//key가 존재하는 경우 위치를 찾는다
 		while (NULL != lpTemp) {

@@ -90,7 +90,7 @@ int addWidget(Widget *widget, Widget *subWidget){
 bool printLabel(Widget* widget, const Label* label){
     if(label->text==NULL) return False;
 
-    gotoxy(widget->posx + label->posx,widget->posy + label->posy);
+    gotoxy(widget->posx + label->posx, widget->posy + label->posy);
     printf("%s",label->text);    
 
     return True;

@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <signal.h>
+#include <sys/types.h>
 #include "array.h"
 #include "widget.h"
 #include "label.h"
 #include "home_ui.h"
-// #include "manage_ui.h"
+#include "manage_ui.h"
 #include "pay_ui.h"
 #include "parkstatus_ui.h"
 #include "info_ui.h"
@@ -22,8 +23,19 @@ LPHASH user;
 LinkedList current_list;
 LinkedList current_car_list;
 
+void signalHandler(int sig){
+	if(sig == SIGINT){
+		saveCurrentCarData(current_car_list);
+        saveParkingLot(current_list);
+        saveUserData(user);
+        exit(0);
+	}
+}
+
 int main(int argc, char const *argv[])
 {
+    // signal(SIGSTOP, signalHandler);
+    signal(SIGINT, signalHandler);
     // user 해시테이블 생성
     // LPHASH user;
     hashCreate(&user); 
@@ -37,11 +49,12 @@ int main(int argc, char const *argv[])
     create_linked_list(&current_car_list);
     readCurrentData(&current_car_list);
 
+
     void *mainPage;
     FP render;
     
     HOME_UI* home = createHomeUI();
-    // MANAGE_UI *iomanage = createManageUI();
+    MANAGE_UI *iomanage = createManageUI();
     PAY_UI *pay = createPayUI();
     PARKSTATUS_UI *parkStatus = createParkStatusUI();
     INFO_UI* info = createInfoUI();
@@ -51,8 +64,7 @@ int main(int argc, char const *argv[])
     mainPage = home;
     render = renderHomeUI;
 
-    int page = 0, err_no, break_sig;
-    char tmp;
+    int page = 0;
     
     while(1){
         page = render(mainPage);
@@ -64,8 +76,8 @@ int main(int argc, char const *argv[])
             break;
         case IOMANAGE:
             // page = manage_in_out(user, &current_list, &current_car_list);
-            // mainPage = iomanage;
-            // render = renderManageUI;
+            mainPage = iomanage;
+            render = renderManageUI;
             break;
         case PAY:
             mainPage = pay;
@@ -103,48 +115,22 @@ int main(int argc, char const *argv[])
             page = HOME;
             break;
         case EXIT:
-            break_sig = 1;
-            break;
-            // return 0;
+            return 0;
         default:
             break;
         }
-        if (break_sig){
-            break;
-        }
     }
 
-    // data 백업
-    // 1. current_list -> ParkingLot.dat
-    printf("Backup current_list\n");
-    FILE *fp = fopen(PARKINGLOT_SETTINGS_FILE_PATH, "wb");
-    Node *cur;
-    cur = current_list.head;
-    while (cur){
-        fwrite(((PARK *)cur->data), sizeof(PARK), 1, fp);
-        cur = cur->next;
-    }
-    fclose(fp);
-    
-    // 2. current_car_list -> Current.dat
-    printf("Backup current_car_list\n");
-    fp = fopen(CURRENT_DATA_FILE_PATH, "wb");
-    cur = current_car_list.head;
-    while (cur){
-        fwrite(((CAR_INFO *)cur->data), sizeof(CAR_INFO), 1, fp);
-        cur = cur->next;
-    }
-    fclose(fp);
-
-    
-    // 3. user_table -> User.dat
+    // 데이터 백업
+    saveCurrentCarData(current_car_list);
+    saveParkingLot(current_list);
     saveUserData(user);
-
-
+    
     // 메모리 해제
     list_clear(&current_list);  
     list_clear(&current_car_list);
     hashDestroy(user);
+
 
 
     clearWidget(home);
