@@ -3,10 +3,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "manage.h"
 #include "utils.h"
 
 // extern int ticketFee;
 extern LPHASH user;
+
+//할인율
+float ticketDisc = 0.5;
+// float lCarDisc = 0.3;
+// float eCarDisc = 0.3;
 
 //정산하기
 int renderFeeView(){
@@ -53,7 +59,9 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
     {
     //계산된 fee 출력을 위해 int->string
     char feeStr[10];
-    sprintf(feeStr, "%d", fee);
+    if(hasTicket){
+        sprintf(feeStr, "%d", (int)(fee * ticketDisc));
+    }
 
     Widget *feeDetailView = (Widget *)malloc(sizeof(Widget));
 
@@ -83,6 +91,10 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
     setLabelText(label3, "원 입니다.");
 
     if(hasTicket){
+        Label *label2 = createLabel();
+        setLabelPos(label2, 11, 19);
+        setLabelText(label2, feeStr); // hasticket 여부로 *할인율 적용할지 판단
+
         Label *label4 = createLabel();
         setLabelPos(label4, 11, 35);
         setLabelText(label4, "(정기권 할인 적용)");
@@ -115,20 +127,19 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
 
     if(!strcmp("Y", prompt)){
         
-        FILE *ifp = fopen("./data/history.dat","rb");
-        FILE *ofp = fopen("./data/history.dat","wb");
+        FILE *ifp = fopen(HISTORY_DATA_FILE_PATH,"rb");
+        FILE *ofp = fopen(HISTORY_DATA_FILE_PATH,"wb");
 
         if(ifp == NULL || ofp == NULL){
             return 1;
         }
 
         CAR_INFO *carInfo = (CAR_INFO *)malloc(sizeof(CAR_INFO));
-        // memset(carInfo, 0, sizeof(CAR_INFO));
+
         //file을 읽어서 carnumber랑 일치하는 carinfo->fee = 0으로 처리해서 파일다시쓰기
         while(fread(carInfo, sizeof(Info), 1, ifp)){
-            if(!strcmp(carNumber, carInfo->car_number) && strcmp(carInfo->out_datetime, "xxx"))
+            if(!strcmp(carNumber, carInfo->car_number) && strcmp(carInfo->out_datetime, ""))
                 carInfo->fee = 0;
-            
             fwrite(carInfo, sizeof(CAR_INFO), 1, ofp);
         }
         free(carInfo);
@@ -179,7 +190,6 @@ int renderTicketView(){
 //세팅된 label 출력
     for (int i = 0; i < arraySize(ticketView->label); i++)
         printLabel(ticketView, (Label *)(ticketView->label->lpData)[i]);
-    
     return 0;
 }
 
