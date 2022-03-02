@@ -138,7 +138,10 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
     Label temp;
     labelCreate(&temp);
     if(io == 'i'){
+        // 현재 시간 입력
         getDateTime((*car_info)->in_datetime);
+        // strcpy((*car_info)->out_datetime, ""); 
+        (*car_info)->out_datetime[0] = '\0';
         
         setLabelPos(&temp,8,10);
         setLabelText(&temp,"차량 번호(123가1234)>> ");
@@ -163,6 +166,11 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
         setLabelText(&temp,"주차 위치(층수 입력) >> ");
         printLabel(manage,&temp);
         scanf("%d", &(*car_info)->floor); while(getchar()!='\n');
+    
+        // 값 초기화
+        (*car_info)->fee = 0;
+        (*car_info)->is_paid = 0;
+        
 
         int find_flag = 0;
         Node *tmp = current_list.head;
