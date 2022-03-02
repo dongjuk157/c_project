@@ -55,8 +55,6 @@ int renderFeeView(){
 
 int printFeeDetailView(char *carNumber, int fee, int hasTicket){
 
-    REPEAT:
-    {
     //계산된 fee 출력을 위해 int->string
     char feeStr[10];
     if(hasTicket){
@@ -140,6 +138,7 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
         while(fread(carInfo, sizeof(Info), 1, ifp)){
             if(!strcmp(carNumber, carInfo->car_number) && strcmp(carInfo->out_datetime, ""))
                 carInfo->fee = 0;
+                carInfo->is_paid = 1;
             fwrite(carInfo, sizeof(CAR_INFO), 1, ofp);
         }
         free(carInfo);
@@ -151,9 +150,8 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
         printSingleLineView("주차요금 정산", "결제가 취소되었습니다!");
         return 0;
     } else{
-        goto REPEAT;
     }
-    }
+
     return 0;
 }
 
