@@ -3,6 +3,12 @@
 #include "linkedlist.h"
 #include "hash.h"
 
+#define CURRENT_DATA_FILE_PATH          "./data/tempData/Current.dat"
+#define SIMPLE_LOG_FILE_PATH    		"./data/tempData/history.log"
+#define USER_DATA_FILE_PATH     		"./data/tempData/User.dat"
+#define HISTORY_DATA_FILE_PATH     		"./data/tempData/History.dat"
+#define PARKINGLOT_SETTINGS_FILE_PATH   "./data/tempData/ParkingLot.dat"  
+
 typedef struct User {
   char id[20];
   char passward[20];

@@ -42,7 +42,8 @@ int messageBox(Widget* mainWindow, int posy, int posx ,char* message){
 
     char key = 0;
     int type = ID_OK;
-    while(key = getch()){
+    while(1){
+        key = getch();
         if(key == '\n'){
             break;
         }

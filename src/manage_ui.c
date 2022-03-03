@@ -224,6 +224,7 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
             CAR_INFO* car_tmp = (CAR_INFO*) pcar_tmp->data;
             if (strcmp(car_tmp->car_number, (*car_info)->car_number) == 0){ // 같은 차량 찾으면 탐색 종료
                 flag = 1;
+                getDateTime((*car_info)->out_datetime);
                 break;
             }
             pcar_tmp = pcar_tmp->next;
