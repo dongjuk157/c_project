@@ -250,7 +250,7 @@ int save_log(char io, CAR_INFO *car_info){
     FILE *fp;
     fp = fopen(SIMPLE_LOG_FILE_PATH, "a");
     if (!fp){
-        return FILE_ERROR;
+        return ERR_MANAGE_FILE_ERROR;
     }
     // fputs("",fp);
     // 파일형식 [i|o]\t[car_number]\t[yyyy-mm-dd hh:mm:ss]
