@@ -6,48 +6,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern LinkedList current_list;
+// extern LinkedList current_list;
 
 PARK_DETAIL_UI* createParkDetailEntryUI(){
-    PARK_DETAIL_UI* park_detail = createWidget();
-    setWidgetPos(park_detail, DEFAULT_POSY,DEFAULT_POSX);
-    setWidgetSize(park_detail,25,70);
-    setWidgetType(park_detail,MAIN);
-    arrayCreate(&(park_detail->label));
+    PARK_DETAIL_UI* park_detail = createMainWidget(DEFAULT_POSY,DEFAULT_POSX,25,70);
 
-    Label *title = createLabel();
-    setLabelPos(title, 5, 26);
-    setLabelText(title,"주차 관리 프로그램");
+    labelAdd(park_detail,5,26,"주차 관리 프로그램",0);
+    labelAdd(park_detail,7,24,"[주차 현황 - 전체 조회]",0);
 
-    Label *subTitle = createLabel();
-    setLabelPos(subTitle, 7, 24);
-    setLabelText(subTitle,"[주차 현황 - 전체 조회]");
+    Widget* detailSub = createSubWidget(14,4,5,63);
 
-    addLabel(park_detail, title);
-    addLabel(park_detail, subTitle);
-
-    Widget* detailSub = createWidget();
-    setWidgetPos(detailSub,14,4);
-    setWidgetSize(detailSub,5,63);
-    setWidgetType(detailSub,SUB);
-
-    Label* columnBarTop = createLabel();
-    Label* columns = createLabel();
-    Label* columnBarBottom = createLabel();
-
-    setLabelPos(columnBarTop,0,0);
-    setLabelPos(columns,1,0);
-    setLabelPos(columnBarBottom,2,0);
-
-
-    setLabelText(columnBarTop ,   "┌─────────┬───────────┬─────────────┬───────────┬─────────────┐");
-    setLabelText(columns,         "│ 총 공간 │ 남은 공간 │ 전기차 전용 │ 경차 전용 │ 장애인 전용 │");
-    setLabelText(columnBarBottom ,"├─────────┴───────────┴─────────────┴───────────┴─────────────┤");
-
-
-    addLabel(detailSub,columnBarTop);
-    addLabel(detailSub,columns);
-    addLabel(detailSub,columnBarBottom);
+    labelAdd(detailSub,0,0,"┌─────────┬───────────┬─────────────┬───────────┬─────────────┐",0);
+    labelAdd(detailSub,1,0,"│ 총 공간 │ 남은 공간 │ 전기차 전용 │ 경차 전용 │ 장애인 전용 │",0);
+    labelAdd(detailSub,2,0,"├─────────┴───────────┴─────────────┴───────────┴─────────────┤",0);
 
     addWidget(park_detail,detailSub);
 
@@ -55,20 +26,12 @@ PARK_DETAIL_UI* createParkDetailEntryUI(){
 }
 
 PARK_DETAIL_UI* createParkDetailFloorUI(){
-    PARK_DETAIL_UI* park_detail = createWidget();
-    setWidgetPos(park_detail, DEFAULT_POSY,DEFAULT_POSX);
-    setWidgetSize(park_detail,25,80);
-    setWidgetType(park_detail,MAIN);
-    arrayCreate(&(park_detail->label));
+    PARK_DETAIL_UI* park_detail = createMainWidget(DEFAULT_POSY,DEFAULT_POSX,25,81);
 
-    labelAdd(park_detail,5,28,"주차 관리 프로그램", 0);
-    labelAdd(park_detail,7,29,"[주차 현황 - 층별 조회]", 0);
+    labelAdd(park_detail,5,32,"주차 관리 프로그램", 0);
+    labelAdd(park_detail,7,30,"[주차 현황 - 층별 조회]", 0);
     
-
-    Widget* detailSub = createWidget();
-    setWidgetPos(detailSub,8,5);
-    setWidgetSize(detailSub,15,70);
-    setWidgetType(detailSub,SUB);
+    Widget* detailSub = createSubWidget(8,5,15,70);
 
     labelAdd(detailSub,0,0,"┌──────┬─────────┬───────────┬─────────────┬───────────┬─────────────┐",0);
     labelAdd(detailSub,1,0,"│ 층수 │ 총 공간 │ 남은 공간 │ 전기차 전용 │ 경차 전용 │ 장애인 전용 │",0);
@@ -78,6 +41,24 @@ PARK_DETAIL_UI* createParkDetailFloorUI(){
 
     return park_detail;
 }
+
+PARK_DETAIL_UI* createParkDetailOtherUI(){
+    PARK_DETAIL_UI* park_detail = createMainWidget(DEFAULT_POSY,DEFAULT_POSX,25,70);
+
+    labelAdd(park_detail,5,26,"주차 관리 프로그램",0);
+    labelAdd(park_detail,7,21,"[주차 현황 - 타 주차장 조회]",0);
+
+    Widget* detailSub = createSubWidget(8,4,15,63);
+
+    labelAdd(detailSub,0,0,"┌─────────┬───────────┬─────────────┬───────────┬─────────────┐",0);
+    labelAdd(detailSub,1,0,"│ 총 공간 │ 남은 공간 │ 전기차 전용 │ 경차 전용 │ 장애인 전용 │",0);
+    labelAdd(detailSub,2,0,"├─────────┴───────────┴─────────────┴───────────┴─────────────┤",0);
+
+    addWidget(park_detail,detailSub);
+
+    return park_detail;
+}
+
 
 int renderDetailEntry(PARK_DETAIL_UI* park_detail){
     renderWidget(park_detail);
@@ -100,7 +81,6 @@ int renderDetailEntry(PARK_DETAIL_UI* park_detail){
 
     sprintf(buffer,"현재 주차가능 공간 수는 %d개 입니다.", total.total - total.total_car);
     printSiglelineWidget(park_detail, 10, 10, buffer, 0);
-
 
     sprintf(buffer," %5d      %5d         %4d         %4d         %4d", 
         total.total,
@@ -138,52 +118,6 @@ int renderDetailFloor(PARK_DETAIL_UI* park_detail){
     return 0;
 }
 
-PARK_DETAIL_UI* createParkDetailOtherUI(){
-    PARK_DETAIL_UI* park_detail = createWidget();
-    setWidgetPos(park_detail, DEFAULT_POSY,DEFAULT_POSX);
-    setWidgetSize(park_detail,25,70);
-    setWidgetType(park_detail,MAIN);
-    arrayCreate(&(park_detail->label));
-
-    Label *title = createLabel();
-    setLabelPos(title, 5, 26);
-    setLabelText(title,"주차 관리 프로그램");
-
-    Label *subTitle = createLabel();
-    setLabelPos(subTitle, 7, 24);
-    setLabelText(subTitle,"[주차 현황 - 타 주차장 조회]");
-
-    addLabel(park_detail, title);
-    addLabel(park_detail, subTitle);
-
-    Widget* detailSub = createWidget();
-    setWidgetPos(detailSub,7,4);
-    setWidgetSize(detailSub,15,63);
-    setWidgetType(detailSub,SUB);
-
-    Label* columnBarTop = createLabel();
-    Label* columns = createLabel();
-    Label* columnBarBottom = createLabel();
-
-    setLabelPos(columnBarTop,0,0);
-    setLabelPos(columns,1,0);
-    setLabelPos(columnBarBottom,2,0);
-
-
-    setLabelText(columnBarTop ,   "┌─────────┬───────────┬─────────────┬───────────┬─────────────┐");
-    setLabelText(columns,         "│ 총 공간 │ 남은 공간 │ 전기차 전용 │ 경차 전용 │ 장애인 전용 │");
-    setLabelText(columnBarBottom ,"├─────────┴───────────┴─────────────┴───────────┴─────────────┤");
-
-
-    addLabel(detailSub,columnBarTop);
-    addLabel(detailSub,columns);
-    addLabel(detailSub,columnBarBottom);
-
-    addWidget(park_detail,detailSub);
-
-    return park_detail;
-}
-
 int renderDetailOther(PARK_DETAIL_UI* park_detail){
     // 여기서 사용할 리스트 생성
     LinkedList all_parking_lots;
@@ -203,7 +137,6 @@ int renderDetailOther(PARK_DETAIL_UI* park_detail){
         // id를 사용해서 폴더 구조 파악-> ./data/{tmp_user->id}/ParkingLot.dat 확인
         sprintf(tmp_datapath,"./data/%s/ParkingLot.dat", tmp_user->id);
         // parkinglot에서 파일 읽고 데이터 만들기
-        // printf("%s", tmp_datapath);
 
         FILE *fp_data = fopen(tmp_datapath, "rb");
         // total에 한 주차장의 모든 데이터를 더한 값 저장
@@ -258,7 +191,7 @@ int renderDetailOther(PARK_DETAIL_UI* park_detail){
                 tmp_data->light_car,
                 tmp_data->handicapped
             );
-            printSiglelineWidget(park_detail, 10 + 2 * i, 5, buffer, 0);
+            printSiglelineWidget(park_detail, 11 + 2 * i, 5, buffer, 0);
             cnt++;
             cur = cur->next;
         }

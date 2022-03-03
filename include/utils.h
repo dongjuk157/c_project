@@ -17,7 +17,7 @@ typedef char bool;
 
 struct termios buf, savebuf;
 
-
+int myGetline(char *__restrict __s, int __n, FILE *__restrict __stream);
 int gotoxy(int x, int y); 
 int min(int a, int b);
 int getch(void);

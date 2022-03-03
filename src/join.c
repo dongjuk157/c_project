@@ -1,4 +1,5 @@
 #include "join.h"
+#include "messagebox.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> // strcat
@@ -10,7 +11,7 @@ int loginCheck(char *id, char *password){
     // 1. 파일 열기 data/user
     FILE *fp = fopen("./data/user.dat", "rb");
     if (!fp){
-        return -1; // file error
+        return ERR_JOIN_FILE_NOT_OPEN; // file error
     }
     // 2. 파일 내 같은 id 있는지 확인
     USER *tmp = (USER*)malloc(sizeof(USER));
@@ -22,20 +23,20 @@ int loginCheck(char *id, char *password){
             // check password
             // 암호화된 password로 비교하고싶다...
             if (strcmp(tmp->passward, password) == 0) {
-                return 0; // success
+                return JOIN_EOK; // success
             } else {
-                return -2; // login failed
+                return ERR_JOIN_INVALID_PASSWORD; // login failed
             }
         }
     }    
-    return -3; // not found
+    return ERR_JOIN_INVALID_ID; // not found
 }
 
 int join(char *id, char *password){
     // 1. 파일 열기 data/user
     FILE *fp = fopen("./data/user.dat", "rb+");
     if (!fp){
-        return -1; // file error
+        return ERR_JOIN_FILE_NOT_OPEN; // file error
     }
     // 2. 파일 내 같은 id 있는지 확인
     USER *tmp = (USER*)malloc(sizeof(USER));
@@ -44,7 +45,7 @@ int join(char *id, char *password){
         if (feof(fp))
             break;
         if (strcmp(tmp->id, id) == 0) {
-            return -2; // same id
+            return ERR_JOIN_SAME_ID_EXIST; // same id
         }
     }
     // 3. 파일 내 찾는 값이 없으면 마지막에 구조체로 추가
@@ -55,7 +56,7 @@ int join(char *id, char *password){
     fclose(fp); 
     free(tmp);
     createNewFiles(id);
-    return 0;
+    return JOIN_EOK;
 }
 
 int createNewFiles(char *id){
@@ -66,8 +67,9 @@ int createNewFiles(char *id){
     // 회원가입 후 해당 id로 폴더 구조 생성
     struct stat sb;
     if (stat(dirname, &sb) == 0 && S_ISDIR(sb.st_mode)){
-        printf("%s already exists\n", dirname);
-    } else {
+        // printf("%s already exists\n", dirname);
+    }
+    else {
         // create directory "./data"
         if(mkdir(dirname, 0777) < 0 && errno != EEXIST) {
             // we check for EEXIST since maybe the directory is already there
@@ -79,7 +81,7 @@ int createNewFiles(char *id){
     strcat(dirname, id);
     
     if (stat(dirname, &sb) == 0 && S_ISDIR(sb.st_mode)){
-        printf("%s already exists\n", dirname);
+        // printf("%s already exists\n", dirname);
     } else {
         // create directory "./data"
         if(mkdir(dirname, 0777) < 0 && errno != EEXIST) {
@@ -127,9 +129,8 @@ int createNewFiles(char *id){
     fclose(fp);
 
 
-    return 0;
+    return JOIN_EOK;
 }
-
 
 int createParkingLot(char *id, LinkedList* list){
     FILE *fp;
@@ -140,7 +141,7 @@ int createParkingLot(char *id, LinkedList* list){
 
     fp = fopen(tmp_file_name, "wb");
     if(!fp) 
-        return -1;
+        return ERR_JOIN_FILE_NOT_OPEN;
     
     Node* cur = list->head;
     PARK *tmp;
@@ -151,5 +152,26 @@ int createParkingLot(char *id, LinkedList* list){
     }
     fclose(fp);
     free(tmp);
-    return 0;
+    return JOIN_EOK;
+}
+
+int joinErrorHandler(Widget* widget, int errCode){
+    switch (errCode)
+    {
+    case JOIN_EOK:
+        break;
+    case ERR_JOIN_FILE_NOT_OPEN:
+        messageBox(widget,7,9, "파일을 열 수 없습니다.");
+        break;
+    case ERR_JOIN_INVALID_PASSWORD:
+        messageBox(widget,7,9,"비밀번호를 다시 입력해주세요.");
+        break;
+    case ERR_JOIN_INVALID_ID:
+        messageBox(widget,7,9,"잘못된 아이디 입니다.");
+        break;
+    case ERR_JOIN_SAME_ID_EXIST:
+        messageBox(widget,7,9, "해당 아이디가 이미 존재합니다.");
+        break;
+    }
+    return JOIN_EOK;
 }

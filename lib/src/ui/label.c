@@ -17,7 +17,7 @@ Label* createLabel(){
 int setLabel(Label* label, int posy, int posx, const char* text, int color){
     setLabelPos(label,posy,posx);
     setLabelText(label, text);
-    label->color = color;
+    setLabelBackgrounColor(label,color);
 
     return LABEL_EOK;
 }

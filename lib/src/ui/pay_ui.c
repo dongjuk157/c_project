@@ -6,44 +6,19 @@
 #include "info.h"
 #include "view.h"
 #include "utils.h"
-#include "manage.h"
 
-extern LPHASH user; 
+
+// extern LPHASH user; 
 
 PAY_UI *createPayUI(){
 
-    PAY_UI *payUI = createWidget();
+    PAY_UI *payUI = createMainWidget(DEFAULT_POSY,DEFAULT_POSX,25,70);
 
-    setWidgetPos(payUI, DEFAULT_POSY,DEFAULT_POSX);
-    setWidgetSize(payUI, 25, 70);
-    setWidgetType(payUI, MAIN);
-    arrayCreate(&(payUI->label));
-
-    Label *title = createLabel();
-    setLabelPos(title, 3, 26);
-    setLabelText(title,"주차 관리 프로그램");
-
-    Label *subTitle = createLabel();
-    setLabelPos(subTitle, 5, 31);
-    setLabelText(subTitle,"결제 기능");
-
-    Label *selectOne = createLabel();
-    setLabelPos(selectOne, 13, 10);
-    setLabelText(selectOne,"1. 주차요금 정산");
-
-    Label *selectTwo = createLabel();
-    setLabelPos(selectTwo, 16, 10);
-    setLabelText(selectTwo,"2. 정기권 등록 및 연장");
-
-    Label *prompt = createLabel();
-    setLabelPos(prompt, 20, 10);
-    setLabelText(prompt,"기능을 선택하세요 >> ");
-
-    addLabel(payUI, title);
-    addLabel(payUI, subTitle);
-    addLabel(payUI, selectOne);
-    addLabel(payUI, selectTwo);
-    addLabel(payUI, prompt);
+    labelAdd(payUI, 3,26, "주차 관리 프로그램",0);
+    labelAdd(payUI, 5,31, "결제 기능",0);
+    labelAdd(payUI, 13,10, "1. 주차요금 정산",0);
+    labelAdd(payUI, 16,10, "2. 정기권 등록 및 연장",0);
+    labelAdd(payUI, 20,10, "기능을 선택하세요 >> ",0);
 
     return payUI;
 }
@@ -51,13 +26,9 @@ PAY_UI *createPayUI(){
 int renderPayUI(PAY_UI *pay, void *data){
     //UI 프레임 그리기
     renderWidget(pay);
-    //세팅된 label 출력
-    for (int i = 0; i < arraySize(pay->label); i++)
-        printLabel(pay, (Label *)(pay->label->lpData)[i]);
 
     char selectNumber[8];
-    fgets(selectNumber, 8, stdin);
-    selectNumber[strlen(selectNumber)-1] = '\0';
+    myGetline(selectNumber, 8, stdin);
     
     if(!strcmp("exit", selectNumber)) return HOME;
     
@@ -76,8 +47,7 @@ int payParkingFee(){
     renderFeeView();
     //차량번호 입력받기
     char carNumber[20];
-    fgets(carNumber,20,stdin);
-    carNumber[strlen(carNumber)-1] = '\0';
+    myGetline(carNumber,20,stdin);
 
     calcFee(carNumber);
 
@@ -134,8 +104,7 @@ int buyTicket(){
 
     //차량번호 입력받기
     char carNumber[20];
-    fgets(carNumber,20,stdin);
-    carNumber[strlen(carNumber)-1] = '\0';
+    myGetline(carNumber,20,stdin);
 
     USER_INFO *foundInfo = NULL;
     hashGetValue(user, carNumber, (LPDATA *)&foundInfo);
@@ -173,8 +142,7 @@ int extendTicket(USER_INFO *foundInfo){
     printf("연장하시겠습니까? (Y/N)");
 
     char buf[4];
-    fgets(buf, 4, stdin);
-    buf[strlen(buf) -1] = '\0';
+    myGetline(buf, 4, stdin);
 
     if(!strcmp("Y", buf)){
         renderExtendTicketDetailView(foundInfo);
@@ -193,8 +161,7 @@ int newTicket(USER_INFO *foundInfo){
     printf("정기권을 등록하시겠습니까? (Y/N)");
 
     char buf[4];
-    fgets(buf, 4, stdin);
-    buf[strlen(buf) -1] = '\0';
+    myGetline(buf, 4, stdin);
 
     if(!strcmp("Y", buf)){
         renderNewTicketDetailView(foundInfo);
@@ -207,11 +174,7 @@ int newTicket(USER_INFO *foundInfo){
 }
 
 int saveUser(char *carNumber, USER_INFO **foundInfo){
-    Widget *saveView = (Widget *)malloc(sizeof(Widget));
-    setWidgetPos(saveView, DEFAULT_POSY,DEFAULT_POSX);
-    setWidgetSize(saveView, 25, 70);
-    setWidgetType(saveView, MAIN);
-    arrayCreate(&(saveView->label));
+    Widget *saveView = createMainWidget(0,0,25,70);
 
     printSiglelineWidget(saveView, 12, 10, "해당 차량번호로 조회된 결과가 없습니다.", 0);
     
@@ -235,12 +198,8 @@ int saveUser(char *carNumber, USER_INFO **foundInfo){
 
     system("clear");
 
-    Widget *defaultView = (Widget *)malloc(sizeof(Widget));
-    setWidgetPos(defaultView, DEFAULT_POSY,DEFAULT_POSX);
-    setWidgetSize(defaultView, 25, 70);
-    setWidgetType(defaultView, MAIN);
-    arrayCreate(&(defaultView->label));    
-    printWidget(defaultView);
+    Widget *defaultView = createMainWidget(0,0,25,70);
+    renderWidget(defaultView);
 
     return OK;
 }
