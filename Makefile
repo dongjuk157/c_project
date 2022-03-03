@@ -1,5 +1,5 @@
 CC = gcc
-#  CC = c:/sysgcc/raspberry/bin/arm-linux-gnueabihf-gcc.exe
+# CC = c:/sysgcc/raspberry/bin/arm-linux-gnueabihf-gcc.exe
 
 SRC_DIR = src
 OBJ_DIR = obj
@@ -34,7 +34,9 @@ $(TARGET) : $(OBJS)
 	$(CC) -o $@ $(OBJS)
 
 $(OBJ_DIR)/%.o: src/%.c
+	-mkdir obj
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
 clean:
 	rm $(TARGET) $(OBJS)
+	rm -r obj
