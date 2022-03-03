@@ -4,8 +4,10 @@
 
 ### user file ###
 .vscode/
+data/ 
 
-data/
+# main is execute file
+main
 
 ### C ###
 # Prerequisites
