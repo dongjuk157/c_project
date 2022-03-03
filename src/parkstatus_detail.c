@@ -1,5 +1,6 @@
 #include "parkstatus_detail.h"
 #include "linkedlist.h"
+#include "messagebox.h"
 #include "info.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -229,7 +230,7 @@ int renderDetailOther(PARK_DETAIL_UI* park_detail){
         // id를 사용해서 폴더 구조 파악-> ./data/{tmp_user->id}/ParkingLot.dat 확인
         sprintf(tmp_datapath,"./data/%s/ParkingLot.dat", tmp_user->id);
         // parkinglot에서 파일 읽고 데이터 만들기
-        printf("%s", tmp_datapath);
+        // printf("%s", tmp_datapath);
 
         FILE *fp_data = fopen(tmp_datapath, "rb");
         // total에 한 주차장의 모든 데이터를 더한 값 저장
@@ -272,7 +273,7 @@ int renderDetailOther(PARK_DETAIL_UI* park_detail){
         
         renderEmpty(park_detail);
         renderWidget(park_detail);
-        for (int i = 0; i < 5; i++){ // 5개씩 한번에 보여줌
+        for (int i = 0; i < 6; i++){ // 5개씩 한번에 보여줌
             if (!cur) break; // 5개보다 작으면 break
             PARK* tmp_data;
             tmp_data = (PARK *) cur->data;
@@ -284,14 +285,22 @@ int renderDetailOther(PARK_DETAIL_UI* park_detail){
                 tmp_data->light_car,
                 tmp_data->handicapped
             );
-            printSiglelineWidget(park_detail, 11 + 2 * cnt, 5, buffer, 0);
+            printSiglelineWidget(park_detail, 10 + 2 * i, 5, buffer, 0);
             cnt++;
             cur = cur->next;
         }
+        // printf(" %d %d ", cnt-1/5, ((list_size(&all_parking_lots)-1)/5));
         getchar();
+        if((cnt-1)/6 == ((list_size(&all_parking_lots)-1)/6)){
+            messageBox(park_detail,7,17,"마지막 페이지 입니다.");
+            return HOME;
+        }
+        else if(messageBox(park_detail,7,17,"다음페이지를 보시겠습니까?")==ID_CANCLE){
+            return HOME;
+        }
     }
 
 
     list_clear(&all_parking_lots); //리스트 해제
-    return 0;
+    return HOME;
 }

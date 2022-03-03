@@ -246,6 +246,7 @@ int searchUserUI(MANAGE_UI* manage,  char *car_number, USER_INFO **user_data, ch
     if ((tmp_user) == NULL){ // hash 값이 없는 경우
         if (io == 'i'){
             saveUserUI(manage, car_number, user_data);
+            return OK;
         }
         return -2; // NOT SEARCH USER
     }

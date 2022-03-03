@@ -61,9 +61,7 @@ int messageBox(Widget* mainWindow, int posy, int posx ,char* message){
             }
            
         }
-
     }
 
     return type;
-
 }

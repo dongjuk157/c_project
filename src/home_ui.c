@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "messagebox.h"
 HOME_UI* createHomeUI(){
     HOME_UI* home = createWidget();
     setWidgetPos(home, DEFAULT_POSY,DEFAULT_POSX);
@@ -17,7 +17,7 @@ HOME_UI* createHomeUI(){
     labelAdd(home,16,30,"5. 주차 이력", 0);
 
     #ifdef TEST
-    labelAdd(home,16,50,"6. 데이터 확인", 0);
+    labelAdd(home,16,50,"6. 다른 계정으로 로그인", 0);
 
     #endif // TEST
 
@@ -30,19 +30,22 @@ int checkinit(char *init){
     if(!strcmp("exit", init)) return EXIT;
     else{
         int num = atoi(init);
-        if(num == HOME) return HOME;
-        else if(num == IOMANAGE) return IOMANAGE;
+        // if(num == HOME) return HOME;
+        if(num == IOMANAGE) return IOMANAGE;
         else if(num == PAY) return PAY;
         else if(num == PARKSTATUS) return PARKSTATUS;
         else if(num == CARINFO) return CARINFO;
         else if(num == PARKHISTORY) return PARKHISTORY;
-        // else if(num == LOGIN) return LOGIN;
+        else if(num == LOGIN) return LOGIN;
         // else if(num == ENROLLUSER) return ENROLLUSER;
         // else if(num == SETTING) return SETTING;
         #ifdef TEST
         else if(num == 9) return 9;
         #endif
-        else return WIDGET_NOT_VALID_INPUT;
+        else{
+            messageBox(NULL,7,17,"잘못된 입력입니다.");
+            return HOME;
+        }
     }
 }
 

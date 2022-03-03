@@ -85,7 +85,7 @@ int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI, void *data){
         PARK_DETAIL_UI* other_entry = createParkDetailOtherUI();
         renderDetailOther(other_entry);
         clearWidget(other_entry);
-        getchar();
+        // getchar();
     }
     else return PARKSTATUS;
     
