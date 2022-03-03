@@ -6,12 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern char *CURRENT_DATA_FILE_PATH;
-extern char *SIMPLE_LOG_FILE_PATH;    		
-extern char *USER_DATA_FILE_PATH;
-extern char *HISTORY_DATA_FILE_PATH;     		
-extern char *PARKINGLOT_SETTINGS_FILE_PATH;   
-
 extern LinkedList current_list;
 
 PARK_DETAIL_UI* createParkDetailEntryUI(){
@@ -61,45 +55,24 @@ PARK_DETAIL_UI* createParkDetailEntryUI(){
 }
 
 PARK_DETAIL_UI* createParkDetailFloorUI(){
-        PARK_DETAIL_UI* park_detail = createWidget();
+    PARK_DETAIL_UI* park_detail = createWidget();
     setWidgetPos(park_detail, DEFAULT_POSY,DEFAULT_POSX);
     setWidgetSize(park_detail,25,80);
     setWidgetType(park_detail,MAIN);
     arrayCreate(&(park_detail->label));
 
-    Label *title = createLabel();
-    setLabelPos(title, 5, 31);
-    setLabelText(title,"주차 관리 프로그램");
-
-    Label *subTitle = createLabel();
-    setLabelPos(subTitle, 7, 29);
-    setLabelText(subTitle,"[주차 현황 - 층별 조회]");
-
-    addLabel(park_detail, title);
-    addLabel(park_detail, subTitle);
+    labelAdd(park_detail,5,28,"주차 관리 프로그램", 0);
+    labelAdd(park_detail,7,29,"[주차 현황 - 층별 조회]", 0);
+    
 
     Widget* detailSub = createWidget();
     setWidgetPos(detailSub,8,5);
     setWidgetSize(detailSub,15,70);
     setWidgetType(detailSub,SUB);
 
-    Label* columnBarTop = createLabel();
-    Label* columns = createLabel();
-    Label* columnBarBottom = createLabel();
-
-    setLabelPos(columnBarTop,0,0);
-    setLabelPos(columns,1,0);
-    setLabelPos(columnBarBottom,2,0);
-
-
-    setLabelText(columnBarTop ,   "┌──────┬─────────┬───────────┬─────────────┬───────────┬─────────────┐");
-    setLabelText(columns,         "│ 층수 │ 총 공간 │ 남은 공간 │ 전기차 전용 │ 경차 전용 │ 장애인 전용 │");
-    setLabelText(columnBarBottom ,"├──────┴─────────┴───────────┴─────────────┴───────────┴─────────────┤");
-
-
-    addLabel(detailSub,columnBarTop);
-    addLabel(detailSub,columns);
-    addLabel(detailSub,columnBarBottom);
+    labelAdd(detailSub,0,0,"┌──────┬─────────┬───────────┬─────────────┬───────────┬─────────────┐",0);
+    labelAdd(detailSub,1,0,"│ 층수 │ 총 공간 │ 남은 공간 │ 전기차 전용 │ 경차 전용 │ 장애인 전용 │",0);
+    labelAdd(detailSub,2,0,"├──────┴─────────┴───────────┴─────────────┴───────────┴─────────────┤",0);
 
     addWidget(park_detail,detailSub);
 

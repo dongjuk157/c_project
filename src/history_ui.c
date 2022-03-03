@@ -1,10 +1,10 @@
 #include "history_ui.h"
 #include "history_detail.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef int (*FP)(Widget*);
 
 HISTORY_UI* createHistoryUI(){
 

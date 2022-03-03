@@ -49,7 +49,8 @@ int renderLoginUI(LOGIN_UI* login, void *id){
     char password[20];
     char key = 0;
     int type = 0;
-    while(key = getch()){
+    while(1){
+        key = getch();
         if(key == '\n'){
             break;
         }
@@ -96,6 +97,10 @@ int renderLoginUI(LOGIN_UI* login, void *id){
     else if(res == 0){
         messageBox(login,7,9,"로그인 성공");
         strcpy(globalId,id);
+    }
+    else{
+        system("touch user.dat");
+        return LOGIN;
     }
     
     return HOME;

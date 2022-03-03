@@ -8,13 +8,7 @@
 #include "utils.h"
 #include "manage.h"
 
-extern LPHASH user;
-
-extern char *CURRENT_DATA_FILE_PATH;
-extern char *SIMPLE_LOG_FILE_PATH;    		
-extern char *USER_DATA_FILE_PATH;
-extern char *HISTORY_DATA_FILE_PATH;     		
-extern char *PARKINGLOT_SETTINGS_FILE_PATH;  
+extern LPHASH user; 
 
 PAY_UI *createPayUI(){
 
@@ -193,7 +187,6 @@ int extendTicket(USER_INFO *foundInfo){
 }
 
 int newTicket(USER_INFO *foundInfo){
-    
     gotoxy(11, 13);
     printf("%s님,\n", foundInfo->name);
     gotoxy(11, 15);
@@ -210,6 +203,7 @@ int newTicket(USER_INFO *foundInfo){
     } else{
         return OK;
     }
+    return OK;
 }
 
 int saveUser(char *carNumber, USER_INFO **foundInfo){
@@ -223,7 +217,6 @@ int saveUser(char *carNumber, USER_INFO **foundInfo){
     
     *foundInfo = (USER_INFO *) malloc(sizeof(USER_INFO));
     // user_data에 값 저장
-    char tmp_c;
 
     printSiglelineWidget(saveView, 16, 10, "이름을 입력하세요 >> ", 0);
     scanf("%s", (*foundInfo)->name); while(getchar()!='\n');

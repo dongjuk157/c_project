@@ -27,14 +27,15 @@
 #define MAIN 0
 #define SUB 1
 #define MSGBOX 2
+#define BUTTON 3
 
 typedef struct Widget{
-    int height;
-    int width;
+    int height; //위젯의 높이
+    int width; //
     int posx,posy;
-    int type;
-    LPARRAY label;
-    LPARRAY subWidget;
+    int type; //위젯의 타입 0 : MAIN, 1 : SUB, 2 : MSGBOX 3 : BUTTON 
+    LPARRAY label;  //라벨이 들어갈 동적배열
+    LPARRAY subWidget; //서브 위젯이 들어갈 동적배열
 }Widget;
 
 Widget* createWidget();
