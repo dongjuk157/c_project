@@ -7,6 +7,7 @@
 #define SIMPLE_LOG_FILE_PATH    		"./data/tempData/history.log"
 #define USER_DATA_FILE_PATH     		"./data/tempData/User.dat"
 #define HISTORY_DATA_FILE_PATH     		"./data/tempData/History.dat"
+#define HISTORY_TMP_DATA_FILE_PATH     		"./data/tempData/History.tmp.dat"
 #define PARKINGLOT_SETTINGS_FILE_PATH   "./data/tempData/ParkingLot.dat"  
 
 typedef struct User {

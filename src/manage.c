@@ -102,7 +102,7 @@ int save_log(char io, CAR_INFO *car_info){
 }
 
 int search_user(LPHASH user_table, char *car_number, USER_INFO **user_data){
-    printf("search_user\n");
+    // printf("search_user\n");
 	// 해시 테이블에서 확인. 찾는 값이 있으면 user_data에 저장
     // hash table get
     USER_INFO *tmp_user = NULL;
@@ -188,8 +188,9 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
         case 'i':{
             // 입차할 때 history 마지막에 추가
             FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"ab");
-            if(!fp) 
+            if(!fp) {
                 return FILE_ERROR;
+            }
 
             // 구조체의 내용을 파일에 저장
             fwrite(car_info, sizeof(CAR_INFO), 1, fp);
@@ -197,35 +198,50 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
             break;
         }
         case 'o':{
-            // 출차할 때 차 번호가 맞는 값 찾고 해당 부분 수정
-            FILE *fp = fopen(HISTORY_DATA_FILE_PATH,"rb+");
+            // 출차할 때 차 번호가 맞는 값 찾고 해당 부분 수정 파일 전체를 바꾸는 방식
+            
+            // 복사
+            // cp History.dat History.tmp.dat
+            char command[100];
+            strcpy(command, "cp ");
+            strcat(command, HISTORY_DATA_FILE_PATH);
+            strcat(command, " ");
+            strcat(command, HISTORY_TMP_DATA_FILE_PATH);
+            system(command);
+            
+            FILE *fp_r = fopen(HISTORY_TMP_DATA_FILE_PATH,"rb");
+            if(!fp_r) 
+                return FILE_ERROR;
 
-            if(!fp) 
+            FILE *fp_w = fopen(HISTORY_DATA_FILE_PATH,"wb");
+            if(!fp_w) 
                 return FILE_ERROR;
             
+            int flag = 0; // 출차 확인을 위한 값
             while (1){
-                
                 CAR_INFO* tmp_car= (CAR_INFO *)malloc(sizeof(CAR_INFO));
-                fread(tmp_car, sizeof(CAR_INFO), 1, fp);
-                if (feof(fp)) 
+                fread(tmp_car, sizeof(CAR_INFO), 1, fp_r);                      // 임시파일(HISTORY_TMP_DATA_FILE_PATH) 에서 읽기
+                if (feof(fp_r)) 
                     break;
-                if (strcmp(tmp_car->car_number, car_info->car_number) == 0
-                    && strcmp(tmp_car->out_datetime, "") == 0
-                ) { // 차량번호가 같은데 out_datetime이 NULL인 구조체
+                
+                if (!flag                                                       // 값 변경은 한번만
+                    && strcmp(tmp_car->car_number, car_info->car_number) == 0   // 차량 번호가 같음
+                    && strlen(tmp_car->out_datetime) == 0                       // out_datetime 값이 null
+                ) {
                     // out_datetime 설정
+                    flag = 1;
                     char datetime[20];
                     getDateTime(datetime);
-                    
+                    (tmp_car->out_datetime)[0] = '\0';
                     strcpy(tmp_car->out_datetime, datetime);
+
                     // 요금산정
                     tmp_car->fee = calculate_fee(tmp_car->in_datetime, tmp_car->out_datetime);
 
-                    // read한 만큼 뒤로 
-                    fseek(fp, -sizeof(CAR_INFO), SEEK_CUR);
-                    // 덮어쓰기
-
-                    fwrite(tmp_car, sizeof(CAR_INFO), 1, fp);
-
+                    // HISTORY_DATA_FILE_PATH 쓰기
+                    fwrite(tmp_car, sizeof(CAR_INFO), 1, fp_w); 
+                    
+                    // 값을 변경했으면 출차했다는 것이므로 값 하나 감소
                     Node *tmp = current_list.head;
                     while(tmp){
                         PARK* buf = (PARK*)tmp->data;
@@ -235,11 +251,19 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
                         }
                         tmp = tmp->next;
                     }
-
+                } 
+                else { // 찾는 값이 아니거나 이미 변경했으면 그대로 작성
+                    fwrite(tmp_car, sizeof(CAR_INFO), 1, fp_w); // file 쓰기
                 }
             }
-            fclose(fp);
-
+            
+            fclose(fp_w);
+            fclose(fp_r);
+            // 임시파일 삭제 HISTORY_TMP_DATA_FILE_PATH
+            command[0] = '\0';
+            strcpy(command, "rm ");
+            strcat(command, HISTORY_TMP_DATA_FILE_PATH);
+            system(command);
             break;
         }
         default:
