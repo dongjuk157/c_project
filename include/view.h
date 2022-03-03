@@ -7,7 +7,7 @@
 #define FILE_ERROR     -1
 
 int renderFeeView();
-int printFeeDetailView(char *carNumber, int fee, int hasTicket);
+int printFeeDetailView(char *carNumber, int fee, int hasTicket, CAR_INFO* carinfo);
 
 int renderTicketView();
 int renderExtendTicketDetailView(USER_INFO *foundInfo);

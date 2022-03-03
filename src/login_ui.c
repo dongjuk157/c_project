@@ -43,7 +43,7 @@ LOGIN_UI* createLoginUI(){
     return login;
 }
 
-int renderLoginUI(LOGIN_UI* login, char *id){
+int renderLoginUI(LOGIN_UI* login, void *id){
     renderWidget(login);
     // char id[20];
     char password[20];
@@ -78,7 +78,7 @@ int renderLoginUI(LOGIN_UI* login, char *id){
 
     gotoxy(27,11);
     fgets(id, 20, stdin);
-    id[strlen(id)-1] = '\0';
+    ((char*)id)[strlen(id)-1] = '\0';
 
     gotoxy(27,13);
     fgets(password, 20, stdin);

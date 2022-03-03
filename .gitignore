@@ -5,6 +5,7 @@
 ### user file ###
 .vscode/
 
+data/
 
 ### C ###
 # Prerequisites

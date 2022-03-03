@@ -11,9 +11,13 @@
 #include "manage.h"
 #include "info.h"
 
+
+
+
 extern LPHASH user;
 extern LinkedList current_car_list;
 extern LinkedList current_list;
+extern struct termios buf, savebuf;
 
 
 extern char *CURRENT_DATA_FILE_PATH;
@@ -83,21 +87,22 @@ int getOneMonthAfterFromToday(char *date){
 int getch(void) 
 {
 	int ch;
-	struct termios buf, save;
-	tcgetattr(0, &save);
-	buf = save;
+	tcgetattr(0, &savebuf);
+	buf = savebuf;
 	buf.c_lflag &= ~(ICANON | ECHO);
 	buf.c_cc[VMIN] = 1;
 	buf.c_cc[VTIME] = 0;
 	tcsetattr(0, TCSAFLUSH, &buf);
 	ch = getchar();
-	tcsetattr(0, TCSAFLUSH, &save);
+	tcsetattr(0, TCSAFLUSH, &savebuf);
 	return ch;
 }
+
 
 int min(int a, int b){
 	return (a<b) ? a : b;
 }
+
 // int date[] = {0,0,31,59,90,120,151,181,212,243,273,304,334,365};
 int calculate_fee(char* inDateTime, char* outDateTime){
     int inYear,outYear;

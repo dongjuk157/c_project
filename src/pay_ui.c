@@ -54,7 +54,7 @@ PAY_UI *createPayUI(){
     return payUI;
 }
 
-int renderPayUI(PAY_UI *pay){
+int renderPayUI(PAY_UI *pay, void *data){
     //UI 프레임 그리기
     renderWidget(pay);
     //세팅된 label 출력
@@ -127,7 +127,7 @@ int calcFee(char *carNumber){
         printSingleLineView("주차요금 정산", "미정산 요금이 없습니다!");
         return OK;
     } else{
-        printFeeDetailView(carNumber, fee, hasTicket);
+        printFeeDetailView(carNumber, fee, hasTicket, carInfo);
         return OK;
     }
     return OK;

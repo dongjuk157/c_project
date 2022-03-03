@@ -24,7 +24,7 @@ HISTORY_UI* createHistoryUI(){
     return history;
 }
 
-int renderHistoryUI(HISTORY_UI* history){
+int renderHistoryUI(HISTORY_UI* history, void *data){
 
     renderWidget(history);
     char init[20];

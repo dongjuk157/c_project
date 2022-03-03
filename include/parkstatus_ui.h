@@ -5,6 +5,6 @@
 typedef Widget PARKSTATUS_UI;
 
 PARKSTATUS_UI* createParkStatusUI();
-int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI);
+int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI, void* data);
 
 #endif // PARKSTATUS_UI_H

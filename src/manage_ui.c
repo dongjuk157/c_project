@@ -56,7 +56,7 @@ MANAGE_UI* createManageUI(){
     return manage;
 }
 
-int renderManageUI(MANAGE_UI *manage){
+int renderManageUI(MANAGE_UI *manage, void *data){
     //UI 프레임 그리기
     CAR_INFO* car_info = NULL;
     USER_INFO* user_info = NULL;
@@ -82,14 +82,30 @@ int renderManageUI(MANAGE_UI *manage){
             detail = createManageDetailUI(IN_CAR);
             renderWidget(detail);
             ret = getValuesUI(manage,IN_CAR,&car_info);
-            if (ret){ 
-                // ret == 0 성공, 0 아니면 에러이므로 함수 종료
-                return ret;
+            if (ret){ // 에러생기면 함수 종료
+                // return ret;
+                return HOME;
             }
-            save_log(IN_CAR, car_info);
-            searchUserUI(manage, car_info->car_number, &user_info, 'i');
-            update_current(IN_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
-            update_history(IN_CAR, car_info, user_info); // 6. add history
+            ret = save_log(IN_CAR, car_info);
+            if (ret){ // 에러생기면 함수 종료
+                // return ret;
+                return HOME;
+            }
+            ret = searchUserUI(manage, car_info->car_number, &user_info, 'i');
+            if (ret){ // 에러생기면 함수 종료
+                // return ret;
+                return HOME;
+            }
+            ret = update_current(IN_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
+            if (ret){ // 에러생기면 함수 종료
+                // return ret;
+                return HOME;
+            }
+            ret = update_history(IN_CAR, car_info, user_info); // 6. add history
+            if (ret){ // 에러생기면 함수 종료
+                // return ret;
+                return HOME;
+            }
             
             gotoxy(10,20);
             printf("새로운 차량이 정상적으로 입차 되었습니다.\n");
@@ -101,8 +117,9 @@ int renderManageUI(MANAGE_UI *manage){
             detail = createManageDetailUI(OUT_CAR);
             renderWidget(detail);
             ret = getValuesUI(manage,OUT_CAR,&car_info);
-            if (ret){
-                return ret;
+            if (ret){ // 에러생기면 함수 종료
+                // return ret;
+                return HOME;
             }
             int res;
             res = searchUserUI(manage, car_info->car_number, &user_info , 'o');
@@ -111,9 +128,21 @@ int renderManageUI(MANAGE_UI *manage){
                 return IOMANAGE;
             }
 
-            save_log(OUT_CAR, car_info);
-            update_current(OUT_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
-            update_history(OUT_CAR, car_info, user_info); // 6. add history
+            ret = save_log(OUT_CAR, car_info);
+            if (ret){ // 에러생기면 함수 종료
+                // return ret;
+                return HOME;
+            }
+            ret = update_current(OUT_CAR, car_info, &current_list, &current_car_list); // 5. add current list 
+            if (ret){ // 에러생기면 함수 종료
+                // return ret;
+                return HOME;
+            }
+            ret = update_history(OUT_CAR, car_info, user_info); // 6. add history
+            if (ret){ // 에러생기면 함수 종료
+                // return ret;
+                return HOME;
+            }
             
             gotoxy(10,20);
             printf("정상적으로 출차 되었습니다.\n");
@@ -138,6 +167,15 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
         printSiglelineWidget(manage, 8,10, "차량 번호(123가1234)>> ", 0);
         fgets((*car_info)->car_number, 20, stdin);
         (*car_info)->car_number[strlen((*car_info)->car_number)-1] = '\0';
+        
+        Node *pcar_tmp = current_car_list.head; // 이미 입차된 차량 제거
+        while (pcar_tmp){
+            CAR_INFO* car_tmp = (CAR_INFO*) pcar_tmp->data;
+            if (strcmp(car_tmp->car_number, (*car_info)->car_number) == 0){
+                return -5; // same car in current_car_list
+            }
+            pcar_tmp = pcar_tmp->next;
+        }
 
         printSiglelineWidget(manage, 10,10, "차종 [e]lectric, [l]ight, [n]ormal >> ", 0);
         scanf("%c", &(*car_info)->car_type); while(getchar()!='\n');
@@ -178,12 +216,27 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
         printSiglelineWidget(manage,14,10,"차량 번호(123가1234)>> ", 0);
         fgets((*car_info)->car_number, 20, stdin);
         (*car_info)->car_number[strlen((*car_info)->car_number)-1] = '\0';
+
+        // 입차되지 않은 차량 제거
+        Node *pcar_tmp = current_car_list.head;
+        int flag = 0;
+        while (pcar_tmp){
+            CAR_INFO* car_tmp = (CAR_INFO*) pcar_tmp->data;
+            if (strcmp(car_tmp->car_number, (*car_info)->car_number) == 0){ // 같은 차량 찾으면 탐색 종료
+                flag = 1;
+                break;
+            }
+            pcar_tmp = pcar_tmp->next;
+        }
+        if (!flag){ // 끝까지 순회했는데 못찾으면 에러
+            return -5; // car not in car_list
+        }
     }
     else {
-        return -1;
+        return -2; // format error
     }
 
-    return 0;
+    return 0; // ok
 }
 
 int searchUserUI(MANAGE_UI* manage,  char *car_number, USER_INFO **user_data, char io){
@@ -193,6 +246,7 @@ int searchUserUI(MANAGE_UI* manage,  char *car_number, USER_INFO **user_data, ch
     if ((tmp_user) == NULL){ // hash 값이 없는 경우
         if (io == 'i'){
             saveUserUI(manage, car_number, user_data);
+            return OK;
         }
         return -2; // NOT SEARCH USER
     }
