@@ -200,8 +200,8 @@ int update_history(char io, CAR_INFO *car_info, USER_INFO *user_data){
         case 'o':{
             // 출차할 때 차 번호가 맞는 값 찾고 해당 부분 수정 파일 전체를 바꾸는 방식
             
-            // 이름 바꾸기
-            // mv History.dat History.tmp.dat
+            // 복사
+            // cp History.dat History.tmp.dat
             char command[100];
             strcpy(command, "cp ");
             strcat(command, HISTORY_DATA_FILE_PATH);
