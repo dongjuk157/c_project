@@ -138,25 +138,45 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket, CAR_INFO* carinf
     prompt[strlen(prompt) - 1] = '\0';
 
     if(!strcmp("Y", prompt)){
-        
-        FILE *ifp = fopen(HISTORY_DATA_FILE_PATH,"rb+");
-        if(ifp == NULL){
+        // 복사
+        // cp History.dat History.tmp.dat
+        char command[100];
+        strcpy(command, "cp ");
+        strcat(command, HISTORY_DATA_FILE_PATH);
+        strcat(command, " ");
+        strcat(command, HISTORY_TMP_DATA_FILE_PATH);
+        system(command);
+
+        FILE *fp_r = fopen(HISTORY_TMP_DATA_FILE_PATH,"rb");
+        if(!fp_r) 
             return FILE_ERROR;
-        }
+
+        FILE *fp_w = fopen(HISTORY_DATA_FILE_PATH,"wb");
+        if(!fp_w) 
+            return FILE_ERROR;
 
         CAR_INFO *carInfo = (CAR_INFO *)malloc(sizeof(CAR_INFO));
 
         //file을 읽어서 carnumber랑 일치하는 carinfo->fee = 0으로 처리해서 파일다시쓰기
-        while(fread(carInfo, sizeof(CAR_INFO), 1, ifp)){
+        while(1){
+            fread(carInfo, sizeof(CAR_INFO), 1, fp_r);
+            if(feof(fp_r))
+                break;
             if(!strcmp(carNumber, carInfo->car_number) && strcmp(carInfo->out_datetime, "")){
                 // carInfo->fee = fee;
                 carInfo->is_paid = 1;
             }
-            fseek(ifp,-sizeof(CAR_INFO),SEEK_CUR);
-            fwrite(carInfo, sizeof(CAR_INFO), 1, ifp);
+            // fseek(ifp,-sizeof(CAR_INFO),SEEK_CUR);
+            fwrite(carInfo, sizeof(CAR_INFO), 1, fp_w);
         }
         free(carInfo);
-        fclose(ifp);
+        fclose(fp_w);
+        fclose(fp_r);
+        // 임시파일 삭제
+        command[0] = '\0';
+        strcpy(command, "rm ");
+        strcat(command, HISTORY_TMP_DATA_FILE_PATH);
+        system(command);
 
         printSingleLineView("주차요금 정산", "결제가 완료되었습니다!");
     } else if(!strcmp("N", prompt)){
