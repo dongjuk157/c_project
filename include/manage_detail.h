@@ -2,10 +2,9 @@
 #define __MANAGE_DETAIL_H__
 
 #include "widget.h"
-#include "manage.h"
 
-#define IN_CAR 'i'
-#define OUT_CAR 'o'
+
+
 
 typedef Widget MANAGE_DETAIL_UI;
 

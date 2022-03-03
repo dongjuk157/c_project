@@ -24,10 +24,16 @@
 #define WIDGET_NOT_VALID_INPUT -1000
 #define WIDGET_EOK 0
 
+#define NONE -1
 #define MAIN 0
 #define SUB 1
 #define MSGBOX 2
-#define BUTTON 3
+#define BUTTON 3l
+
+#define OK_BTN 44
+#define CANCLE_BTN 41
+#define YES_BTN 44
+#define NO_BTN 41
 
 typedef struct Widget{
     int height; //위젯의 높이
@@ -38,8 +44,25 @@ typedef struct Widget{
     LPARRAY subWidget; //서브 위젯이 들어갈 동적배열
 }Widget;
 
+typedef Widget MAINWIDGET;
+typedef Widget Button;
+typedef Widget SUBWIDGET;
+typedef Widget MsgBox;
+
+
 Widget* createWidget();
+MAINWIDGET* createMainWidget(int posy, int posx, int height, int width);
+SUBWIDGET* createSubWidget(int posy, int posx, int height, int width);
+MsgBox* createMsgBox(int posy, int posx);
+Button* createButton(int posy,int posx, int width, char *text, int color);
+
 int printWidget(Widget* widget);
+int printMainWidget(MAINWIDGET* widget);
+int printSubWidget(SUBWIDGET *widget);
+int printMessageBox(MsgBox* widget);
+int printButton(Button *widget);
+
+
 int renderWidget(Widget* widget);
 int addLabel(Widget *widget, Label *label);
 int labelAdd(Widget* widget, int posy, int posx, const char* text, int color);

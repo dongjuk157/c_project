@@ -2,12 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "info.h"
 #include "messagebox.h"
 HOME_UI* createHomeUI(){
-    HOME_UI* home = createWidget();
-    setWidgetPos(home, DEFAULT_POSY,DEFAULT_POSX);
-    setWidgetSize(home, 25, 75);
-    setWidgetType(home, MAIN);
+    HOME_UI* home = createMainWidget(0,0,25,75);
 
     labelAdd(home,5,28,"주차 관리 프로그램", 0);
     labelAdd(home,12,10,"1. 출입 차량 관리", 0);
@@ -15,11 +13,7 @@ HOME_UI* createHomeUI(){
     labelAdd(home,12,50,"3. 주차 현황", 0);
     labelAdd(home,16,10,"4. 차량 조회", 0);
     labelAdd(home,16,30,"5. 주차 이력", 0);
-
-    #ifdef TEST
     labelAdd(home,16,50,"6. 다른 계정으로 로그인", 0);
-
-    #endif // TEST
 
     labelAdd(home,20,10,"메뉴를 선택해주세요 >> ", 0);
 

@@ -1,50 +1,33 @@
 #include "login_ui.h"
 #include "join.h"
+#include "info.h"
 #include "messagebox.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-char globalId[20];
-
 LOGIN_UI* createLoginUI(){
-    LOGIN_UI* login = createWidget();
-    setWidgetPos(login, DEFAULT_POSY,DEFAULT_POSX);
-    setWidgetSize(login, 20, 57);
-    setWidgetType(login, MAIN);
+    LOGIN_UI* login = createMainWidget(DEFAULT_POSY,DEFAULT_POSX,20, 57);
 
     labelAdd(login,6,25,"로그인", 0);
-
     labelAdd(login ,9,10, "┌────────────┬─────────────────────┐",0);
     labelAdd(login, 10,10,"│     ID     │                     │",0);
     labelAdd(login ,11,10,"├────────────┼─────────────────────┤",0);
     labelAdd(login ,12,10,"│  PASSWORD  │                     │",0);
     labelAdd(login ,13,10,"└────────────┴─────────────────────┘",0);
     
-
-    Widget* loginBtn = createWidget();
-    setWidgetPos(loginBtn, 15,15);
-    setWidgetSize(loginBtn, 3,10);
-    setWidgetType(loginBtn, SUB);
-
-    Widget* enrollBtn = createWidget();
-    setWidgetPos(enrollBtn, 15,31);
-    setWidgetSize(enrollBtn, 3,10);
-    setWidgetType(enrollBtn, SUB);
-
-    labelAdd(loginBtn,1,1," 로그인 ",44);
-
-    labelAdd(enrollBtn, 1,1,"회원가입",0);
+    Widget* loginBtn = createButton(15,15,10," 로그인 ",44);
+    Widget* enrollBtn = createButton(15,31,10,"회원가입",0);
 
     addWidget(login, loginBtn);
     addWidget(login, enrollBtn);
-
 
     return login;
 }
 
 int renderLoginUI(LOGIN_UI* login, void *id){
     renderWidget(login);
+    memset((char *)id,0,20);
     // char id[20];
     char password[20];
     char key = 0;
@@ -73,35 +56,24 @@ int renderLoginUI(LOGIN_UI* login, void *id){
 
     }
 
-    if(type == 1){
+    if(type == ENROLL_BTN){ 
         return ENROLLUSER;
     }
 
     gotoxy(27,11);
-    fgets(id, 20, stdin);
-    ((char*)id)[strlen(id)-1] = '\0';
+    myGetline(id, 20, stdin);
 
     gotoxy(27,13);
-    fgets(password, 20, stdin);
-    password[strlen(password)-1] = '\0';
+    myGetline(password, 20, stdin);
 
     int res = loginCheck(id,password);
-    if(res == -3){
-        messageBox(login,7,9,"잘못된 아이디 입니다.");
-        return LOGIN;
-    }
-    else if(res == -2){
-        messageBox(login,7,9,"비밀번호를 다시 입력해주세요.");
-        return LOGIN;
-    }
-    else if(res == 0){
+    if(res == JOIN_EOK){
         messageBox(login,7,9,"로그인 성공");
-        strcpy(globalId,id);
+        return HOME;
     }
     else{
-        system("touch user.dat");
+        joinErrorHandler(login, res);
         return LOGIN;
     }
-    
     return HOME;
 }

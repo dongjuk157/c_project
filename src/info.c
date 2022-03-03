@@ -1,5 +1,5 @@
 #include "info.h"
-#include "manage.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -102,5 +102,29 @@ int saveCurrentCarData(LinkedList list){
     return 0;
 }
 
+int findCarInfo(char* carNumber, CAR_INFO** carinfo){
+  Node *tmp = current_car_list.head;
+  while(tmp){
+    CAR_INFO* car = (CAR_INFO*)tmp->data;
+    if(!strcmp(carNumber,car->car_number)){
+      *carinfo = car;
+      return INFO_EOK;
+    }
+    tmp = tmp->next;
+  }
+  return ERROR_INFO_CAR_NOT_FOUND;
+}
 
+int searchUser(char* carNumber, USER_INFO** userData){
+    USER_INFO *tmp_user = NULL;
+    if(hashGetValue(user, carNumber, (LPDATA*)&tmp_user) == ERR_HASH_NOT_FOUND){
+		return ERROR_INFO_USER_NOT_FOUND;
+	}
+    *userData = (USER_INFO *) malloc(sizeof(USER_INFO));
+	strcpy((*userData)->name, tmp_user->name);
+    strcpy((*userData)->phone_num, tmp_user->phone_num);
+    strcpy((*userData)->car_num, tmp_user->car_num);
+    (*userData)->has_ticket = tmp_user->has_ticket;
+	return INFO_EOK;
+}
 

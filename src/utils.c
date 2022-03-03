@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "manage.h"
+
 #include "info.h"
 #include "messagebox.h"
 
@@ -7,6 +7,11 @@ extern LPHASH user;
 extern LinkedList current_car_list;
 extern LinkedList current_list;
 
+int myGetline(char *__restrict __s, int __n, FILE *__restrict __stream){
+	fgets( __s, __n, __stream);
+    __s[strlen(__s)-1] = '\0';
+	return UTILS_EOK;
+}
 
 int gotoxy(int x, int y)
 {

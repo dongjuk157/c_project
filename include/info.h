@@ -1,13 +1,27 @@
 #ifndef __INFO_H__
 #define __INFO_H__
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "linkedlist.h"
 #include "hash.h"
+#include "array.h"
 
 #define CURRENT_DATA_FILE_PATH          "./data/tempData/Current.dat"
 #define SIMPLE_LOG_FILE_PATH    		"./data/tempData/history.log"
 #define USER_DATA_FILE_PATH     		"./data/tempData/User.dat"
 #define HISTORY_DATA_FILE_PATH     		"./data/tempData/History.dat"
 #define PARKINGLOT_SETTINGS_FILE_PATH   "./data/tempData/ParkingLot.dat"  
+
+#define INFO_EOK 0
+
+
+#define ERROR_INFO_CAR_NOT_FOUND -100
+#define ERROR_INFO_USER_NOT_FOUND -101
+
+LPHASH user;
+LinkedList current_list;
+LinkedList current_car_list;
 
 typedef struct User {
   char id[20];
@@ -49,15 +63,6 @@ typedef struct park { // 주차장
   int light_car; //  경차 전용 공간 여부
 } PARK;
 
-
-// typedef struct Car{
-// 	char car_number[20]; // 차량 번호
-//   char in_datetime[20]; // 2022-02-28 21:44:42 : \0까지 해서 20자리
-// 	int car_type; // 차량 구분(경차 , 전기 , 일반 차량)
-// } CAR;
-
-
-void printInfo(Info info);
 int readUserData(LPHASH *hash);
 int readParkingLot(LinkedList* list);
 int readCurrentData(LinkedList* list);
@@ -66,6 +71,8 @@ int saveUserData(LPHASH hash);
 int saveParkingLot(LinkedList list);
 int saveCurrentCarData(LinkedList list);
 
+int findCarInfo(char* carNumber, CAR_INFO** carinfo);
+int searchUser(char* carNumber, USER_INFO** userData);
 
 #endif // __INFO_H__
 

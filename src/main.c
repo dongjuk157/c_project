@@ -16,18 +16,16 @@
 #include "history_ui.h"
 #include "linkedlist.h"
 #include "hash.h"
-#include "manage.h"
+
 #include "utils.h"
 #include "messagebox.h"
 #include "login_ui.h"
 #include "enroll_ui.h"
 #include "setting_ui.h"
 
-LPHASH user;
-LinkedList current_list;
-LinkedList current_car_list;
 
-static char id[20];
+
+static char id[20] = "";
 
 int init();
 int setFilePath(char *id);
@@ -151,9 +149,12 @@ int backUpFile(){
     saveParkingLot(current_list);
     saveUserData(user);
     char command[100];
-    sprintf(command, "cp ./data/tempData/* ./data/%s",id);
-    system(command);
-    system("rm -r ./data/tempData");
+    if(strcmp(id,"")){
+            sprintf(command, "cp ./data/tempData/* ./data/%s",id);
+        system(command);
+        system("rm -r ./data/tempData");
+    }
+
     return OK;
 }
 void signalHandler(int sig){

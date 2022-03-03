@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern LPHASH user;
-extern LinkedList current_car_list;
+// extern LPHASH user;
+// extern LinkedList current_car_list;
 
 INFO_UI* createInfoUI(){
     INFO_UI* info = createWidget();
@@ -14,22 +14,9 @@ INFO_UI* createInfoUI(){
     setWidgetSize(info, 25, 70);
     setWidgetType(info, MAIN);
 
-    Label* title = createLabel();
-    setLabelPos(title,5, 26);
-    setLabelText(title,"주차 관리 프로그램");
-
-    Label* subTitle = createLabel();
-    setLabelPos(subTitle,7,31);
-    setLabelText(subTitle,"차량 조회");
-
-    Label* input = createLabel();
-    setLabelPos(input, 10, 10);
-    setLabelText(input,"차량번호 입력(띄어쓰기 X) >> ");
-
-
-    addLabel(info, title);
-    addLabel(info, subTitle);
-    addLabel(info,input);
+    labelAdd(info,5,26,"주차 관리 프로그램",0);
+    labelAdd(info,7,31,"차량 조회",0);
+    labelAdd(info,10,10,"차량번호 입력(띄어쓰기 X) >> ",0);
 
     return info;
 }
@@ -71,7 +58,6 @@ int findInfo(char* carNumber, Info *info){
     else   
         info->fee = 0;
     
-
     return NFD;
 }
 
@@ -103,36 +89,23 @@ int renderInfoUI(INFO_UI* info, void *dat){
     setWidgetSize(dataWidget,9,52);
     setWidgetType(dataWidget, SUB);
 
-    Label* carNum = createLabel();
-    setLabelPos(carNum,2,5);
     sprintf(buffer,"차량 번호 : %s",data.carNumber);
-    setLabelText(carNum,buffer);
+    labelAdd(dataWidget, 2,5, buffer, 0);
 
-    Label* name = createLabel();
-    setLabelPos(name,3,5);
     sprintf(buffer,"차주 : %s",data.name);
-    setLabelText(name,buffer);
+    labelAdd(dataWidget, 3,5, buffer, 0);
 
-    Label* phoneNumber = createLabel();
-    setLabelPos(phoneNumber,4,5);
+
     sprintf(buffer,"연락처 : %s",data.phoneNumber);
-    setLabelText(phoneNumber,buffer);
+    labelAdd(dataWidget, 4,5, buffer, 0);
 
-    Label* inDatetime = createLabel();
-    setLabelPos(inDatetime,5,5);
+
     sprintf(buffer,"입차 시간 : %s",data.inDatetime);
-    setLabelText(inDatetime,buffer);
+    labelAdd(dataWidget, 5,5, buffer, 0);
 
-    Label* fee = createLabel();
-    setLabelPos(fee,6,5);
+
     sprintf(buffer,"주차 요금 : %d원",data.fee);
-    setLabelText(fee,buffer);
-
-    addLabel(dataWidget,carNum);
-    addLabel(dataWidget,name);
-    addLabel(dataWidget,phoneNumber);
-    addLabel(dataWidget,inDatetime);
-    addLabel(dataWidget,fee);
+    labelAdd(dataWidget, 6,5, buffer, 0);
 
     renderWidget(dataWidget);
 

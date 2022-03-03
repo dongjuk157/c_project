@@ -3,17 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "manage.h"
+
 #include "messagebox.h"
  
 
 HISTORY_DETAIL_UI* createHistoryDetailUI(int type){
 
-    HISTORY_DETAIL_UI* history = createWidget();
-    setWidgetPos(history, DEFAULT_POSY,DEFAULT_POSX);
-    setWidgetSize(history, 25, 81);
-    setWidgetType(history, MAIN);
-    arrayCreate(&(history->label));
+    HISTORY_DETAIL_UI* history = createMainWidget(DEFAULT_POSY,DEFAULT_POSX,25,81);
 
     labelAdd(history,5,31,"주차 관리 프로그램",0);
     labelAdd(history,7,33,"주차 이력 조회",0);
@@ -33,16 +29,12 @@ HISTORY_DETAIL_UI* createHistoryDetailUI(int type){
     else{
         clearWidget(history);
     }
-   
 
     return history;
 }
 
 Widget* createHistoryDetailSub(){
-    Widget* historyData = createWidget();
-    setWidgetPos(historyData,13,5);
-    setWidgetSize(historyData,11, 73);
-    setWidgetType(historyData,SUB);
+    Widget* historyData = createSubWidget(13,5,11,73);
     
     labelAdd(historyData ,0,0,"┌───────────┬──────────────────┬──────────────────┬──────┬───────┬──────┐",0);
     labelAdd(historyData, 1,0,"│ 차량 번호 │    입차  시간    │    출차  시간    │ 구분 │ 요 금 │ 정산 │",0);
@@ -54,17 +46,17 @@ Widget* createHistoryDetailSub(){
 
 int renderHistoryDetail(HISTORY_DETAIL_UI* history, int type){
     renderWidget(history);
-    char init[20];
-
+    char init[20] = "";
     if(type == BY_CAR_NUMBER || type == BY_DATE_IN || type == BY_DATE_OUT){
-        fgets(init,20,stdin);
-        init[strlen(init)-1] = '\0';
+        myGetline(init,20,stdin);
     
         if(!strcmp("exit",init)){
             return HOME;
         }
     }
     
+    labelAdd(history, 10,42,init,0);
+
     LPARRAY datas;
     getHistoryDetail(type, init, &datas);
     int count = arraySize(datas);    

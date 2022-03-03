@@ -3,15 +3,13 @@
 #include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "info.h"
 #include <string.h>
 
 
 HISTORY_UI* createHistoryUI(){
 
-    HISTORY_UI* history = createWidget();
-    setWidgetPos(history, DEFAULT_POSY,DEFAULT_POSX);
-    setWidgetSize(history, 25, 70);
-    setWidgetType(history, MAIN);
+    HISTORY_UI* history = createMainWidget(DEFAULT_POSY,DEFAULT_POSX,25,70);
 
     labelAdd(history,5,26,"주차 관리 프로그램", 0);
     labelAdd(history,7,28,"주차 이력 조회", 0);
