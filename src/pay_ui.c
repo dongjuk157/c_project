@@ -54,7 +54,7 @@ PAY_UI *createPayUI(){
     return payUI;
 }
 
-int renderPayUI(PAY_UI *pay){
+int renderPayUI(PAY_UI *pay, void *data){
     //UI 프레임 그리기
     renderWidget(pay);
     //세팅된 label 출력

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "manage.h"
+#include "messagebox.h"
 
 extern char *CURRENT_DATA_FILE_PATH;
 extern char *SIMPLE_LOG_FILE_PATH;    		
@@ -97,13 +98,16 @@ int renderHistoryDetail(HISTORY_DETAIL_UI* history, int type){
     }
     
     LPARRAY datas;
-    getHistoryDetail(type, init, &datas);
 
-    for (int i = 0; i < (arraySize(datas)-1)/7 + 1; i++)
+    
+    getHistoryDetail(type, init, &datas);
+    int count = arraySize(datas);    
+    for (int i = 0; i < (count-1)/7 + 1; i++)
     {
         Widget* historyData = createHistoryDetailSub();
         renderEmpty(historyData);
-        for (int j = 0; j < min(7,arraySize(datas) - i*7); j++)
+
+        for (int j = 0; j < min(7,count - i*7); j++)
         {
             CAR_INFO* buf;
             char str[100];
@@ -121,12 +125,19 @@ int renderHistoryDetail(HISTORY_DETAIL_UI* history, int type){
             setLabelText(temp,str);
             addLabel(historyData, temp);
         }
+        renderWidget(history);
         renderWidget(historyData);
-        getchar();
-        clearWidget(historyData);
-        
-        
         arrayDestroy(datas);
+        getchar();
+        if(i == ((count-1)/7)){
+            messageBox(historyData,7,17,"마지막 페이지 입니다.");
+            return HOME;
+        }
+        else if(messageBox(historyData,7,17,"다음페이지를 보시겠습니까?")==ID_CANCLE){
+            return HOME;
+        }
+
+        clearWidget(historyData);
     }
     return HOME;
 }
@@ -143,7 +154,7 @@ int getHistoryDetail(int type, char* data, LPARRAY* datas){
         if(fread(info,sizeof(CAR_INFO), 1,fp)==False){
             break;
         }
-        
+    
         if(type == BY_CAR_NUMBER){
             if(!strcmp(info->car_number, data)) arrayAdd(*datas, info);
         }

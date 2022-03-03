@@ -21,12 +21,12 @@ int messageBox(Widget* mainWindow, int posy, int posx ,char* message){
     Label* ok = createLabel();
     setLabelPos(ok,1,1)  ;
     setLabelText(ok, "  확인  ");
-    ok->color = 42;
+    ok->color = 44;
     addLabel(okBtn, ok);
 
     Label* cancle = createLabel();
     setLabelPos(cancle,1,1);
-    cancle->color = 41;
+    cancle->color = 0;
     setLabelText(cancle, "  취소  ");
     addLabel(cancleBtn, cancle);
 
@@ -40,13 +40,30 @@ int messageBox(Widget* mainWindow, int posy, int posx ,char* message){
 
     clearWidget(msgBox);
 
-    char key = getchar();
+    char key = 0;
+    int type = ID_OK;
+    while(key = getch()){
+        if(key == '\n'){
+            break;
+        }
+        else if(key == '\33'){
+            key = getch();
+            key = getch();
+            if(key == 'D'){
+                type=ID_OK;
+                printSiglelineWidget(okBtn,1,1,"  확인  ",44);
+                printSiglelineWidget(cancleBtn,1,1,"  취소  ",0);
+            }
+            else if(key == 'C'){
+                type =ID_CANCLE;
+                printSiglelineWidget(okBtn,1,1,"  확인  ",0);
+                printSiglelineWidget(cancleBtn,1,1,"  취소  ",41);
+            }
+           
+        }
 
-    if(key == '\n'){
-        return ID_OK;
     }
-    else{
-        return ID_CANCLE;
-    }
+
+    return type;
 
 }

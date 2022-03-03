@@ -4,6 +4,7 @@
 #include "join.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 SETTING_UI* createSettingUI(){
     SETTING_UI* setting = createWidget();
@@ -90,7 +91,7 @@ SETTING_UI* createSettingDetailUI(int floor){
     return setting;
 }
 
-int renderSettingUI(SETTING_UI* setting, char *id){
+int renderSettingUI(SETTING_UI* setting, void *id){
     renderWidget(setting);
     int upperNum;
     int lowerNum;

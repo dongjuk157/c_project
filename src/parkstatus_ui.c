@@ -45,7 +45,7 @@ PARKSTATUS_UI* createParkStatusUI(){
     return parkStatus_UI;
 }
 
-int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI){
+int renderParkStatusUI(PARKSTATUS_UI *parkStatus_UI, void *data){
 
     //UI 프레임 그리기
     renderWidget(parkStatus_UI);

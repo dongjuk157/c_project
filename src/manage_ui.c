@@ -56,7 +56,7 @@ MANAGE_UI* createManageUI(){
     return manage;
 }
 
-int renderManageUI(MANAGE_UI *manage){
+int renderManageUI(MANAGE_UI *manage, void *data){
     //UI 프레임 그리기
     CAR_INFO* car_info = NULL;
     USER_INFO* user_info = NULL;

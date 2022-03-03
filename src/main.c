@@ -22,12 +22,19 @@
 #include "login_ui.h"
 #include "enroll_ui.h"
 #include "setting_ui.h"
+#include<unistd.h>
+#include<termios.h>
 
-typedef int (*FP)(Widget*);
+typedef int (*FP)(Widget*, void*);
 
 LPHASH user;
 LinkedList current_list;
 LinkedList current_car_list;
+struct termios buf, savebuf;
+void *mainPage;
+FP render;
+char id[20];
+
 
 
 char *CURRENT_DATA_FILE_PATH;
@@ -36,20 +43,19 @@ char *USER_DATA_FILE_PATH;
 char *HISTORY_DATA_FILE_PATH;     		
 char *PARKINGLOT_SETTINGS_FILE_PATH;
 
-extern char globalId[20];
-
-
 void signalHandler(int sig){
-	
+
     saveCurrentCarData(current_car_list);
     saveParkingLot(current_list);
     saveUserData(user);
-    
-    if(messageBox(NULL,7,17,"정말로 종료하시겠습니까?")==ID_OK){
-        system("clear");
-        exit(0);
-    }
-    
+    tcsetattr(0, TCSAFLUSH, &savebuf);
+    messageBox(NULL,7,17,"프로그램이 종료됩니다.");
+    system("clear");
+    exit(0);
+    // if(messageBox(NULL,7,17,"정말로 종료하시겠습니까?")==ID_OK){
+    //     system("clear");
+    //     exit(0);
+    // }
 }
 
 void setFilePath(char *id) {
@@ -75,10 +81,7 @@ void setFilePath(char *id) {
     sprintf(tmp_path, "./data/%s/ParkingLot.dat", id);
     strcpy(PARKINGLOT_SETTINGS_FILE_PATH, tmp_path);
 
-      // signal(SIGSTOP, signalHandler);
-    signal(SIGINT, signalHandler);
-    signal(SIGHUP, signalHandler);
-    signal(SIGHUP, signalHandler);
+   
     // user 해시테이블 생성
     // LPHASH user;
     hashCreate(&user); 
@@ -97,11 +100,10 @@ void setFilePath(char *id) {
 
 int main(int argc, char const *argv[])
 {
-    // login()
-    // char id[20] = "default";
-    // setFilePath(id);
-    void *mainPage;
-    FP render;
+    signal(SIGINT, signalHandler);
+    signal(SIGHUP, signalHandler);
+    signal(SIGHUP, signalHandler);
+
     
     HOME_UI* home = createHomeUI(); //HOME UI
     MANAGE_UI *iomanage = createManageUI(); // 입출차 관리 UI
@@ -118,46 +120,48 @@ int main(int argc, char const *argv[])
 
     int quit = 0;
     int page = LOGIN;
-    char id[20];
     
     while(!quit){
         // page = render(mainPage);
         switch (page)
         {
         case HOME:
-            page = renderHomeUI(home);
+            mainPage = home;
+            render = renderHomeUI;
+            page = renderHomeUI(home, NULL);
             // mainPage = home;
-            // render = renderHomeUI;
             break;
         case IOMANAGE:
-            page = renderManageUI(iomanage);
+            mainPage = iomanage;
+            render = renderManageUI;
+            page = renderManageUI(iomanage, NULL);
             // mainPage = iomanage;
-            // render = renderManageUI;
             break;
         case PAY:
-            page = renderPayUI(pay);
+            mainPage = pay;
+            render = renderPayUI;
+            page = renderPayUI(pay, NULL);
             // mainPage = pay;
-            // render = renderPayUI;
             break;
         case PARKSTATUS:
-            page = renderParkStatusUI(parkStatus);
-            // mainPage = parkStatus;
-            // render = renderParkStatusUI;
+            mainPage = parkStatus;
+            render = renderParkStatusUI;
+            page = renderParkStatusUI(parkStatus,NULL);
             break;
         case CARINFO:
-            page = renderInfoUI(info);
-            // mainPage = info;
-            // render = renderInfoUI;
+            mainPage = info;
+            render = renderInfoUI;
+            page = renderInfoUI(info,NULL);
             break;
         case PARKHISTORY:
-            page = renderHistoryUI(history);
-            // mainPage = history;
-            // render = renderHistoryUI;
+            mainPage = history;
+            render = renderHistoryUI;
+            page = renderHistoryUI(history,NULL);
             break;
         case LOGIN:
+            mainPage = login;
+            render = renderLoginUI;
             page = renderLoginUI(login,id);
-            // mainPage = login;
-            // render = renderLoginUI;
             if(page == HOME){
                 // getchar();
                 setFilePath(id);
@@ -165,14 +169,14 @@ int main(int argc, char const *argv[])
             
             break;
         case ENROLLUSER:
+            mainPage = enroll;
+            render = renderEnrollUI;
             page = renderEnrollUI(enroll, id);
-            // mainPage = enroll;
-            // render = renderEnrollUI;
             break;
         case SETTING:
-            page = renderSettingUI(setting, id);
-            // mainPage = setting;
+            mainPage = setting;
             render = renderSettingUI;
+            page = renderSettingUI(setting, id);
             break;
         case 9:
             while (1){
@@ -221,6 +225,9 @@ int main(int argc, char const *argv[])
                 quit = True;
                 system("clear");
             }   
+            else{
+                page = HOME;
+            }
             break;
         default:
             break;

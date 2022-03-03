@@ -7,6 +7,6 @@ typedef Widget HISTORY_UI;
 
 HISTORY_UI* createHistoryUI(); 
 
-int renderHistoryUI(HISTORY_UI* history);
+int renderHistoryUI(HISTORY_UI* history, void *data);
 
 #endif // __HISTORY_H__

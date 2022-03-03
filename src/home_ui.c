@@ -36,9 +36,9 @@ int checkinit(char *init){
         else if(num == PARKSTATUS) return PARKSTATUS;
         else if(num == CARINFO) return CARINFO;
         else if(num == PARKHISTORY) return PARKHISTORY;
-        else if(num == LOGIN) return LOGIN;
-        else if(num == ENROLLUSER) return ENROLLUSER;
-        else if(num == SETTING) return SETTING;
+        // else if(num == LOGIN) return LOGIN;
+        // else if(num == ENROLLUSER) return ENROLLUSER;
+        // else if(num == SETTING) return SETTING;
         #ifdef TEST
         else if(num == 9) return 9;
         #endif
@@ -46,7 +46,7 @@ int checkinit(char *init){
     }
 }
 
-int renderHomeUI(HOME_UI* home){
+int renderHomeUI(HOME_UI* home, void *data){
     renderWidget(home);
     char init[20];
 

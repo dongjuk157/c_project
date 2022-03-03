@@ -74,7 +74,7 @@ PARK_DETAIL_UI* createParkDetailFloorUI(){
 
     Widget* detailSub = createWidget();
     setWidgetPos(detailSub,8,5);
-    setWidgetSize(detailSub,16,70);
+    setWidgetSize(detailSub,15,70);
     setWidgetType(detailSub,SUB);
 
     Label* columnBarTop = createLabel();

@@ -8,7 +8,7 @@
 typedef Widget PAY_UI;
 
 PAY_UI* createPayUI();
-int renderPayUI(PAY_UI *pay);
+int renderPayUI(PAY_UI *pay, void *data);
 int payParkingFee();
 int calcFee(char *carNumber);
 int buyTicket();
