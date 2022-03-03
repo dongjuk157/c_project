@@ -56,7 +56,7 @@ MANAGE_UI* createManageUI(){
     return manage;
 }
 
-int renderManageUI(MANAGE_UI *manage){
+int renderManageUI(MANAGE_UI *manage, void *data){
     //UI 프레임 그리기
     CAR_INFO* car_info = NULL;
     USER_INFO* user_info = NULL;
@@ -224,6 +224,7 @@ int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info){
             CAR_INFO* car_tmp = (CAR_INFO*) pcar_tmp->data;
             if (strcmp(car_tmp->car_number, (*car_info)->car_number) == 0){ // 같은 차량 찾으면 탐색 종료
                 flag = 1;
+                getDateTime((*car_info)->out_datetime);
                 break;
             }
             pcar_tmp = pcar_tmp->next;
@@ -246,6 +247,7 @@ int searchUserUI(MANAGE_UI* manage,  char *car_number, USER_INFO **user_data, ch
     if ((tmp_user) == NULL){ // hash 값이 없는 경우
         if (io == 'i'){
             saveUserUI(manage, car_number, user_data);
+            return OK;
         }
         return -2; // NOT SEARCH USER
     }

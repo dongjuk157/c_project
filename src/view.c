@@ -7,14 +7,11 @@
 #include "utils.h"
 
 extern LPHASH user;
-extern char *CURRENT_DATA_FILE_PATH;
-extern char *SIMPLE_LOG_FILE_PATH;    		
-extern char *USER_DATA_FILE_PATH;
-extern char *HISTORY_DATA_FILE_PATH;     		
-extern char *PARKINGLOT_SETTINGS_FILE_PATH;  
 
 //할인율
-float ticketDisc = 0.5;
+float ticketDisc = 0.5; //
+float elecDisc = 0.9;
+float lightDisc = 0.7;
 char ticketFee[6] = "13000";
 
 //정산하기
@@ -56,12 +53,19 @@ int renderFeeView(){
 }
 
 
-int printFeeDetailView(char *carNumber, int fee, int hasTicket){
+int printFeeDetailView(char *carNumber, int fee, int hasTicket, CAR_INFO* carinfo){
 
     char feeStr[10];
     if(hasTicket){
         sprintf(feeStr, "%d", (int)(fee * ticketDisc));
-    }else{
+    }
+    else if(carinfo->car_type == 'e'){
+        sprintf(feeStr, "%d", (int)(fee * elecDisc));
+    }
+    else if(carinfo->car_type == 'l'){
+        sprintf(feeStr, "%d", (int)(fee * lightDisc));
+    }
+    else{
         sprintf(feeStr, "%d", fee);
     }
 
@@ -96,6 +100,18 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
         Label *label4 = createLabel();
         setLabelPos(label4, 11, 35);
         setLabelText(label4, "(정기권 할인 적용)");
+        addLabel(feeDetailView, label4);
+    }
+    else if(carinfo->car_type == 'e'){ //할인율 적용
+        Label *label4 = createLabel();
+        setLabelPos(label4, 11, 35);
+        setLabelText(label4, "(전기차 할인 적용)");
+        addLabel(feeDetailView, label4);
+    }
+    else if(carinfo->car_type == 'l'){ //할인율 적용
+        Label *label4 = createLabel();
+        setLabelPos(label4, 11, 35);
+        setLabelText(label4, "(경차 할인 적용)");
         addLabel(feeDetailView, label4);
     }
 
@@ -133,6 +149,7 @@ int printFeeDetailView(char *carNumber, int fee, int hasTicket){
         //file을 읽어서 carnumber랑 일치하는 carinfo->fee = 0으로 처리해서 파일다시쓰기
         while(fread(carInfo, sizeof(CAR_INFO), 1, ifp)){
             if(!strcmp(carNumber, carInfo->car_number) && strcmp(carInfo->out_datetime, "")){
+                // carInfo->fee = fee;
                 carInfo->is_paid = 1;
             }
             fseek(ifp,-sizeof(CAR_INFO),SEEK_CUR);

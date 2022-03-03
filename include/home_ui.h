@@ -7,6 +7,6 @@ typedef Widget HOME_UI;
 
 HOME_UI* createHomeUI(); 
 
-int renderHomeUI(HOME_UI* home);
+int renderHomeUI(HOME_UI* home, void *data);
 
 #endif // __HOME_H__

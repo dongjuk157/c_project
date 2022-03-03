@@ -10,6 +10,6 @@
 typedef Widget INFO_UI;
 
 INFO_UI* createInfoUI();
-int renderInfoUI(INFO_UI* info);
+int renderInfoUI(INFO_UI* info, void *data);
 
 #endif // __INFO_UI_H__

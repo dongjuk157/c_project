@@ -10,7 +10,7 @@ typedef Widget MANAGE_UI;
 
 MANAGE_UI* createManageUI();
 
-int renderManageUI(MANAGE_UI *manage);
+int renderManageUI(MANAGE_UI *manage, void *data);
 int getValuesUI(MANAGE_UI* manage, char io, CAR_INFO **car_info);
 int searchUserUI(MANAGE_UI* manage,  char *car_number, USER_INFO **user_data, char io);
 int saveUserUI(MANAGE_UI* manage, char *car_number, USER_INFO **user_data);

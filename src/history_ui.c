@@ -1,10 +1,10 @@
 #include "history_ui.h"
 #include "history_detail.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef int (*FP)(Widget*);
 
 HISTORY_UI* createHistoryUI(){
 
@@ -24,7 +24,7 @@ HISTORY_UI* createHistoryUI(){
     return history;
 }
 
-int renderHistoryUI(HISTORY_UI* history){
+int renderHistoryUI(HISTORY_UI* history, void *data){
 
     renderWidget(history);
     char init[20];

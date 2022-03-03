@@ -43,13 +43,14 @@ LOGIN_UI* createLoginUI(){
     return login;
 }
 
-int renderLoginUI(LOGIN_UI* login, char *id){
+int renderLoginUI(LOGIN_UI* login, void *id){
     renderWidget(login);
     // char id[20];
     char password[20];
     char key = 0;
     int type = 0;
-    while(key = getch()){
+    while(1){
+        key = getch();
         if(key == '\n'){
             break;
         }
@@ -78,7 +79,7 @@ int renderLoginUI(LOGIN_UI* login, char *id){
 
     gotoxy(27,11);
     fgets(id, 20, stdin);
-    id[strlen(id)-1] = '\0';
+    ((char*)id)[strlen(id)-1] = '\0';
 
     gotoxy(27,13);
     fgets(password, 20, stdin);
@@ -96,6 +97,10 @@ int renderLoginUI(LOGIN_UI* login, char *id){
     else if(res == 0){
         messageBox(login,7,9,"로그인 성공");
         strcpy(globalId,id);
+    }
+    else{
+        system("touch user.dat");
+        return LOGIN;
     }
     
     return HOME;

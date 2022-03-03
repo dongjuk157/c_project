@@ -2,12 +2,23 @@
 #define __UTILS_H__
 #define False 0
 #define True 1
-
+#include <termios.h>
+#include <sys/types.h>
+#include <sys/select.h>
+#include <stdio.h>
+#include <signal.h>
+#include <time.h>
+#include <string.h>
+#include <stdlib.h>
 #define UTILS_EOK 0
 
+typedef int (*FP)(void*, void*);
 typedef char bool;
 
-int gotoxy(int x, int y);
+struct termios buf, savebuf;
+
+
+int gotoxy(int x, int y); 
 int min(int a, int b);
 int getch(void);
 int to_day(int y, int m, int d);

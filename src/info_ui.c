@@ -75,7 +75,7 @@ int findInfo(char* carNumber, Info *info){
     return NFD;
 }
 
-int renderInfoUI(INFO_UI* info){
+int renderInfoUI(INFO_UI* info, void *dat){
     renderWidget(info);
 
     char carNumber[20];
