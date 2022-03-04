@@ -55,15 +55,15 @@ $(OBJ_DIR)/$(UI_DIR)/%.o: $(SRC_DIR)/$(UI_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
 make_file :
-	# -mkdir ~/lib
+	-mkdir $(HOME)
 	-mkdir obj
 	-mkdir obj/data_structure
 	-mkdir obj/ui
 
 clean:
-	rm $(TARGET_DATASTRUCTURE) $(DATASTRUCTURE_OBJS)
-	rm $(TARGET_UI) $(UI_OBJS)
-	rm /usr/lib/$(TARGET_UI)
-	rm /usr/lib/$(TARGET_DATASTRUCTURE)
-	rm -r obj
+	-rm $(TARGET_DATASTRUCTURE) $(DATASTRUCTURE_OBJS)
+	-rm $(TARGET_UI) $(UI_OBJS)
+	-rm $(HOME)/$(TARGET_UI)
+	-rm $(HOME)/$(TARGET_DATASTRUCTURE)
+	-rm -r obj
 	
