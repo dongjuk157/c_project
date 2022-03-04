@@ -7,7 +7,7 @@ DATASTRUCTURE_DIR = data_structure
 UI_DIR = ui
 
 INCLUDE_DIR = ../include
-LIBARY_DIR = ./
+LIBARY_DIR = ~/lib
 
 DATASTRUCTURE_SRCS = $(SRC_DIR)/$(DATASTRUCTURE_DIR)/hash.c  
 DATASTRUCTURE_SRCS += $(SRC_DIR)/$(DATASTRUCTURE_DIR)/array.c 
@@ -43,10 +43,6 @@ CFLAGS = -I $(INCLUDE_DIR) -fPIC
 
 
 all : make_file $(DATASTRUCTURE_OBJS) $(UI_OBJS)
-	-mkdir ~/lib
-	-mkdir obj
-	-mkdir obj/data_structure
-	-mkdir obj/ui
 	$(CC) -shared $(DATASTRUCTURE_OBJS) -o $(TARGET_DATASTRUCTURE)
 	$(CC) -shared $(UI_OBJS) -o $(TARGET_UI)
 	cp $(TARGET_DATASTRUCTURE) ~/lib/$(TARGET_DATASTRUCTURE)

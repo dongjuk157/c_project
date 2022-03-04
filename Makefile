@@ -4,7 +4,7 @@ CC = gcc
 SRC_DIR = src
 OBJ_DIR = obj
 INCLUDE_DIR = include
-LIBARY_DIR = lib
+LIBARY_DIR = ~/lib
 
 SRCS = $(SRC_DIR)/main.c  $(SRC_DIR)/utils.c  $(SRC_DIR)/info.c
 SRCS += $(SRC_DIR)/join.c
