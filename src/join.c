@@ -8,12 +8,12 @@
 #include <errno.h>
 
 int loginCheck(char *id, char *password){
-    // 1. ÆÄÀÏ ¿­±â data/user
+    // 1. íŒŒì¼ ì—´ê¸° data/user
     FILE *fp = fopen("./data/user.dat", "rb");
     if (!fp){
         return ERR_JOIN_FILE_NOT_OPEN; // file error
     }
-    // 2. ÆÄÀÏ ³» °°Àº id ÀÖ´ÂÁö È®ÀÎ
+    // 2. íŒŒì¼ ë‚´ ê°™ì€ id ìˆëŠ”ì§€ í™•ì¸
     USER *tmp = (USER*)malloc(sizeof(USER));
     while (1){
         fread(tmp, sizeof(USER), 1, fp);
@@ -21,7 +21,7 @@ int loginCheck(char *id, char *password){
             break;
         if (strcmp(tmp->id, id) == 0) { // search same id
             // check password
-            // ¾ÏÈ£È­µÈ password·Î ºñ±³ÇÏ°í½Í´Ù...
+            // ì•”í˜¸í™”ëœ passwordë¡œ ë¹„êµí•˜ê³ ì‹¶ë‹¤...
             if (strcmp(tmp->passward, password) == 0) {
                 return JOIN_EOK; // success
             } else {
@@ -33,12 +33,12 @@ int loginCheck(char *id, char *password){
 }
 
 int join(char *id, char *password){
-    // 1. ÆÄÀÏ ¿­±â data/user
+    // 1. íŒŒì¼ ì—´ê¸° data/user
     FILE *fp = fopen("./data/user.dat", "rb+");
     if (!fp){
         return ERR_JOIN_FILE_NOT_OPEN; // file error
     }
-    // 2. ÆÄÀÏ ³» °°Àº id ÀÖ´ÂÁö È®ÀÎ
+    // 2. íŒŒì¼ ë‚´ ê°™ì€ id ìˆëŠ”ì§€ í™•ì¸
     USER *tmp = (USER*)malloc(sizeof(USER));
     while (1){
         fread(tmp, sizeof(USER), 1, fp);
@@ -48,11 +48,11 @@ int join(char *id, char *password){
             return ERR_JOIN_SAME_ID_EXIST; // same id
         }
     }
-    // 3. ÆÄÀÏ ³» Ã£´Â °ªÀÌ ¾øÀ¸¸é ¸¶Áö¸·¿¡ ±¸Á¶Ã¼·Î Ãß°¡
-    fseek(fp, 0, SEEK_END); // ÆÄÀÏ ¸¶Áö¸·À¸·Î ÀÌµ¿
+    // 3. íŒŒì¼ ë‚´ ì°¾ëŠ” ê°’ì´ ì—†ìœ¼ë©´ ë§ˆì§€ë§‰ì— êµ¬ì¡°ì²´ë¡œ ì¶”ê°€
+    fseek(fp, 0, SEEK_END); // íŒŒì¼ ë§ˆì§€ë§‰ìœ¼ë¡œ ì´ë™
     strcpy(tmp->id, id); 
-    strcpy(tmp->passward, password);  // password ¾ÏÈ£È­ÇÏ°í½Í´Ù...
-    fwrite(tmp, sizeof(USER), 1, fp); // ÆÄÀÏ¿¡ °ª  Ãß°¡
+    strcpy(tmp->passward, password);  // password ì•”í˜¸í™”í•˜ê³ ì‹¶ë‹¤...
+    fwrite(tmp, sizeof(USER), 1, fp); // íŒŒì¼ì— ê°’  ì¶”ê°€
     fclose(fp); 
     free(tmp);
     createNewFiles(id);
@@ -60,11 +60,11 @@ int join(char *id, char *password){
 }
 
 int createNewFiles(char *id){
-    // È¸¿ø°¡ÀÔÀÌÈÄ µ¥ÀÌÅÍ µğ·ºÅä¸®,  ±â´É
+    // íšŒì›ê°€ì…ì´í›„ ë°ì´í„° ë””ë ‰í† ë¦¬,  ê¸°ëŠ¥
     // char id[256];
     // char password[256];
     char dirname[256] = "./data";
-    // È¸¿ø°¡ÀÔ ÈÄ ÇØ´ç id·Î Æú´õ ±¸Á¶ »ı¼º
+    // íšŒì›ê°€ì… í›„ í•´ë‹¹ idë¡œ í´ë” êµ¬ì¡° ìƒì„±
     struct stat sb;
     if (stat(dirname, &sb) == 0 && S_ISDIR(sb.st_mode)){
         // printf("%s already exists\n", dirname);
@@ -94,35 +94,35 @@ int createNewFiles(char *id){
     char tmp_file_name[512];
 
     // initialize data/{id}/Current.dat 
-    tmp_file_name[0] = '\0'; // ÃÊ±âÈ­
+    tmp_file_name[0] = '\0'; // ì´ˆê¸°í™”
     strcat(tmp_file_name, dirname);
     strcat(tmp_file_name, "/Current.dat");
     fp = fopen(tmp_file_name, "wb");
     fclose(fp);
 
     // initialize data/{id}/History.dat
-    tmp_file_name[0] = '\0'; // ÃÊ±âÈ­
+    tmp_file_name[0] = '\0'; // ì´ˆê¸°í™”
     strcat(tmp_file_name, dirname);
     strcat(tmp_file_name, "/History.dat");
     fp = fopen(tmp_file_name, "wb"); 
     fclose(fp);
 
     // initialize data/{id}/ParkingLot.dat
-    tmp_file_name[0] = '\0'; // ÃÊ±âÈ­
+    tmp_file_name[0] = '\0'; // ì´ˆê¸°í™”
     strcat(tmp_file_name, dirname);
     strcat(tmp_file_name, "/ParkingLot.dat");
     fp = fopen(tmp_file_name, "wb");
     fclose(fp);
 
     // initialize data/{id}/User.dat
-    tmp_file_name[0] = '\0'; // ÃÊ±âÈ­
+    tmp_file_name[0] = '\0'; // ì´ˆê¸°í™”
     strcat(tmp_file_name, dirname);
     strcat(tmp_file_name, "/User.dat");
     fp = fopen(tmp_file_name, "wb");
     fclose(fp);
 
     // initialize data/{id}/history.log
-    tmp_file_name[0] = '\0'; // ÃÊ±âÈ­
+    tmp_file_name[0] = '\0'; // ì´ˆê¸°í™”
     strcat(tmp_file_name, dirname);
     strcat(tmp_file_name, "/history.log");
     fp = fopen(tmp_file_name, "w");
@@ -161,16 +161,16 @@ int joinErrorHandler(Widget* widget, int errCode){
     case JOIN_EOK:
         break;
     case ERR_JOIN_FILE_NOT_OPEN:
-        messageBox(widget,7,9, "ÆÄÀÏÀ» ¿­ ¼ö ¾ø½À´Ï´Ù.");
+        messageBox(widget,7,9, "íŒŒì¼ì„ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
         break;
     case ERR_JOIN_INVALID_PASSWORD:
-        messageBox(widget,7,9,"ºñ¹Ğ¹øÈ£¸¦ ´Ù½Ã ÀÔ·ÂÇØÁÖ¼¼¿ä.");
+        messageBox(widget,7,9,"ë¹„ë°€ë²ˆí˜¸ë¥¼ ë‹¤ì‹œ ì…ë ¥í•´ì£¼ì„¸ìš”.");
         break;
     case ERR_JOIN_INVALID_ID:
-        messageBox(widget,7,9,"Àß¸øµÈ ¾ÆÀÌµğ ÀÔ´Ï´Ù.");
+        messageBox(widget,7,9,"ì˜ëª»ëœ ì•„ì´ë”” ì…ë‹ˆë‹¤.");
         break;
     case ERR_JOIN_SAME_ID_EXIST:
-        messageBox(widget,7,9, "ÇØ´ç ¾ÆÀÌµğ°¡ ÀÌ¹Ì Á¸ÀçÇÕ´Ï´Ù.");
+        messageBox(widget,7,9, "í•´ë‹¹ ì•„ì´ë””ê°€ ì´ë¯¸ ì¡´ì¬í•©ë‹ˆë‹¤.");
         break;
     }
     return JOIN_EOK;
