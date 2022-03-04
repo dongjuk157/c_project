@@ -50,6 +50,7 @@ all : make_file $(DATASTRUCTURE_OBJS) $(UI_OBJS)
 
 $(OBJ_DIR)/$(DATASTRUCTURE_DIR)/%.o: src/$(DATASTRUCTURE_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
+	
 $(OBJ_DIR)/$(UI_DIR)/%.o: $(SRC_DIR)/$(UI_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
@@ -62,7 +63,7 @@ make_file :
 clean:
 	rm $(TARGET_DATASTRUCTURE) $(DATASTRUCTURE_OBJS)
 	rm $(TARGET_UI) $(UI_OBJS)
-	rm ~/lib/$(TARGET_UI)
-	rm ~/lib/$(TARGET_DATASTRUCTURE)
+	rm /usr/lib/$(TARGET_UI)
+	rm /usr/lib/$(TARGET_DATASTRUCTURE)
 	rm -r obj
 	
