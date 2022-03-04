@@ -7,7 +7,7 @@ DATASTRUCTURE_DIR = data_structure
 UI_DIR = ui
 
 INCLUDE_DIR = ../include
-LIBARY_DIR = ~/lib
+LIBARY_DIR = /usr/lib
 
 DATASTRUCTURE_SRCS = $(SRC_DIR)/$(DATASTRUCTURE_DIR)/hash.c  
 DATASTRUCTURE_SRCS += $(SRC_DIR)/$(DATASTRUCTURE_DIR)/array.c 
@@ -45,16 +45,17 @@ CFLAGS = -I $(INCLUDE_DIR) -fPIC
 all : make_file $(DATASTRUCTURE_OBJS) $(UI_OBJS)
 	$(CC) -shared $(DATASTRUCTURE_OBJS) -o $(TARGET_DATASTRUCTURE)
 	$(CC) -shared $(UI_OBJS) -o $(TARGET_UI)
-	cp $(TARGET_DATASTRUCTURE) ~/lib/$(TARGET_DATASTRUCTURE)
-	cp $(TARGET_UI) ~/lib/$(TARGET_UI)
+	cp $(TARGET_DATASTRUCTURE) /usr/lib/$(TARGET_DATASTRUCTURE)
+	cp $(TARGET_UI) /usr/lib/$(TARGET_UI)
 
 $(OBJ_DIR)/$(DATASTRUCTURE_DIR)/%.o: src/$(DATASTRUCTURE_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
+	
 $(OBJ_DIR)/$(UI_DIR)/%.o: $(SRC_DIR)/$(UI_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
 make_file :
-	-mkdir ~/lib
+	# -mkdir ~/lib
 	-mkdir obj
 	-mkdir obj/data_structure
 	-mkdir obj/ui
@@ -62,7 +63,7 @@ make_file :
 clean:
 	rm $(TARGET_DATASTRUCTURE) $(DATASTRUCTURE_OBJS)
 	rm $(TARGET_UI) $(UI_OBJS)
-	rm ~/lib/$(TARGET_UI)
-	rm ~/lib/$(TARGET_DATASTRUCTURE)
+	rm /usr/lib/$(TARGET_UI)
+	rm /usr/lib/$(TARGET_DATASTRUCTURE)
 	rm -r obj
 	
