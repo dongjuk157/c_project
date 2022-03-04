@@ -38,12 +38,13 @@ Compiler
 
 1. `Makefile` 수정
 
-   본인의 환경에 맞게 Makefile의 CC를 수정한다.
+   본인의 환경에 맞게 Makefile의 CC를 수정한다. 수정할 위치 최상위 폴더의 Makefile(`./Makefile`), lib폴더의 Makefile(`./lib/Makefile`)
 
    - linux or wsl: `gcc`  (default)
 
    - windows - raspian 크로스 컴파일: `c:/sysgcc/raspberry/bin/arm-linux-gnueabihf-gcc.exe`
      - https://gnutoolchains.com/raspberry/ 에서 raspberry-gcc8.3.0를 설치해서 사용한다.
+   - 
 
 2. `~/.bashrc` 에 라이브러리 경로 등록
 
