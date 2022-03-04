@@ -5,7 +5,7 @@
 
 //내부에서만 사용할 메모리 할당 함수 
 //함수내에서 size의 값을 변경하면 컴파일 오류 발생하게 함
-static int _arrayCreate(LPARRAY lpArray, const int size)
+static int _arrayCreate(LPARRAY lpArray, int size)
 {
     LPDATA* lpData;
     
@@ -138,7 +138,7 @@ int arrayAdd(LPARRAY lpArray, const LPDATA lpValue)
     //기록의 크기와 색인을 비교합니다
     if (lpArray->size >= lpArray->max_size) {
         int nErr;
-        
+        getchar();
         nErr = _arrayCreate(lpArray, lpArray->max_size * 2);
         if (ERR_ARRAY_OK != nErr) {
             //메모리 재 할당 함수가 실패하면 오류 코드를 리턴합니다.

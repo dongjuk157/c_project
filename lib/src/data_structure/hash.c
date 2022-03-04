@@ -131,7 +131,7 @@ int hashGetValue(LPHASH lpHash, const char* key, LPDATA* value)
 		return ERR_HASH_MAGICCODE;
 	}
 
-	//node의 buckey의 위치를 구한다.
+	//node의 bucket의 위치를 구한다.
 	nHashBucket = hashValue % lpHash->nHashSize;
 	//vlaue의 값을 초기화한다.
 	*value = NULL;
@@ -143,13 +143,13 @@ int hashGetValue(LPHASH lpHash, const char* key, LPDATA* value)
 		//링크드 리스트에서 key와 같은 노드를 찾는다.
 		if (0 == strcmp(lpNode->key, key)) {
 			*value = lpNode->value;
-			break;
+			return ERR_HASH_OK;
 		}
 		//다음 노드로 이동을 한다.
 		lpNode = lpNode->pNext;
 	}
 	
-	return ERR_HASH_OK;
+	return ERR_HASH_NOT_FOUND;
 }
 
 int hashSetValue(LPHASH lpHash, const char* key, const LPDATA value)
@@ -181,7 +181,7 @@ int hashSetValue(LPHASH lpHash, const char* key, const LPDATA value)
 	
 	//hash table에 key가 존재하는지 확인한다.
 	hashIsKey(lpHash, key, &isExist);
-	if (TRUE == isExist) {
+	if (isExist == TRUE) {
 	
 		//key가 존재하는 경우 위치를 찾는다
 		while (NULL != lpTemp) {
