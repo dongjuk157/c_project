@@ -18,9 +18,9 @@
 
 **Environment**
 
-Windows 기반의 WSL2나 ubuntu 라즈비안 등 리눅스 기반의 OS 필요하다. 가상환경이나 네이티브나 상관은 없어보이나 아래 환경에서만 테스트해보았다.
+OS: Linux 
 
-OS: Linux
+Windows 기반의 WSL2나 ubuntu, 라즈비안 등 리눅스 기반의 OS 필요하다. 가상환경이나 네이티브나 상관은 없어보이나 아래 환경에서만 테스트해보았다.
 
 - Windows11, WSL2
 - 라즈베리파이 가상환경, QEMU(kernel-qemu-4.4.34-jessie), Raspbian(2019-06-20-raspbian-buster)
@@ -28,30 +28,23 @@ OS: Linux
 Compiler
 
 - gcc - WSL 혹은 raspbian(Raspberry Pi OS)에서 직접 컴파일
-- 크로스 컴파일러: arm-linux-gnueabihf-gcc(raspian) 
-  - windows에서 작업, 컴파일하고 가상환경으로 옮겨서 실행
-
 
 
 
 **Prerequisite**
 
-1. `Makefile` 수정
+1. `Makefile`
 
-   본인의 환경에 맞게 Makefile의 CC를 수정한다.
-
-   - linux or wsl: `gcc`  (default)
-
-   - windows - raspian 크로스 컴파일: `c:/sysgcc/raspberry/bin/arm-linux-gnueabihf-gcc.exe`
-     - https://gnutoolchains.com/raspberry/ 에서 raspberry-gcc8.3.0를 설치해서 사용한다.
+   linux or wsl: `gcc`  (default)
 
 2. `~/.bashrc` 에 라이브러리 경로 등록
 
    - 프로그램에 필요한 공유, 동적 라이브러리는 lib 폴더에 포함되어 있다.
 
    1. `vi ~/.bashrc`연 뒤 맨 아래에 추가
-      - `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/pi/src/c_project/lib` 
+      - `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/lib` 
       - 클론한 주소는 모두 다르므로 lib 디렉토리를 정확히 설정한다.
+   2. `source ~/.bashrc` 으로 적용
 
 3. 파일 준비
 
@@ -62,6 +55,7 @@ Compiler
    2. 더미데이터 등록(optional)
 
       - `data-*.tar.gz` 와 이름이 비슷한 압축 파일은 더미데이터이다. 압축을 해제하고 내부 내용을 `data` 폴더 안에 넣어주면 더미데이터가 등록된다.
+      - 압축 해제 명령어`tar -xvzf data-2120.tar.gz`
 
 
 
@@ -71,12 +65,10 @@ Compiler
 
 ```shell
 make
-#(optional) chmod 755 ./main
 ./main
 ```
 
 - Makefile을 사용해서 컴파일을 한 뒤 프로그램을 실행한다.
-- (optional) 크로스 컴파일 시 파일의 권한을 설정해야한다. 
 
 
 
@@ -95,8 +87,8 @@ data/
  ├ test20/     (dummy data)
  └ user.dat (Required)
 include/
-src/
 lib/
+src/
 ```
 
 - `data`: 프로그램 실행시 사용하는 데이터가 저장되어있는 폴더
@@ -106,7 +98,6 @@ lib/
   - `histroy.log`: 유저가 읽을 수 있는 기록 파일
   - `ParkingLot.dat`: 주차장의 정보가 있는 파일
   - `User.dat`: 차주 정보. 프로그램 실행 시 해시테이블 생성,  종료 시 저장 백업.
-
 - `include`: 헤더파일만 모아둔 폴더
-- `src` :실제 코드(.c)를 모아둔 폴더
 - `lib`: 공유, 동적 라이브러리를 모아둔 폴더
+- `src` :실제 코드(.c)를 모아둔 폴더
