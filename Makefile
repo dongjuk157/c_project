@@ -17,8 +17,9 @@ CFLAGS = -c -g -Wall
 CFLAGS += -I $(INCLUDE_DIR)
 # CFLAGS += -D TEST
 
+	
+
 $(TARGET) : $(OBJS)
-	tar -xvzf data-2120.tar.gz;
 	cd lib; make
 	$(CC) -o $@ $(OBJS) -L$(LIBARY_DIR) $(LIBS)
 
